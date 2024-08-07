@@ -19,6 +19,7 @@ import ListItemText from "@mui/material/ListItemText";
 import InventoryIcon from "@mui/icons-material/Inventory";
 import LocalShippingIcon from "@mui/icons-material/LocalShipping";
 import { Outlet } from "react-router-dom";
+import AddIcon from '@mui/icons-material/Add';
 
 const drawerWidth = 240;
 
@@ -113,13 +114,23 @@ export default function Layout() {
             aria-label="open drawer"
             edge="start"
             onClick={handleDrawerOpen}
-            sx={{ mr: 2, ...(open && { display: "none" }) }}
+            sx={{ mr: 2, ...(open && { display: "none" }), ":hover": {backgroundColor: "rgba(255, 255, 255, 0.274)"} }}
           >
             <MenuIcon />
           </IconButton>
           <Typography variant="h6" noWrap component="div">
             Inventory Management
           </Typography>
+          <Box sx={{position: "absolute", right: "0"}}>
+          <IconButton
+            color="inherit"
+            aria-label="open drawer"
+            edge="start"
+            sx={{ mr: 2, ...(open && { display: "none" }), ":hover": {backgroundColor: "rgba(255, 255, 255, 0.274)"} }}
+          >
+            <AddIcon />
+          </IconButton>
+          </Box>
         </Toolbar>
       </AppBar>
 
