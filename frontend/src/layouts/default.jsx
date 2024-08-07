@@ -1,4 +1,3 @@
-import * as React from "react";
 import { styled, useTheme } from "@mui/material/styles";
 import Box from "@mui/material/Box";
 import Drawer from "@mui/material/Drawer";
@@ -18,7 +17,11 @@ import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
 import InventoryIcon from "@mui/icons-material/Inventory";
 import LocalShippingIcon from "@mui/icons-material/LocalShipping";
-import { Outlet } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { Outlet, useLocation, useNavigate } from "react-router-dom";
+import { createOrUpdateTab } from "../redux/tabSlice";
+import { Tab, Tabs } from "@mui/material";
+import { useEffect, useState } from "react";
 
 const drawerWidth = 240;
 
@@ -74,26 +77,20 @@ const DrawerHeader = styled("div")(({ theme }) => ({
   justifyContent: "flex-start",
 }));
 
-const drawerTabs = [
-  {
-    name: "Suppliers",
-    icon: <LocalShippingIcon />,
-    onClick: () => {
-      console.log("Suppliers");
-    },
-  },
-  {
-    name: "Packages",
-    icon: <InventoryIcon />,
-    onClick: () => {
-      console.log("Packages");
-    },
-  },
-];
-
 export default function Layout() {
   const theme = useTheme();
-  const [open, setOpen] = React.useState(false);
+  const dispatch = useDispatch();
+  const location = useLocation();
+  const [open, setOpen] = useState(true);
+
+  useEffect(() => {
+    dispatch(
+      createOrUpdateTab({
+        name: routeNames[location.pathname],
+        path: location.pathname,
+      })
+    );
+  }, [dispatch]);
 
   const handleDrawerOpen = () => {
     setOpen(true);
@@ -145,22 +142,101 @@ export default function Layout() {
           </IconButton>
         </DrawerHeader>
         <Divider />
-        <List>
-          {drawerTabs.map((tab) => (
-            <ListItem key={tab.name} disablePadding>
-              <ListItemButton>
-                <ListItemIcon>{tab.icon}</ListItemIcon>
-                <ListItemText primary={tab.name} />
-              </ListItemButton>
-            </ListItem>
-          ))}
-        </List>
+        <DrawerTabs />
       </Drawer>
 
       <Container open={open}>
         <DrawerHeader />
+        <Box sx={{ marginBottom: "1rem" }}>
+          <TabList />
+        </Box>
         <Outlet />
       </Container>
     </Box>
   );
+}
+
+const routeNames = {
+  "/package-list": "Packages",
+  "/suppliers-list": "Suppliers",
+};
+
+function DrawerTabs() {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  const drawerTabs = [
+    {
+      name: "Suppliers",
+      icon: <LocalShippingIcon />,
+      onClick: () => {
+        dispatch(
+          createOrUpdateTab({ name: "Suppliers", path: "/suppliers-list" })
+        );
+        navigate("/suppliers-list");
+      },
+    },
+    {
+      name: "Packages",
+      icon: <InventoryIcon />,
+      onClick: () => {
+        dispatch(
+          createOrUpdateTab({ name: "Packages", path: "/package-list" })
+        );
+        navigate("/package-list");
+      },
+    },
+  ];
+
+  return (
+    <List>
+      {drawerTabs.map((tab) => (
+        <ListItem key={tab.name} disablePadding>
+          <ListItemButton onClick={tab.onClick}>
+            <ListItemIcon>{tab.icon}</ListItemIcon>
+            <ListItemText primary={tab.name} />
+          </ListItemButton>
+        </ListItem>
+      ))}
+    </List>
+  );
+}
+
+function TabList() {
+  const location = useLocation();
+  const [value, setValue] = useState(null);
+  const tabsMap = useSelector((state) => state.tabs.map);
+  const [tabs, setTabs] = useState([]);
+
+  useEffect(() => {
+    setValue(location.pathname);
+  }, [location]);
+
+  useEffect(() => {
+    setTabs(Object.values(tabsMap));
+  }, [tabsMap]);
+
+  const handleChange = (event, newValue) => {
+    setValue(newValue);
+  };
+
+  return tabs.length > 0 && value ? (
+    <Box
+      sx={{
+        maxWidth: { xs: 320, sm: 480, md: 640, lg: 840 },
+        bgcolor: "background.paper",
+      }}
+    >
+      <Tabs
+        value={value}
+        onChange={handleChange}
+        variant="scrollable"
+        scrollButtons="auto"
+      >
+        {tabs.map((tab) => (
+          <Tab key={tab.path} label={tab.name} value={tab.path} />
+        ))}
+      </Tabs>
+    </Box>
+  ) : null;
 }
