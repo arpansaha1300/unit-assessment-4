@@ -16,6 +16,7 @@ public class Package {
     private Long id;
     private String packageName;
     private String details;
+    private Long quantity;
 
     @ManyToOne
     @JoinColumn(name = "supplier_id")
@@ -44,6 +45,14 @@ public class Package {
 
     public void setDetails(String details) {
         this.details = details;
+    }
+    
+    public Long getQuantity() {
+        return quantity;
+    }
+
+    public void setQuantity(Long quantity) {
+        this.quantity = quantity;
     }
 
     public Supplier getSupplier() {

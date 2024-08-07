@@ -32,6 +32,7 @@ public class PackageController {
         Package packages=new Package();
         packages.setPackageName(packagedto.getPackageName());
         packages.setDetails(packagedto.getDetails());
+        packages.setQuantity(packagedto.getQuantity());
         return packageService.savePackage(packages);
     }
     @GetMapping("/{id}")
@@ -49,6 +50,9 @@ public class PackageController {
         }
         if (packagedto.getDetails() != null) {
             existingPackage.setDetails(packagedto.getDetails());
+        }
+        if (packagedto.getQuantity() != null) {
+            existingPackage.setQuantity(packagedto.getQuantity());
         }
         return packageService.savePackage(existingPackage);
     }
