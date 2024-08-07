@@ -81,7 +81,6 @@ const Suppliers = () => {
   const handleUpdateSupplier = async () => {
     try {
       await axios.put(`your-api-url/suppliers/${selectedSupplier.id}`, updatedSupplier);
-      // Handle success (e.g., update local state or refetch data)
     } catch (error) {
       console.error('Error updating supplier:', error);
     } finally {
@@ -101,8 +100,7 @@ const Suppliers = () => {
 
   const handleDeleteSupplier = async () => {
     try {
-      await axios.delete(`your-api-url/suppliers/${supplierToDelete.id}`);
-      // Handle success (e.g., update local state or refetch data)
+      await axios.post(`http/${supplierToDelete.id}`);
     } catch (error) {
       console.error('Error deleting supplier:', error);
     } finally {
@@ -177,7 +175,6 @@ const Suppliers = () => {
         </Box>
       </CardContent>
 
-      {/* Edit Dialog */}
       <Dialog open={editDialogOpen} onClose={handleEditDialogClose}>
         <DialogTitle>Edit Supplier</DialogTitle>
         <DialogContent>
@@ -209,7 +206,6 @@ const Suppliers = () => {
         </DialogActions>
       </Dialog>
 
-      {/* Delete Confirmation Dialog */}
       <Dialog open={deleteDialogOpen} onClose={handleDeleteDialogClose}>
         <DialogTitle>Confirm Deletion</DialogTitle>
         <DialogContent>Are you sure you want to delete this supplier?</DialogContent>

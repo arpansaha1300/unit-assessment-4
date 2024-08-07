@@ -12,6 +12,7 @@ import {
   Box,
   useTheme,
   useMediaQuery,
+  Stack,
 } from '@mui/material';
 
 const Packages = () => {
