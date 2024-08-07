@@ -5,6 +5,7 @@ import Signup from "./pages/Signup";
 import Suppliers from "./pages/Suppliers";
 import Packages from "./pages/Packages";
 import Profile from "./pages/Profile";
+import EditSupplier from './pages/suppliers/Edit'
 
 const router = createBrowserRouter([
   {
@@ -13,6 +14,11 @@ const router = createBrowserRouter([
       {
         path: "/suppliers-list",
         element: <Suppliers />,
+      },
+
+      {
+        path: "/suppliers-list/:supplierId/edit",
+        element: <EditSupplier />,
       },
 
       {

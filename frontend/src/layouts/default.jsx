@@ -78,6 +78,23 @@ const DrawerHeader = styled("div")(({ theme }) => ({
   justifyContent: "flex-start",
 }));
 
+function getRouteName(path, label) {
+  switch (path) {
+    case "/package-list": {
+      return "Packages"
+    }
+    case "/suppliers-list": {
+      return "Suppliers"
+    }
+    default: {
+      if (path.startsWith("/suppliers-list") && path.endsWith("/edit")) {
+        if (!label) return "Edit Supplier"
+        return label + "| Edit Supplier"
+      }
+    }
+  }
+}
+
 export default function Layout() {
   const theme = useTheme();
   const dispatch = useDispatch();
@@ -87,11 +104,11 @@ export default function Layout() {
   useEffect(() => {
     dispatch(
       createOrUpdateTab({
-        name: routeNames[location.pathname],
+        name: getRouteName(location.pathname),
         path: location.pathname,
       })
     );
-  }, [dispatch]);
+  }, [dispatch, location.pathname]);
 
   const handleDrawerOpen = () => {
     setOpen(true);
@@ -166,11 +183,6 @@ export default function Layout() {
     </Box>
   );
 }
-
-const routeNames = {
-  "/package-list": "Packages",
-  "/suppliers-list": "Suppliers",
-};
 
 function DrawerTabs() {
   const dispatch = useDispatch();
