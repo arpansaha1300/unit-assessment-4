@@ -48,13 +48,13 @@ const Container = styled("main", {
     easing: theme.transitions.easing.sharp,
     duration: theme.transitions.duration.leavingScreen,
   }),
-  marginLeft: 0,
+  marginLeft: `-${drawerWidth}px`,
   ...(open && {
     transition: theme.transitions.create("margin", {
       easing: theme.transitions.easing.easeOut,
       duration: theme.transitions.duration.enteringScreen,
     }),
-    marginLeft: `${drawerWidth}px`,
+    marginLeft: 0,
   }),
   /**
    * This is necessary to enable the selection of content. In the DOM, the stacking order is determined
@@ -123,11 +123,6 @@ export default function Layout() {
         </Toolbar>
       </AppBar>
 
-      <Container open={open}>
-        <DrawerHeader />
-        <Outlet />
-      </Container>
-
       <Drawer
         sx={{
           width: drawerWidth,
@@ -161,6 +156,11 @@ export default function Layout() {
           ))}
         </List>
       </Drawer>
+
+      <Container open={open}>
+        <DrawerHeader />
+        <Outlet />
+      </Container>
     </Box>
   );
 }
