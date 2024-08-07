@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import {
   Card,
   CardContent,
@@ -29,19 +29,21 @@ const Suppliers = () => {
 
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
+  
+  //   const suppliersData = [
+  //   { id: 1, name: 'Supplier One', email: 'supplier1@example.com', contact: '123-456-7890' },
+  //   { id: 2, name: 'Supplier Two', email: 'supplier2@example.com', contact: '234-567-8901' },
+  //   { id: 3, name: 'Supplier Three', email: 'supplier3@example.com', contact: '345-678-9012' },
+  //   { id: 4, name: 'Supplier Four', email: 'supplier4@example.com', contact: '456-789-0123' },
+  //   { id: 5, name: 'Supplier Five', email: 'supplier5@example.com', contact: '567-890-1234' },
+  //   { id: 6, name: 'Supplier Six', email: 'supplier6@example.com', contact: '678-901-2345' },
+  //   { id: 7, name: 'Supplier Seven', email: 'supplier7@example.com', contact: '789-012-3456' },
+  //   { id: 8, name: 'Supplier Eight', email: 'supplier8@example.com', contact: '890-123-4567' },
+  //   { id: 9, name: 'Supplier Nine', email: 'supplier9@example.com', contact: '901-234-5678' },
+  //   { id: 10, name: 'Supplier Ten', email: 'supplier10@example.com', contact: '012-345-6789' },
+  // ];
 
-    const suppliersData = [
-    { id: 1, name: 'Supplier One', email: 'supplier1@example.com', contact: '123-456-7890' },
-    { id: 2, name: 'Supplier Two', email: 'supplier2@example.com', contact: '234-567-8901' },
-    { id: 3, name: 'Supplier Three', email: 'supplier3@example.com', contact: '345-678-9012' },
-    { id: 4, name: 'Supplier Four', email: 'supplier4@example.com', contact: '456-789-0123' },
-    { id: 5, name: 'Supplier Five', email: 'supplier5@example.com', contact: '567-890-1234' },
-    { id: 6, name: 'Supplier Six', email: 'supplier6@example.com', contact: '678-901-2345' },
-    { id: 7, name: 'Supplier Seven', email: 'supplier7@example.com', contact: '789-012-3456' },
-    { id: 8, name: 'Supplier Eight', email: 'supplier8@example.com', contact: '890-123-4567' },
-    { id: 9, name: 'Supplier Nine', email: 'supplier9@example.com', contact: '901-234-5678' },
-    { id: 10, name: 'Supplier Ten', email: 'supplier10@example.com', contact: '012-345-6789' },
-  ];
+  const [suppliersData, setSuppliersData] = useState([]);
 
 
   const [page, setPage] = useState(0);
@@ -52,6 +54,18 @@ const Suppliers = () => {
   const [supplierToDelete, setSupplierToDelete] = useState(null);
   const [updatedSupplier, setUpdatedSupplier] = useState({ name: '', email: '', contact: '' });
 
+  useEffect(() => {
+    const fetchSuppliers = async () => {
+      try {
+        const response = await axios.get('http://localhost:8080/api/suppliers');
+        setSuppliersData(response.data);
+      } catch (error) {
+        console.error('Error fetching suppliers data:', error);
+      }
+    };
+
+    fetchSuppliers();
+  }, []);
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
   };
@@ -97,7 +111,7 @@ const Suppliers = () => {
       handleDeleteDialogClose();
     }
   };
-  
+
   const handleDeleteClick = (supplier) => {
     setSupplierToDelete(supplier);
     setDeleteDialogOpen(true);
