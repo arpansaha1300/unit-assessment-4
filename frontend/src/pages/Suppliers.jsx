@@ -52,12 +52,13 @@ const Suppliers = () => {
   const [editDialogOpen, setEditDialogOpen] = useState(false);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [supplierToDelete, setSupplierToDelete] = useState(null);
-  const [updatedSupplier, setUpdatedSupplier] = useState({ name: '', email: '', contact: '' });
+  const [updatedSupplier, setUpdatedSupplier] = useState({ name: '', email: '', contactInfo: '' });
 
   useEffect(() => {
     const fetchSuppliers = async () => {
       try {
         const response = await axios.get('http://localhost:8080/api/suppliers');
+        console.log(response.data);
         setSuppliersData(response.data);
       } catch (error) {
         console.error('Error fetching suppliers data:', error);
@@ -83,7 +84,7 @@ const Suppliers = () => {
 
   const handleEditClick = (supplier) => {
     setSelectedSupplier(supplier);
-    setUpdatedSupplier({ name: supplier.name, email: supplier.email, contact: supplier.contact });
+    setUpdatedSupplier({ name: supplier.name, email: supplier.email, contactInfo: supplier.contactInfo });
     setEditDialogOpen(true);
   };
 
@@ -141,7 +142,7 @@ const Suppliers = () => {
                 </Typography>
                 <Typography variant="h6">{supplier.name}</Typography>
                 <Typography variant="body2">{supplier.email}</Typography>
-                <Typography variant="body2">{supplier.contact}</Typography>
+                <Typography variant="body2">{supplier.contactInfo}</Typography>
               </Box>
             ))}
           </Stack>
@@ -152,7 +153,7 @@ const Suppliers = () => {
                 <TableCell sx={{ fontWeight: 'bold' }}>ID</TableCell>
                 <TableCell sx={{ fontWeight: 'bold' }}>Name</TableCell>
                 <TableCell sx={{ fontWeight: 'bold' }}>Email</TableCell>
-                <TableCell sx={{ fontWeight: 'bold' }}>Contact</TableCell>
+                <TableCell sx={{ fontWeight: 'bold' }}>contactInfo</TableCell>
                 <TableCell sx={{ fontWeight: 'bold', textAlign: 'right' }}>Actions</TableCell>
               </TableRow>
             </TableHead>
@@ -162,7 +163,7 @@ const Suppliers = () => {
                   <TableCell>{supplier.id}</TableCell>
                   <TableCell>{supplier.name}</TableCell>
                   <TableCell>{supplier.email}</TableCell>
-                  <TableCell>{supplier.contact}</TableCell>
+                  <TableCell>{supplier.contactInfo}</TableCell>
                   <TableCell sx={{ textAlign: 'right' }}>
                     <IconButton size="small" sx={{ color: 'black' }} onClick={() => handleEditClick(supplier)}>
                       <EditIcon fontSize="small" />
@@ -210,10 +211,10 @@ const Suppliers = () => {
           />
           <TextField
             margin="dense"
-            label="Contact"
+            label="contactInfo"
             fullWidth
-            value={updatedSupplier.contact}
-            onChange={(e) => setUpdatedSupplier({ ...updatedSupplier, contact: e.target.value })}
+            value={updatedSupplier.contactInfo}
+            onChange={(e) => setUpdatedSupplier({ ...updatedSupplier, contactInfo: e.target.value })}
           />
         </DialogContent>
         <DialogActions>
