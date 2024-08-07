@@ -95,7 +95,7 @@ const Suppliers = () => {
 
   const handleUpdateSupplier = async () => {
     try {
-      await axios.put(`http://localhost8080/api/suppliers/${selectedSupplier.id}`,updatedSupplier);
+      await axios.put(`http://localhost:8080/api/suppliers/${selectedSupplier.id}`,updatedSupplier);
     } catch (error) {
       console.error('Error updating supplier:', error);
     } finally {
