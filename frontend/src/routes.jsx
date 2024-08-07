@@ -6,6 +6,7 @@ import Suppliers from "./pages/Suppliers";
 import Packages from "./pages/Packages";
 import Profile from "./pages/Profile";
 import EditSupplier from './pages/suppliers/Edit'
+import AddSupplier from "./pages/AddSupplier";
 
 const router = createBrowserRouter([
   {
@@ -30,6 +31,10 @@ const router = createBrowserRouter([
         path: "/supplier-profile",
         element: <Profile />,
       },
+      {
+        path: "/add-supplier",
+        element: <AddSupplier />,
+      }
     ],
   },
 
