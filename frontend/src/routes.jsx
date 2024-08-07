@@ -3,7 +3,7 @@ import {
   RouterProvider,
 } from "react-router-dom";
 import "./index.css";
-import Layout from "./layouts/default";
+// import Layout from "./layouts/default";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
 import Suppliers from "./pages/Suppliers";
@@ -11,9 +11,9 @@ import Packages from "./pages/Packages";
 import Profile from "./pages/Profile";
 
 const router = createBrowserRouter([
-  {
-    element: <Layout />,
-    children: [
+  // {
+  //   element: <Layout />,
+  //   children: [
 
           {
               path: "/suppliers-list",
@@ -29,8 +29,8 @@ const router = createBrowserRouter([
                   path: "/supplier-profile",
                   element: <Profile />,
                 },
-    ]
-  },
+    // ]
+  // },
   
   {
     path: "/",
