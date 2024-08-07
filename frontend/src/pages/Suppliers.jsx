@@ -80,7 +80,7 @@ const Suppliers = () => {
 
   const handleUpdateSupplier = async () => {
     try {
-      await axios.put(`your-api-url/suppliers/${selectedSupplier.id}`, updatedSupplier);
+      await axios.put(`http://localhost8080/api/suppliers/${selectedSupplier.id}`,updatedSupplier);
     } catch (error) {
       console.error('Error updating supplier:', error);
     } finally {
@@ -88,6 +88,16 @@ const Suppliers = () => {
     }
   };
 
+  const handleDeleteSupplier = async () => {
+    try {
+      await axios.delete(`http://localhost8080/api/suppliers/${supplierToDelete.id}`);
+    } catch (error) {
+      console.error('Error deleting supplier:', error);
+    } finally {
+      handleDeleteDialogClose();
+    }
+  };
+  
   const handleDeleteClick = (supplier) => {
     setSupplierToDelete(supplier);
     setDeleteDialogOpen(true);
@@ -98,15 +108,7 @@ const Suppliers = () => {
     setSupplierToDelete(null);
   };
 
-  const handleDeleteSupplier = async () => {
-    try {
-      await axios.post(`http/${supplierToDelete.id}`);
-    } catch (error) {
-      console.error('Error deleting supplier:', error);
-    } finally {
-      handleDeleteDialogClose();
-    }
-  };
+  
 
   return (
     <Card>
