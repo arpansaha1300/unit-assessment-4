@@ -3,6 +3,7 @@ package io.assessment.inventory.controller.dto;
 public class PackageDto {
     private String packageName;
     private String details;
+    private Long quantity;
     public String getPackageName() {
         return packageName;
     }
@@ -15,6 +16,13 @@ public class PackageDto {
     public void setDetails(String details) {
         this.details = details;
     }
+    public Long getQuantity() {
+        return quantity;
+    }
+    public void setQuantity(long quantity) {
+        this.quantity = quantity;
+    }
+    
     
 
 }
