@@ -215,6 +215,7 @@ function DrawerTabs() {
 
 function TabList() {
   const location = useLocation();
+  const navigate = useNavigate();
   const [value, setValue] = useState(null);
   const tabsMap = useSelector((state) => state.tabs.map);
   const [tabs, setTabs] = useState([]);
@@ -228,6 +229,7 @@ function TabList() {
   }, [tabsMap]);
 
   const handleChange = (event, newValue) => {
+    navigate(newValue);
     setValue(newValue);
   };
 
