@@ -18,7 +18,7 @@ import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
 import InventoryIcon from "@mui/icons-material/Inventory";
 import LocalShippingIcon from "@mui/icons-material/LocalShipping";
-import { Outlet } from "react-router-dom";
+import { Outlet, useNavigate } from "react-router-dom";
 import AddIcon from '@mui/icons-material/Add';
 
 const drawerWidth = 240;
@@ -95,6 +95,7 @@ const drawerTabs = [
 export default function Layout() {
   const theme = useTheme();
   const [open, setOpen] = React.useState(false);
+  const navigate = useNavigate();
 
   const handleDrawerOpen = () => {
     setOpen(true);
@@ -102,6 +103,10 @@ export default function Layout() {
 
   const handleDrawerClose = () => {
     setOpen(false);
+  };
+
+  const directToAdd = () => {
+    navigate("/add-supplier");
   };
 
   return (
@@ -122,14 +127,15 @@ export default function Layout() {
             Inventory Management
           </Typography>
           <Box sx={{position: "absolute", right: "0"}}>
-          <IconButton
-            color="inherit"
-            aria-label="open drawer"
-            edge="start"
-            sx={{ mr: 2, ...(open && { display: "none" }), ":hover": {backgroundColor: "rgba(255, 255, 255, 0.274)"} }}
-          >
-            <AddIcon />
-          </IconButton>
+            <IconButton
+              color="inherit"
+              aria-label="open drawer"
+              edge="start"
+              onClick={directToAdd}
+              sx={{ mr: 2, ...(open && { display: "none" }), ":hover": {backgroundColor: "rgba(255, 255, 255, 0.274)"} }}
+            >
+              <AddIcon />
+            </IconButton>
           </Box>
         </Toolbar>
       </AppBar>
