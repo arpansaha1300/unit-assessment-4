@@ -1,48 +1,53 @@
-import { Button, FormControl, TextField } from "@mui/material"
-import { useState } from "react"
-
-
+import { Box, Button, FormControl, TextField } from "@mui/material";
+import { useEffect, useState } from "react";
+import { useDispatch } from "react-redux";
+import { createOrUpdateTab } from "../redux/tabSlice";
 
 function AddSupplier() {
-  const [nameError, setNameError] = useState('');
-  const [passError, setPassError] = useState('');
-  const [contactError, setContactError] = useState('');
-  const [emailError, setEmailError] = useState('');
+  const dispatch = useDispatch();
+  const [nameError, setNameError] = useState("");
+  const [passError, setPassError] = useState("");
+  const [contactError, setContactError] = useState("");
+  const [emailError, setEmailError] = useState("");
   const [name, setName] = useState();
   const [email, setEmail] = useState();
   const [contact, setContact] = useState();
   const [pass, setPass] = useState();
 
+  useEffect(() => {
+    dispatch(createOrUpdateTab("/add-supplier"));
+  }, [dispatch]);
+
   const validateDetails = (name, email, contact, pass) => {
     var regExp = /[a-zA-Z]/g;
     var res = true;
-    if(!name){
-      setNameError('Please enter a name');
-      res=false;
+    if (!name) {
+      setNameError("Please enter a name");
+      res = false;
     }
-    if(!email){
-      setEmailError('Please enter an email address');
-      res=false;
+    if (!email) {
+      setEmailError("Please enter an email address");
+      res = false;
     }
-    if(!email.includes("@gmail.com")){
-      setEmailError('Please enter a valid email (e.g. user@gmail.com)');
-      res=false;
+    if (!email.includes("@gmail.com")) {
+      setEmailError("Please enter a valid email (e.g. user@gmail.com)");
+      res = false;
     }
-    if(!contact){
-      setContactError('Please enter a contact number');
-      res=false;
+    if (!contact) {
+      setContactError("Please enter a contact number");
+      res = false;
     }
-    if(!(contact.length === 10)){
-      setContactError('Please enter a 10 digit contact number');
-      res=false;
+    if (!(contact.length === 10)) {
+      setContactError("Please enter a 10 digit contact number");
+      res = false;
     }
-    if(regExp.test(contact)){
-      setContactError('Contact number should contain only numbers');
-      res=false;
+    if (regExp.test(contact)) {
+      setContactError("Contact number should contain only numbers");
+      res = false;
     }
-    if(!pass){
-      setPassError('Please enter a password');
-      res=false;
+    if (!pass) {
+      setPassError("Please enter a password");
+      res = false;
     }
     return res;
   };
@@ -50,20 +55,21 @@ function AddSupplier() {
   const handleSubmit = (event) => {
     event.preventDefault();
     const res = validateDetails(name, email, contact, pass);
-    if(res){
+    if (res) {
       console.log("form submitted succesfully");
     }
   };
 
   return (
-    <form align="center" onSubmit={handleSubmit}>
-        <FormControl sx={{width: "24rem", marginTop: "3rem"}}>
-        <TextField
+    <Box sx={{ maxWidth: "24rem", margin: "auto" }}>
+      <form onSubmit={handleSubmit}>
+        <FormControl sx={{ width: "24rem", marginTop: "3rem" }}>
+          <TextField
             margin="dense"
             label="Name"
             onChange={(e) => {
               setName(e.target.value);
-              setNameError('');
+              setNameError("");
             }}
             error={!!nameError}
             helperText={nameError}
@@ -74,7 +80,7 @@ function AddSupplier() {
             label="Email"
             onChange={(e) => {
               setEmail(e.target.value);
-              setEmailError('');
+              setEmailError("");
             }}
             error={!!emailError}
             helperText={emailError}
@@ -85,7 +91,7 @@ function AddSupplier() {
             label="Contact"
             onChange={(e) => {
               setContact(e.target.value);
-              setContactError('');
+              setContactError("");
             }}
             error={!!contactError}
             helperText={contactError}
@@ -97,16 +103,23 @@ function AddSupplier() {
             type="password"
             onChange={(e) => {
               setPass(e.target.value);
-              setPassError('');
+              setPassError("");
             }}
             error={!!passError}
             helperText={passError}
             fullWidth
           />
-          <Button variant="contained" type="submit" sx={{ textTransform: "none", marginTop: '1.2rem' }}>Log In</Button>
+          <Button
+            variant="contained"
+            type="submit"
+            sx={{ textTransform: "none", marginTop: "1.2rem" }}
+          >
+            Log In
+          </Button>
         </FormControl>
-    </form>
-  )
+      </form>
+    </Box>
+  );
 }
 
-export default AddSupplier
+export default AddSupplier;

@@ -39,6 +39,9 @@ function getRouteName(path, data) {
     case "/suppliers-list": {
       return "Suppliers";
     }
+    case  "/add-supplier": {
+      return "Add Supplier"
+    }
     default: {
       if (path.startsWith("/suppliers-list") && path.endsWith("/edit")) {
         const supplier = data;
