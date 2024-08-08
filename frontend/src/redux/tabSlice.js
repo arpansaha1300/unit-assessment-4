@@ -22,7 +22,7 @@ const tabSlice = createSlice({
       }
     },
     removeTab: (state, action) => {
-      delete state.tabs[action.payload.path];
+      delete state.map[action.payload.path];
     },
   },
 });
@@ -39,8 +39,8 @@ function getRouteName(path, data) {
     case "/suppliers-list": {
       return "Suppliers";
     }
-    case  "/add-supplier": {
-      return "Add Supplier"
+    case "/add-supplier": {
+      return "Add Supplier";
     }
     default: {
       if (path.startsWith("/suppliers-list") && path.endsWith("/edit")) {
