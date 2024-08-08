@@ -8,6 +8,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Transient;
 
 @Entity
 public class Package {
@@ -15,7 +16,7 @@ public class Package {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String packageName;
-    private String details;
+    private String Address;
     private Long quantity;
 
     @ManyToOne
@@ -39,13 +40,15 @@ public class Package {
         this.packageName = packageName;
     }
 
-    public String getDetails() {
-        return details;
+    public String getAddress() {
+        return Address;
     }
 
-    public void setDetails(String details) {
-        this.details = details;
+    public void setAddress(String address) {
+        Address = address;
     }
+
+    
     
     public Long getQuantity() {
         return quantity;
@@ -62,4 +65,11 @@ public class Package {
     public void setSupplier(Supplier supplier) {
         this.supplier = supplier;
     }
+
+    @Transient
+    public Long getSupplierId() {
+        return (supplier != null) ? supplier.getId() : null;
+    }
 }
+
+    

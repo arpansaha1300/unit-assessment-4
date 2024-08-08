@@ -1,6 +1,7 @@
 package io.assessment.inventory.controller;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -10,6 +11,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import io.assessment.inventory.controller.dto.PackageDto;
@@ -27,11 +29,12 @@ public class PackageController {
     public List<Package> getAllPackages() {
         return packageService.getAllPackages();
     }
+
     @PostMapping
     public Package addPackages(@RequestBody PackageDto packagedto) {
         Package packages=new Package();
         packages.setPackageName(packagedto.getPackageName());
-        packages.setDetails(packagedto.getDetails());
+        packages.setAddress(packagedto.getAddress());
         packages.setQuantity(packagedto.getQuantity());
         return packageService.savePackage(packages);
     }
@@ -48,8 +51,8 @@ public class PackageController {
         if (packagedto.getPackageName() != null) {
             existingPackage.setPackageName(packagedto.getPackageName());
         }
-        if (packagedto.getDetails() != null) {
-            existingPackage.setDetails(packagedto.getDetails());
+        if (packagedto.getAddress() != null) {
+            existingPackage.setAddress(packagedto.getAddress());
         }
         if (packagedto.getQuantity() != null) {
             existingPackage.setQuantity(packagedto.getQuantity());

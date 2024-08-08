@@ -13,11 +13,11 @@ INSERT INTO supplier (id, contact_info, name, password,email) VALUES (7, '234789
 INSERT INTO supplier (id, contact_info, name, password,email) VALUES (8, '1234567890','Asmit','554','asmit@acmecorp.com');
 
 ----for pacakge table----
-INSERT INTO package (id, details, package_name, supplier_id, quantity) VALUES (1, 'sports-item','Football',1,5);
-INSERT INTO package (id, details, package_name, supplier_id, quantity) VALUES (3, 'jwellery','Rings',3,4);
-INSERT INTO package (id, details, package_name, supplier_id, quantity) VALUES (4, 'Home Appliances','AC',4,7);
-INSERT INTO package (id, details, package_name, supplier_id, quantity) VALUES (5, 'Kitchen Appliances','Kuchina',5,1);
-INSERT INTO package (id, details, package_name, supplier_id, quantity) VALUES (6, 'Dresses','Jeans',6,3);
-INSERT INTO package (id, details, package_name, supplier_id, quantity) VALUES (7, 'Vehicles','Car',8,2);
+INSERT INTO package (id, address, package_name, supplier_id, quantity) VALUES (1, 'Pune','Football',1,5);
+INSERT INTO package (id, address, package_name, supplier_id, quantity) VALUES (3, 'Delhi','Rings',3,4);
+INSERT INTO package (id, address, package_name, supplier_id, quantity) VALUES (4, 'Kolkata','AC',4,7);
+INSERT INTO package (id, address, package_name, supplier_id, quantity) VALUES (5, 'Mumbai','Kuchina',5,1);
+INSERT INTO package (id, address, package_name, supplier_id, quantity) VALUES (6, 'Chandigarh','Jeans',6,3);
+INSERT INTO package (id, address, package_name, supplier_id, quantity) VALUES (7, 'Agra','Car',8,4);
 
 
