@@ -2,6 +2,7 @@ package io.assessment.inventory.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 
+import io.assessment.inventory.exception.SupplierNotFoundException;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -20,7 +21,7 @@ public class Package {
     private Long quantity;
 
     @ManyToOne
-    @JoinColumn(name = "supplier_id")
+    @JoinColumn(name = "supplier_id",referencedColumnName = "id")
     @JsonBackReference
     private Supplier supplier;
 

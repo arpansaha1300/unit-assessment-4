@@ -1,27 +1,22 @@
 package io.assessment.inventory.controller.dto;
 
+import lombok.ToString;
+
+@ToString
 public class PackageDto {
-    private Long id;
     private String packageName;
     private String Address;
     private Long quantity;
-    private Long supplier_id;
-    
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
+    private Long supplierId;
 
     public String getPackageName() {
         return packageName;
     }
+
     public void setPackageName(String packageName) {
         this.packageName = packageName;
     }
-    
+
     public String getAddress() {
         return Address;
     }
@@ -33,20 +28,17 @@ public class PackageDto {
     public Long getQuantity() {
         return quantity;
     }
+
     public void setQuantity(long quantity) {
         this.quantity = quantity;
     }
 
     public Long getSupplier_id() {
-        return supplier_id;
+        return supplierId;
     }
 
-    public void setSupplier_id(Long supplier_id) {
-        this.supplier_id = supplier_id;
+    public void setSupplierId(Long supplier_id) {
+        this.supplierId = supplier_id;
     }
-    
-    
-    
-    
 
 }
