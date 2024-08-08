@@ -26,6 +26,7 @@ public class SupplierController {
         supplier.setName(supplierdto.getName());
         supplier.setEmail(supplierdto.getEmail());
         supplier.setPassword(supplierdto.getPassword());
+        supplier.setContactInfo(supplierdto.getContactInfo());
         return supplierService.saveSupplier(supplier);
     }
 
