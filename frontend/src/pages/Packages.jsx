@@ -16,13 +16,16 @@ import {Card,CardContent,Typography,Table,TableBody,
   DialogTitle,
   Button,
   TextField,
-} from '@mui/material';
-import EditIcon from '@mui/icons-material/Edit';
-import DeleteIcon from '@mui/icons-material/Delete';
-import axios from 'axios';
+} from "@mui/material";
+import EditIcon from "@mui/icons-material/Edit";
+import DeleteIcon from "@mui/icons-material/Delete";
+import axios from "axios";
+import { useDispatch } from "react-redux";
+import { createOrUpdateTab } from "../redux/tabSlice";
 
 const Packages = () => {
   const theme = useTheme();
+  const dispatch = useDispatch();
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
   const [packagesData, setPackagesData] = useState([]);
   // const packagesData = [
@@ -50,14 +53,25 @@ const Packages = () => {
     };
     fetchPackages();
   },[]);
+
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
-  const [order, setOrder] = useState('asc');
-  const [orderBy, setOrderBy] = useState('id');
+  const [order, setOrder] = useState("asc");
+  const [orderBy, setOrderBy] = useState("id");
   const [editDialogOpen, setEditDialogOpen] = useState(false);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [selectedPackage, setSelectedPackage] = useState(null);
-  const [updatedPackage, setUpdatedPackage] = useState({ id: '', packageName: '', address: '', supplierId: '', quantity: '' });
+  const [updatedPackage, setUpdatedPackage] = useState({
+    id: "",
+    name: "",
+    address: "",
+    supplierId: "",
+    quantity: "",
+  });
+
+  useEffect(() => {
+    dispatch(createOrUpdateTab("/package-list"));
+  }, [dispatch]);
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -69,8 +83,8 @@ const Packages = () => {
   };
 
   const handleRequestSort = (event, property) => {
-    const isAsc = orderBy === property && order === 'asc';
-    setOrder(isAsc ? 'desc' : 'asc');
+    const isAsc = orderBy === property && order === "asc";
+    setOrder(isAsc ? "desc" : "asc");
     setOrderBy(property);
   };
 
@@ -87,9 +101,12 @@ const Packages = () => {
 
   const handleUpdatePackage = async () => {
     try {
-      await axios.put(`http://localhost:8080/api/packages/${selectedPackage.id}`, updatedPackage);
+      await axios.put(
+        `http://localhost:8080/api/packages/${selectedPackage.id}`,
+        updatedPackage
+      );
     } catch (error) {
-      console.error('Error updating package:', error);
+      console.error("Error updating package:", error);
     } finally {
       handleEditDialogClose();
     }
@@ -107,21 +124,27 @@ const Packages = () => {
 
   const handleDeletePackage = async () => {
     try {
-      await axios.delete(`http://localhost:8080/api/packages/${selectedPackage.id}`);
+      await axios.delete(
+        `http://localhost:8080/api/packages/${selectedPackage.id}`
+      );
     } catch (error) {
-      console.error('Error deleting package:', error);
+      console.error("Error deleting package:", error);
     } finally {
       handleDeleteDialogClose();
     }
   };
 
   const sortedData = packagesData.sort((a, b) => {
-    if (orderBy === 'packageName') {
-      return order === 'asc' ? a.packageName.localeCompare(b.packageName) : b.packageName.localeCompare(a.packageName);
-    } else if (orderBy === 'quantity') {
-      return order === 'asc' ? a.quantity - b.quantity : b.quantity - a.quantity;
-    } else if (orderBy === 'id') {
-      return order === 'asc' ? a.id - b.id : b.id - a.id;
+    if (orderBy === "name") {
+      return order === "asc"
+        ? a.name.localeCompare(b.name)
+        : b.name.localeCompare(a.name);
+    } else if (orderBy === "quantity") {
+      return order === "asc"
+        ? a.quantity - b.quantity
+        : b.quantity - a.quantity;
+    } else if (orderBy === "id") {
+      return order === "asc" ? a.id - b.id : b.id - a.id;
     }
     return 0;
   });
@@ -135,47 +158,71 @@ const Packages = () => {
   return (
     <Card>
       <CardContent>
-        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
-          <Typography variant="h6" sx={{ fontWeight: 'bold' }}>
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            mb: 2,
+          }}
+        >
+          <Typography variant="h6" sx={{ fontWeight: "bold" }}>
             Packages ({packagesData.length})
           </Typography>
         </Box>
         {isMobile ? (
           <Stack spacing={2}>
-            {sortedData.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((pkg, index) => (
-              <Box key={index} sx={{ border: '1px solid #ddd', borderRadius: '4px', p: 2 }}>
-                <Typography variant="body1" sx={{ fontWeight: 'bold' }}>
-                  {pkg.id}
-                </Typography>
-                <Typography variant="h6">{pkg.packageName}</Typography>
-                <Typography variant="body2">{pkg.address}</Typography>
-                <Typography variant="body2">Supplier ID: {pkg.supplierId}</Typography>
-                <Typography variant="body2">Quantity: {pkg.quantity}</Typography>
-                <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                  <IconButton size="small" sx={{ color: 'black' }} onClick={() => handleEditClick(pkg)}>
-                    <EditIcon fontSize="small" />
-                  </IconButton>
-                  <IconButton size="small" sx={{ color: 'red', ml: 1 }} onClick={() => handleDeleteClick(pkg)}>
-                    <DeleteIcon fontSize="small" />
-                  </IconButton>
+            {sortedData
+              .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+              .map((pkg, index) => (
+                <Box
+                  key={index}
+                  sx={{ border: "1px solid #ddd", borderRadius: "4px", p: 2 }}
+                >
+                  <Typography variant="body1" sx={{ fontWeight: "bold" }}>
+                    {pkg.id}
+                  </Typography>
+                  <Typography variant="h6">{pkg.name}</Typography>
+                  <Typography variant="body2">{pkg.address}</Typography>
+                  <Typography variant="body2">
+                    Supplier ID: {pkg.supplierId}
+                  </Typography>
+                  <Typography variant="body2">
+                    Quantity: {pkg.quantity}
+                  </Typography>
+                  <Box sx={{ display: "flex", alignItems: "center" }}>
+                    <IconButton
+                      size="small"
+                      sx={{ color: "black" }}
+                      onClick={() => handleEditClick(pkg)}
+                    >
+                      <EditIcon fontSize="small" />
+                    </IconButton>
+                    <IconButton
+                      size="small"
+                      sx={{ color: "red", ml: 1 }}
+                      onClick={() => handleDeleteClick(pkg)}
+                    >
+                      <DeleteIcon fontSize="small" />
+                    </IconButton>
+                  </Box>
                 </Box>
-              </Box>
-            ))}
+              ))}
           </Stack>
         ) : (
-          <Table sx={{ width: '100%', tableLayout: 'fixed' }}>
+          <Table sx={{ width: "100%", tableLayout: "fixed" }}>
             <TableHead>
               <TableRow>
-                <TableCell sx={{ fontWeight: 'bold', width: '10%' }}>
+                <TableCell sx={{ fontWeight: "bold", width: "10%" }}>
                   <TableSortLabel
-                    active={orderBy === 'id'}
-                    direction={orderBy === 'id' ? order : 'asc'}
-                    onClick={(event) => handleRequestSort(event, 'id')}
+                    active={orderBy === "id"}
+                    direction={orderBy === "id" ? order : "asc"}
+                    onClick={(event) => handleRequestSort(event, "id")}
                   >
                     ID
                   </TableSortLabel>
                 </TableCell>
-                <TableCell sx={{ fontWeight: 'bold', width: '20%' }}>
+                <TableCell sx={{ fontWeight: "bold", width: "20%" }}>
                   <TableSortLabel
                     active={orderBy === 'packageName'}
                     direction={orderBy === 'packageName' ? order : 'asc'}
@@ -184,40 +231,67 @@ const Packages = () => {
                     Name
                   </TableSortLabel>
                 </TableCell>
-                <TableCell sx={{ fontWeight: 'bold', width: '30%' }}>Address</TableCell>
-                <TableCell sx={{ fontWeight: 'bold', width: '20%' }}>Supplier ID</TableCell>
-                <TableCell sx={{ fontWeight: 'bold', width: '20%' }}>
+                <TableCell sx={{ fontWeight: "bold", width: "30%" }}>
+                  Address
+                </TableCell>
+                <TableCell sx={{ fontWeight: "bold", width: "20%" }}>
+                  Supplier ID
+                </TableCell>
+                <TableCell sx={{ fontWeight: "bold", width: "20%" }}>
                   <TableSortLabel
-                    active={orderBy === 'quantity'}
-                    direction={orderBy === 'quantity' ? order : 'asc'}
-                    onClick={(event) => handleRequestSort(event, 'quantity')}
+                    active={orderBy === "quantity"}
+                    direction={orderBy === "quantity" ? order : "asc"}
+                    onClick={(event) => handleRequestSort(event, "quantity")}
                   >
                     Quantity
                   </TableSortLabel>
                 </TableCell>
-                <TableCell sx={{ fontWeight: 'bold', textAlign: 'right', width: '10%' }}>Actions</TableCell>
+                <TableCell
+                  sx={{ fontWeight: "bold", textAlign: "right", width: "10%" }}
+                >
+                  Actions
+                </TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
-              {sortedData.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((pkg, index) => (
-                <TableRow key={index} sx={{ '&:hover': { backgroundColor: '#f0f0f0' } }}>
-                  <TableCell>{pkg.id}</TableCell>
-                  <TableCell>{pkg.packageName}</TableCell>
-                  <TableCell>{pkg.address}</TableCell>
-                  <TableCell>{pkg.supplierId}</TableCell>
-                  <TableCell>{pkg.quantity}</TableCell>
-                  <TableCell sx={{ textAlign: 'right' }}>
-                    <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end' }}>
-                      <IconButton size="small" sx={{ color: 'black' }} onClick={() => handleEditClick(pkg)}>
-                        <EditIcon fontSize="small" />
-                      </IconButton>
-                      <IconButton size="small" sx={{ color: 'red', ml: 1 }} onClick={() => handleDeleteClick(pkg)}>
-                        <DeleteIcon fontSize="small" />
-                      </IconButton>
-                    </Box>
-                  </TableCell>
-                </TableRow>
-              ))}
+              {sortedData
+                .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                .map((pkg, index) => (
+                  <TableRow
+                    key={index}
+                    sx={{ "&:hover": { backgroundColor: "#f0f0f0" } }}
+                  >
+                    <TableCell>{pkg.id}</TableCell>
+                    <TableCell>{pkg.name}</TableCell>
+                    <TableCell>{pkg.address}</TableCell>
+                    <TableCell>{pkg.supplierId}</TableCell>
+                    <TableCell>{pkg.quantity}</TableCell>
+                    <TableCell sx={{ textAlign: "right" }}>
+                      <Box
+                        sx={{
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "flex-end",
+                        }}
+                      >
+                        <IconButton
+                          size="small"
+                          sx={{ color: "black" }}
+                          onClick={() => handleEditClick(pkg)}
+                        >
+                          <EditIcon fontSize="small" />
+                        </IconButton>
+                        <IconButton
+                          size="small"
+                          sx={{ color: "red", ml: 1 }}
+                          onClick={() => handleDeleteClick(pkg)}
+                        >
+                          <DeleteIcon fontSize="small" />
+                        </IconButton>
+                      </Box>
+                    </TableCell>
+                  </TableRow>
+                ))}
             </TableBody>
           </Table>
         )}
@@ -246,28 +320,41 @@ const Packages = () => {
           <TextField
             label="Address"
             value={updatedPackage.address}
-            onChange={(e) => setUpdatedPackage({ ...updatedPackage, address: e.target.value })}
+            onChange={(e) =>
+              setUpdatedPackage({ ...updatedPackage, address: e.target.value })
+            }
             fullWidth
             margin="dense"
           />
           <TextField
             label="Supplier ID"
             value={updatedPackage.supplierId}
-            onChange={(e) => setUpdatedPackage({ ...updatedPackage, supplierId: e.target.value })}
+            onChange={(e) =>
+              setUpdatedPackage({
+                ...updatedPackage,
+                supplierId: e.target.value,
+              })
+            }
             fullWidth
             margin="dense"
           />
           <TextField
             label="Quantity"
             value={updatedPackage.quantity}
-            onChange={(e) => setUpdatedPackage({ ...updatedPackage, quantity: e.target.value })}
+            onChange={(e) =>
+              setUpdatedPackage({ ...updatedPackage, quantity: e.target.value })
+            }
             fullWidth
             margin="dense"
           />
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleEditDialogClose} color="primary">Cancel</Button>
-          <Button onClick={handleUpdatePackage} color="primary">Save</Button>
+          <Button onClick={handleEditDialogClose} color="primary">
+            Cancel
+          </Button>
+          <Button onClick={handleUpdatePackage} color="primary">
+            Save
+          </Button>
         </DialogActions>
       </Dialog>
       <Dialog open={deleteDialogOpen} onClose={handleDeleteDialogClose}>
@@ -276,8 +363,12 @@ const Packages = () => {
           <Typography>Are you sure you want to delete this package?</Typography>
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleDeleteDialogClose} color="primary">Cancel</Button>
-          <Button onClick={handleDeletePackage} color="error">Delete</Button>
+          <Button onClick={handleDeleteDialogClose} color="primary">
+            Cancel
+          </Button>
+          <Button onClick={handleDeletePackage} color="error">
+            Delete
+          </Button>
         </DialogActions>
       </Dialog>
     </Card>

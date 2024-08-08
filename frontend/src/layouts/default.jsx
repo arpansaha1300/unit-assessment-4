@@ -22,7 +22,7 @@ import { Outlet, useLocation, useNavigate } from "react-router-dom";
 import { createOrUpdateTab } from "../redux/tabSlice";
 import { Tab, Tabs } from "@mui/material";
 import { useEffect, useState } from "react";
-import AddIcon from '@mui/icons-material/Add';
+import AddIcon from "@mui/icons-material/Add";
 
 const drawerWidth = 240;
 
@@ -78,38 +78,11 @@ const DrawerHeader = styled("div")(({ theme }) => ({
   justifyContent: "flex-start",
 }));
 
-function getRouteName(path, label) {
-  switch (path) {
-    case "/package-list": {
-      return "Packages"
-    }
-    case "/suppliers-list": {
-      return "Suppliers"
-    }
-    default: {
-      if (path.startsWith("/suppliers-list") && path.endsWith("/edit")) {
-        if (!label) return "Edit Supplier"
-        return label + "| Edit Supplier"
-      }
-    }
-  }
-}
-
 export default function Layout() {
   const theme = useTheme();
   const dispatch = useDispatch();
-  const location = useLocation();
   const navigate = useNavigate();
   const [open, setOpen] = useState(true);
-
-  useEffect(() => {
-    dispatch(
-      createOrUpdateTab({
-        name: getRouteName(location.pathname),
-        path: location.pathname,
-      })
-    );
-  }, [dispatch, location.pathname]);
 
   const handleDrawerOpen = () => {
     setOpen(true);
@@ -120,7 +93,9 @@ export default function Layout() {
   };
 
   const directToAdd = () => {
-    navigate("/add-supplier");
+    const path = "/add-supplier";
+    dispatch(createOrUpdateTab(path));
+    navigate(path);
   };
 
   return (
@@ -133,20 +108,27 @@ export default function Layout() {
             aria-label="open drawer"
             edge="start"
             onClick={handleDrawerOpen}
-            sx={{ mr: 2, ...(open && { display: "none" }), ":hover": {backgroundColor: "rgba(255, 255, 255, 0.274)"} }}
+            sx={{
+              mr: 2,
+              ...(open && { display: "none" }),
+              ":hover": { backgroundColor: "rgba(255, 255, 255, 0.274)" },
+            }}
           >
             <MenuIcon />
           </IconButton>
           <Typography variant="h6" noWrap component="div">
             Inventory Management
           </Typography>
-          <Box sx={{position: "absolute", right: "0"}}>
+          <Box sx={{ position: "absolute", right: "0" }}>
             <IconButton
               color="inherit"
               aria-label="open drawer"
               edge="start"
               onClick={directToAdd}
-              sx={{ mr: 2, ...(open && { display: "none" }), ":hover": {backgroundColor: "rgba(255, 255, 255, 0.274)"} }}
+              sx={{
+                mr: 2,
+                ":hover": { backgroundColor: "rgba(255, 255, 255, 0.274)" },
+              }}
             >
               <AddIcon />
             </IconButton>
@@ -199,9 +181,7 @@ function DrawerTabs() {
       name: "Suppliers",
       icon: <LocalShippingIcon />,
       onClick: () => {
-        dispatch(
-          createOrUpdateTab({ name: "Suppliers", path: "/suppliers-list" })
-        );
+        dispatch(createOrUpdateTab("/suppliers-list"));
         navigate("/suppliers-list");
       },
     },
@@ -209,9 +189,7 @@ function DrawerTabs() {
       name: "Packages",
       icon: <InventoryIcon />,
       onClick: () => {
-        dispatch(
-          createOrUpdateTab({ name: "Packages", path: "/package-list" })
-        );
+        dispatch(createOrUpdateTab("/package-list"));
         navigate("/package-list");
       },
     },
