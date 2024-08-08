@@ -19,10 +19,12 @@ import InventoryIcon from "@mui/icons-material/Inventory";
 import LocalShippingIcon from "@mui/icons-material/LocalShipping";
 import { useDispatch, useSelector } from "react-redux";
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
-import { createOrUpdateTab } from "../redux/tabSlice";
+import { createOrUpdateTab, removeTab } from "../redux/tabSlice";
 import { Tab, Tabs, useMediaQuery } from "@mui/material";
 import { useEffect, useState } from "react";
 import AddIcon from "@mui/icons-material/Add";
+import CloseIcon from "@mui/icons-material/Close";
+import styles from "./default.module.css";
 
 const drawerWidth = 240;
 
@@ -79,7 +81,6 @@ const DrawerHeader = styled("div")(({ theme }) => ({
 }));
 
 export default function Layout() {
-  
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
   const dispatch = useDispatch();
@@ -214,6 +215,7 @@ function DrawerTabs() {
 function TabList() {
   const location = useLocation();
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const [value, setValue] = useState(null);
   const tabsMap = useSelector((state) => state.tabs.map);
   const [tabs, setTabs] = useState([]);
@@ -226,9 +228,23 @@ function TabList() {
     setTabs(Object.values(tabsMap));
   }, [tabsMap]);
 
-  const handleChange = (event, newValue) => {
+  const handleChange = (_, newValue) => {
     navigate(newValue);
     setValue(newValue);
+  };
+
+  const closeTab = (e, tab, i) => {
+    e.stopPropagation();
+
+    if (value === tab.path) {
+      if (i > 0) {
+        navigate(tabs[i - 1].path);
+      } else {
+        navigate(tabs[i + 1].path);
+      }
+    }
+
+    dispatch(removeTab(tab));
   };
 
   return tabs.length > 0 && value ? (
@@ -244,8 +260,24 @@ function TabList() {
         variant="scrollable"
         scrollButtons="auto"
       >
-        {tabs.map((tab) => (
-          <Tab key={tab.path} label={tab.name} value={tab.path} />
+        {tabs.map((tab, i) => (
+          <Tab
+            key={tab.path}
+            value={tab.path}
+            label={
+              <span style={{ display: "inline-flex", alignItems: "center" }}>
+                {tab.name}
+                {tabs.length > 1 && (
+                  <span
+                    onClick={(e) => closeTab(e, tab, i)}
+                    className={styles.tabButton}
+                  >
+                    <CloseIcon sx={{ width: "1.2rem", height: "1.2rem" }} />
+                  </span>
+                )}
+              </span>
+            }
+          />
         ))}
       </Tabs>
     </Box>
