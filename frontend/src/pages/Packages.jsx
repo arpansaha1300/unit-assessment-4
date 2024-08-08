@@ -28,18 +28,6 @@ const Packages = () => {
   const dispatch = useDispatch();
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
   const [packagesData, setPackagesData] = useState([]);
-  // const packagesData = [
-  //   { id: 1, name: 'Package One', address: '123 Main St', supplierId: 1, quantity: 10 },
-  //   { id: 2, name: 'Package Two', address: '456 Elm St', supplierId: 2, quantity: 20 },
-  //   { id: 3, name: 'Package Three', address: '789 Oak St', supplierId: 3, quantity: 30 },
-  //   { id: 4, name: 'Package Four', address: '101 Maple St', supplierId: 4, quantity: 40 },
-  //   { id: 5, name: 'Package Five', address: '202 Pine St', supplierId: 5, quantity: 50 },
-  //   { id: 6, name: 'Package Six', address: '303 Cedar St', supplierId: 6, quantity: 60 },
-  //   { id: 7, name: 'Package Seven', address: '404 Birch St', supplierId: 7, quantity: 70 },
-  //   { id: 8, name: 'Package Eight', address: '505 Walnut St', supplierId: 8, quantity: 80 },
-  //   { id: 9, name: 'Package Nine', address: '606 Ash St', supplierId: 9, quantity: 90 },
-  //   { id: 10, name: 'Package Ten', address: '707 Cherry St', supplierId: 10, quantity: 100 },
-  // ];
 
   useEffect(()=>{
     const fetchPackages = async () => {
@@ -63,7 +51,7 @@ const Packages = () => {
   const [selectedPackage, setSelectedPackage] = useState(null);
   const [updatedPackage, setUpdatedPackage] = useState({
     id: "",
-    name: "",
+    packageName: "",
     address: "",
     supplierId: "",
     quantity: "",
@@ -135,10 +123,10 @@ const Packages = () => {
   };
 
   const sortedData = packagesData.sort((a, b) => {
-    if (orderBy === "name") {
+    if (orderBy === "packageName") {
       return order === "asc"
-        ? a.name.localeCompare(b.name)
-        : b.name.localeCompare(a.name);
+        ? a.packageName.localeCompare(b.packageName)
+        : b.packageName.localeCompare(a.packageName);
     } else if (orderBy === "quantity") {
       return order === "asc"
         ? a.quantity - b.quantity
@@ -182,7 +170,7 @@ const Packages = () => {
                   <Typography variant="body1" sx={{ fontWeight: "bold" }}>
                     {pkg.id}
                   </Typography>
-                  <Typography variant="h6">{pkg.name}</Typography>
+                  <Typography variant="h6">{pkg.packageName}</Typography>
                   <Typography variant="body2">{pkg.address}</Typography>
                   <Typography variant="body2">
                     Supplier ID: {pkg.supplierId}
@@ -226,7 +214,7 @@ const Packages = () => {
                   <TableSortLabel
                     active={orderBy === 'packageName'}
                     direction={orderBy === 'packageName' ? order : 'asc'}
-                    onClick={(event) => handleRequestSort(event, 'name')}
+                    onClick={(event) => handleRequestSort(event, 'packageName')}
                   >
                     Name
                   </TableSortLabel>
@@ -262,7 +250,7 @@ const Packages = () => {
                     sx={{ "&:hover": { backgroundColor: "#f0f0f0" } }}
                   >
                     <TableCell>{pkg.id}</TableCell>
-                    <TableCell>{pkg.name}</TableCell>
+                    <TableCell>{pkg.packageName}</TableCell>
                     <TableCell>{pkg.address}</TableCell>
                     <TableCell>{pkg.supplierId}</TableCell>
                     <TableCell>{pkg.quantity}</TableCell>
