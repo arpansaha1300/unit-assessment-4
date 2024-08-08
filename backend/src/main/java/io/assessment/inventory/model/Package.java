@@ -2,6 +2,7 @@ package io.assessment.inventory.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 
+import io.assessment.inventory.exception.SupplierNotFoundException;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -20,7 +21,7 @@ public class Package {
     private Long quantity;
 
     @ManyToOne
-    @JoinColumn(name = "supplier_id")
+    @JoinColumn(name = "supplier_id",referencedColumnName = "id")
     @JsonBackReference
     private Supplier supplier;
 
@@ -72,8 +73,16 @@ public class Package {
     }
 
     public void setSupplier_id(Long supplier_id) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'setSupplier_id'");
+        if (supplier_id != null) {
+            Supplier newSupplier = Supplier.getSupplierById(supplier_id);
+            if (newSupplier != null) {
+                this.supplier = newSupplier;
+            } else {
+                throw new SupplierNotFoundException("Supplier not found with id " + supplier_id);
+            }
+        } else {
+            this.supplier = null;
+        }
     }
 }
 

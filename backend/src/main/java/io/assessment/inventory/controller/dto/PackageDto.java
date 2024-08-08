@@ -1,19 +1,10 @@
 package io.assessment.inventory.controller.dto;
 
 public class PackageDto {
-    private Long id;
     private String packageName;
     private String Address;
     private Long quantity;
     private Long supplier_id;
-    
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
 
     public String getPackageName() {
         return packageName;
