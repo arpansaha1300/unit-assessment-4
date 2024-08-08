@@ -70,11 +70,7 @@ const Packages = () => {
     setPage(0);
   };
 
-  const handleRequestSort = (event, property) => {
-    const isAsc = orderBy === property && order === "asc";
-    setOrder(isAsc ? "desc" : "asc");
-    setOrderBy(property);
-  };
+  
 
   const handleEditClick = (pkg) => {
     setSelectedPackage(pkg);
@@ -122,6 +118,12 @@ const Packages = () => {
     }
   };
 
+  const handleRequestSort = (event, property) => {
+    const isAsc = orderBy === property && order === "asc";
+    setOrder(isAsc ? "desc" : "asc");
+    setOrderBy(property);
+  };
+  
   const sortedData = packagesData.sort((a, b) => {
     if (orderBy === "packageName") {
       return order === "asc"
