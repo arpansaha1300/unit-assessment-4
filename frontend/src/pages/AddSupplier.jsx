@@ -1,7 +1,8 @@
-import { Box, Button, FormControl, TextField } from "@mui/material";
+import { Alert, Box, Button, FormControl, Snackbar, TextField } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { createOrUpdateTab } from "../redux/tabSlice";
+import axios from "axios";
 
 function AddSupplier() {
   const dispatch = useDispatch();
@@ -13,6 +14,22 @@ function AddSupplier() {
   const [email, setEmail] = useState();
   const [contact, setContact] = useState();
   const [pass, setPass] = useState();
+  const [state, setState] = useState({
+    open: false,
+    vertical: 'bottom',
+    horizontal: 'right',
+  });
+  const { vertical, horizontal, open } = state;
+
+  const handleSubmission = () => {
+    setState({
+      vertical: 'bottom',
+      horizontal: 'right', open: true });
+  };
+
+  const handleClose = () => {
+    setState({ ...state, open: false });
+  };
 
   useEffect(() => {
     dispatch(createOrUpdateTab("/add-supplier"));
@@ -56,7 +73,19 @@ function AddSupplier() {
     event.preventDefault();
     const res = validateDetails(name, email, contact, pass);
     if (res) {
-      console.log("form submitted succesfully");
+      axios.post('http://localhost:8080/api/suppliers', {
+          name: name,
+          email: email,
+          password: pass,
+          contactInfo: contact
+      })
+      .then(function (response) {
+        console.log(response);
+        handleSubmission();
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
     }
   };
 
@@ -114,10 +143,26 @@ function AddSupplier() {
             type="submit"
             sx={{ textTransform: "none", marginTop: "1.2rem" }}
           >
-            Log In
+            Add Supplier
           </Button>
         </FormControl>
       </form>
+      <Snackbar
+        anchorOrigin={{ vertical, horizontal }}
+        open={open}
+        autoHideDuration={4000}
+        onClose={handleClose}
+        key={vertical + horizontal}
+      >
+          <Alert
+          onClose={handleClose}
+          severity="success"
+          variant="filled"
+          sx={{ width: '100%' }}
+        >
+          Supplier successfully added
+        </Alert>
+      </Snackbar>
     </Box>
   );
 }
