@@ -21,3 +21,17 @@ INSERT INTO package (id, address, package_name, supplier_id, quantity) VALUES (6
 INSERT INTO package (id, address, package_name, supplier_id, quantity) VALUES (7, 'Agra','Car',8,4);
 
 
+
+-----drop coloumn----
+ALTER TABLE pacakge
+DROP COLUMN details;
+
+
+-----update pacakge table------
+UPDATE `supply`.`package` SET `address` = 'Pune' WHERE (`id` = '1');
+UPDATE `supply`.`package` SET `address` = 'Delhi' WHERE (`id` = '3');
+UPDATE `supply`.`package` SET `address` = 'Kolkata' WHERE (`id` = '4');
+UPDATE `supply`.`package` SET `address` = 'Mumbai' WHERE (`id` = '5');
+UPDATE `supply`.`package` SET `address` = 'Chandigarh' WHERE (`id` = '6');
+UPDATE `supply`.`package` SET `address` = 'Agra' WHERE (`id` = '7');
+
