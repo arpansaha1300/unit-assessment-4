@@ -26,6 +26,7 @@ public class SupplierController {
         supplier.setName(supplierdto.getName());
         supplier.setEmail(supplierdto.getEmail());
         supplier.setPassword(supplierdto.getPassword());
+        supplier.setContactInfo(supplierdto.getContactInfo());
         return supplierService.saveSupplier(supplier);
     }
 
@@ -48,8 +49,8 @@ public class SupplierController {
         if (supplierdto.getName() != null) {
             existingSupplier.setName(supplierdto.getName());
         }
-        if (supplierdto.getPassword() != null) {
-            existingSupplier.setPassword(supplierdto.getPassword());
+        if (supplierdto.getEmail() != null) {
+            existingSupplier.setEmail(supplierdto.getEmail());
         }
         if (supplierdto.getContactInfo() != null) {
             existingSupplier.setContactInfo(supplierdto.getContactInfo());

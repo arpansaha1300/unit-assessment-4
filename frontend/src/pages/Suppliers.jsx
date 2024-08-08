@@ -22,6 +22,7 @@ import {
   DialogContent,
   DialogTitle,
   Button,
+  TableSortLabel,
 } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
@@ -57,6 +58,8 @@ const Suppliers = () => {
     fetchSuppliers();
   }, []);
 
+  const [order, setOrder] = useState("asc");
+  const [orderBy, setOrderBy] = useState("id");
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
   };
@@ -65,6 +68,32 @@ const Suppliers = () => {
     setRowsPerPage(+event.target.value);
     setPage(0);
   };
+
+  const handleRequestSort = (event, property) => {
+    const isAsc = orderBy === property && order === "asc";
+    setOrder(isAsc ? "desc" : "asc");
+    setOrderBy(property);
+  };
+
+  const sortedData=suppliersData.sort((a,b)=>{
+    if(orderBy==='id'){
+      if(order==='asc'){
+        return a.id-b.id;
+      }
+      else {
+        return b.id-a.id;
+      }
+    }
+    else if(orderBy==='name')
+    {
+      if(order==='asc'){
+        return a.name.localeCompare(b.name);
+      }
+      else {
+        return b.name.localeCompare(a.name);
+      }
+    }
+  });
 
   const totalPages = Math.ceil(suppliersData.length / rowsPerPage);
 
@@ -86,7 +115,7 @@ const Suppliers = () => {
   const handleDeleteSupplier = async () => {
     try {
       await axios.delete(
-        `http://localhost8080/api/suppliers/${supplierToDelete.id}`
+        `http://localhost:8080/api/suppliers/${supplierToDelete.id}`
       );
     } catch (error) {
       console.error("Error deleting supplier:", error);
@@ -122,7 +151,7 @@ const Suppliers = () => {
         </Box>
         {isMobile ? (
           <Stack spacing={2}>
-            {suppliersData
+            {sortedData
               .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
               .map((supplier, index) => (
                 <Box
@@ -144,17 +173,32 @@ const Suppliers = () => {
           <Table sx={{ width: "100%" }}>
             <TableHead>
               <TableRow sx={{ "&:hover": { background: "#f0f0f0" } }}>
-                <TableCell sx={{ fontWeight: "bold" }}>ID</TableCell>
-                <TableCell sx={{ fontWeight: "bold" }}>Name</TableCell>
+                <TableCell sx={{ fontWeight: "bold" }}>
+                  <TableSortLabel
+                    active={orderBy === "id"}
+                    direction={orderBy === "id" ? order : "asc"}
+                    onClick={(event) => handleRequestSort(event, "id")}
+                  >
+                    ID
+                  </TableSortLabel>
+                </TableCell>
+                <TableCell sx={{ fontWeight: "bold" }}>
+                  <TableSortLabel
+                  active={orderBy==='name'}
+                  direction={orderBy==='name'?order:'desc'}
+                  onClick={(event)=>handleRequestSort(event,"name")}>
+                  Name
+                  </TableSortLabel>
+                </TableCell>
                 <TableCell sx={{ fontWeight: "bold" }}>Email</TableCell>
-                <TableCell sx={{ fontWeight: "bold" }}>contactInfo</TableCell>
+                <TableCell sx={{ fontWeight: "bold" }}>Contact</TableCell>
                 <TableCell sx={{ fontWeight: "bold", textAlign: "right" }}>
                   Actions
                 </TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
-              {suppliersData
+              {sortedData
                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                 .map((supplier, index) => (
                   <TableRow
@@ -186,13 +230,13 @@ const Suppliers = () => {
             </TableBody>
           </Table>
         )}
-        <Box
+        {/* <Box
           sx={{
             display: "flex",
             justifyContent: "center",
             alignItems: "center",
           }}
-        >
+        > */}
           <TablePagination
             component="div"
             count={suppliersData.length}
@@ -204,7 +248,7 @@ const Suppliers = () => {
             labelRowsPerPage={isMobile ? "" : "Rows per page"}
             labelDisplayedRows={customLabelDisplayedRows}
           />
-        </Box>
+        {/* </Box> */}
       </CardContent>
 
       <Dialog open={deleteDialogOpen} onClose={handleDeleteDialogClose}>

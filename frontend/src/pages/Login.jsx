@@ -1,44 +1,37 @@
 import { Box, Button, CssBaseline, FormControl, TextField, Typography } from "@mui/material";
 import { useState } from "react";
 import backgroundImg from '../assets/background.jpg';
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import axios from "axios";
 
 function Login() {
-  const [nameError, setNameError] = useState('');
-  const [passError, setPassError] = useState('');
   const [name, setName] = useState('');
   const [pass, setPass] = useState('');
+  const navigate = useNavigate();
 
   const handleNameChange = (event) => {
     setName(event.target.value);
-    setNameError('');
   }
 
   const handlePassChange = (event) => {
     setPass(event.target.value);
-    setPassError('');
   }
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    let valid = true;
 
-    if (!name) {
-      setNameError('Username is required');
-      valid = false;
-    } else if (!name.includes('@gmail.com')) {
-      setNameError('Username must be an email (e.g. user@gmail.com)');
-      valid = false;
-    }
-
-    if (!pass) {
-      setPassError('Password is required');
-      valid = false;
-    }
-
-    if (valid) {
-      console.log('Form submitted successfully!');
-    }
+    axios.post("http://localhost:8080/api/login", {
+        email: name,
+        password: pass
+      })
+      .then(function (response) {
+        if((response.data.split(" "))[0]){
+        navigate('/suppliers-list');
+      }
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
   }
 
   const backgroundStyle = {
@@ -81,8 +74,8 @@ function Login() {
               onChange={handleNameChange}
               variant="outlined"
               label="Username"
-              error={!!nameError}
-              helperText={nameError}
+              type="email"
+              required
             />
             <TextField
               style={inputStyle}
@@ -91,8 +84,7 @@ function Login() {
               variant="outlined"
               label="Password"
               type="password"
-              error={!!passError}
-              helperText={passError}
+              required
             />
             <Button variant="contained" type="submit" sx={{ textTransform: "none", marginTop: '0.2rem' }}>Log In</Button>
           </FormControl>
