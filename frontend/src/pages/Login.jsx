@@ -1,12 +1,13 @@
 import { Box, Button, CssBaseline, FormControl, TextField, Typography } from "@mui/material";
 import { useState } from "react";
 import backgroundImg from '../assets/background.jpg';
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 
 function Login() {
   const [name, setName] = useState('');
   const [pass, setPass] = useState('');
+  const navigate = useNavigate();
 
   const handleNameChange = (event) => {
     setName(event.target.value);
@@ -24,7 +25,9 @@ function Login() {
         password: pass
       })
       .then(function (response) {
-        console.log(response.body);
+        if((response.data.split(" "))[0]){
+        navigate('/suppliers-list');
+      }
       })
       .catch(function (error) {
         console.log(error);
