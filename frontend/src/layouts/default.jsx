@@ -20,7 +20,7 @@ import LocalShippingIcon from "@mui/icons-material/LocalShipping";
 import { useDispatch, useSelector } from "react-redux";
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
 import { createOrUpdateTab } from "../redux/tabSlice";
-import { Tab, Tabs } from "@mui/material";
+import { Tab, Tabs, useMediaQuery } from "@mui/material";
 import { useEffect, useState } from "react";
 import AddIcon from "@mui/icons-material/Add";
 
@@ -79,11 +79,13 @@ const DrawerHeader = styled("div")(({ theme }) => ({
 }));
 
 export default function Layout() {
+  
   const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("md"));
   // const dispatch = useDispatch();
   // const location = useLocation();
   const navigate = useNavigate();
-  const [open, setOpen] = useState(true);
+  const [open, setOpen] = useState(!isMobile);
 
   // useEffect(() => {
   //   dispatch(createOrUpdateTab(location.pathname));
