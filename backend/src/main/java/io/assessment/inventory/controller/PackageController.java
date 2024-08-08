@@ -1,7 +1,6 @@
 package io.assessment.inventory.controller;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -11,19 +10,23 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import io.assessment.inventory.controller.dto.PackageDto;
 import io.assessment.inventory.exception.PackageNotFoundException;
+import io.assessment.inventory.exception.SupplierNotFoundException;
 import io.assessment.inventory.model.Package;
+import io.assessment.inventory.model.Supplier;
 import io.assessment.inventory.service.PackageService;
+import io.assessment.inventory.service.SupplierService;
 
 @RestController
 @RequestMapping("/api/packages")
 public class PackageController {
     @Autowired
     private PackageService packageService;
+    @Autowired
+    private SupplierService supplierService;
 
     @GetMapping
     public List<Package> getAllPackages() {
@@ -36,6 +39,7 @@ public class PackageController {
         packages.setPackageName(packagedto.getPackageName());
         packages.setAddress(packagedto.getAddress());
         packages.setQuantity(packagedto.getQuantity());
+        packages.setSupplier_id(packagedto.getSupplier_id());
         return packageService.savePackage(packages);
     }
     @GetMapping("/{id}")
@@ -56,6 +60,13 @@ public class PackageController {
         }
         if (packagedto.getQuantity() != null) {
             existingPackage.setQuantity(packagedto.getQuantity());
+        }
+        if (packagedto.getSupplier_id() != null) {
+            Supplier newSupplier = supplierService.getSupplierById(packagedto.getSupplier_id());
+            if (newSupplier == null) {
+                throw new SupplierNotFoundException("Supplier not found with id " + packagedto.getSupplier_id());
+            }
+            existingPackage.setSupplier(newSupplier);
         }
         return packageService.savePackage(existingPackage);
     }

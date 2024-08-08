@@ -5,6 +5,7 @@ public class PackageDto {
     private String packageName;
     private String Address;
     private Long quantity;
+    private Long supplier_id;
     
     public Long getId() {
         return id;
@@ -35,6 +36,15 @@ public class PackageDto {
     public void setQuantity(long quantity) {
         this.quantity = quantity;
     }
+
+    public Long getSupplier_id() {
+        return supplier_id;
+    }
+
+    public void setSupplier_id(Long supplier_id) {
+        this.supplier_id = supplier_id;
+    }
+    
     
     
     
