@@ -35,20 +35,23 @@ public class PackageController {
 
     @PostMapping
     public Package addPackages(@RequestBody PackageDto packagedto) {
-        Package packages=new Package();
+        Package packages = new Package();
         packages.setPackageName(packagedto.getPackageName());
         packages.setAddress(packagedto.getAddress());
         packages.setQuantity(packagedto.getQuantity());
         packages.setSupplier_id(packagedto.getSupplier_id());
         return packageService.savePackage(packages);
     }
+
     @GetMapping("/{id}")
     public Package getPackageById(@PathVariable Long id) {
         return packageService.getPackageById(id);
     }
+
     @PutMapping("/{id}")
     public Package updatePackage(@PathVariable Long id, @RequestBody PackageDto packagedto) {
         Package existingPackage = packageService.getPackageById(id);
+        System.out.println(packagedto.toString());
         if (existingPackage == null) {
             throw new PackageNotFoundException("Package not found with id " + id);
         }
@@ -66,10 +69,13 @@ public class PackageController {
             if (newSupplier == null) {
                 throw new SupplierNotFoundException("Supplier not found with id " + packagedto.getSupplier_id());
             }
+            System.out.println(newSupplier.getId());
             existingPackage.setSupplier(newSupplier);
+
         }
         return packageService.savePackage(existingPackage);
     }
+
     @DeleteMapping("/{id}")
     public void deletePackage(@PathVariable Long id) {
         packageService.deletePackage(id);
