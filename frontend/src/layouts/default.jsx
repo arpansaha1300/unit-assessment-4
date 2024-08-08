@@ -80,14 +80,9 @@ const DrawerHeader = styled("div")(({ theme }) => ({
 
 export default function Layout() {
   const theme = useTheme();
-  // const dispatch = useDispatch();
-  // const location = useLocation();
+  const dispatch = useDispatch();
   const navigate = useNavigate();
   const [open, setOpen] = useState(true);
-
-  // useEffect(() => {
-  //   dispatch(createOrUpdateTab(location.pathname));
-  // }, [dispatch, location.pathname]);
 
   const handleDrawerOpen = () => {
     setOpen(true);
@@ -98,7 +93,9 @@ export default function Layout() {
   };
 
   const directToAdd = () => {
-    navigate("/add-supplier");
+    const path = "/add-supplier";
+    dispatch(createOrUpdateTab(path));
+    navigate(path);
   };
 
   return (
@@ -130,7 +127,6 @@ export default function Layout() {
               onClick={directToAdd}
               sx={{
                 mr: 2,
-                ...(open && { display: "none" }),
                 ":hover": { backgroundColor: "rgba(255, 255, 255, 0.274)" },
               }}
             >
