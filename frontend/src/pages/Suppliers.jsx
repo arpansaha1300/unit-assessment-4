@@ -74,6 +74,27 @@ const Suppliers = () => {
     setOrder(isAsc ? "desc" : "asc");
     setOrderBy(property);
   };
+
+  const sortedData=suppliersData.sort((a,b)=>{
+    if(orderBy==='id'){
+      if(order==='asc'){
+        return a.id-b.id;
+      }
+      else {
+        return b.id-a.id;
+      }
+    }
+    else if(orderBy==='name')
+    {
+      if(order==='asc'){
+        return a.name.localeCompare(b.name);
+      }
+      else {
+        return b.name.localeCompare(a.name);
+      }
+    }
+  });
+
   const totalPages = Math.ceil(suppliersData.length / rowsPerPage);
 
   const customLabelDisplayedRows = ({ page }) => {
@@ -130,7 +151,7 @@ const Suppliers = () => {
         </Box>
         {isMobile ? (
           <Stack spacing={2}>
-            {suppliersData
+            {sortedData
               .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
               .map((supplier, index) => (
                 <Box
@@ -154,14 +175,21 @@ const Suppliers = () => {
               <TableRow sx={{ "&:hover": { background: "#f0f0f0" } }}>
                 <TableCell sx={{ fontWeight: "bold" }}>
                   <TableSortLabel
-                    active={orderBy === "quantity"}
-                    direction={orderBy === "quantity" ? order : "asc"}
-                    onClick={(event) => handleRequestSort(event, "quantity")}
+                    active={orderBy === "id"}
+                    direction={orderBy === "id" ? order : "asc"}
+                    onClick={(event) => handleRequestSort(event, "id")}
                   >
                     ID
                   </TableSortLabel>
                 </TableCell>
-                <TableCell sx={{ fontWeight: "bold" }}>Name</TableCell>
+                <TableCell sx={{ fontWeight: "bold" }}>
+                  <TableSortLabel
+                  active={orderBy==='name'}
+                  direction={orderBy==='name'?order:'desc'}
+                  onClick={(event)=>handleRequestSort(event,"name")}>
+                  Name
+                  </TableSortLabel>
+                </TableCell>
                 <TableCell sx={{ fontWeight: "bold" }}>Email</TableCell>
                 <TableCell sx={{ fontWeight: "bold" }}>Contact</TableCell>
                 <TableCell sx={{ fontWeight: "bold", textAlign: "right" }}>
@@ -170,7 +198,7 @@ const Suppliers = () => {
               </TableRow>
             </TableHead>
             <TableBody>
-              {suppliersData
+              {sortedData
                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                 .map((supplier, index) => (
                   <TableRow
@@ -202,13 +230,13 @@ const Suppliers = () => {
             </TableBody>
           </Table>
         )}
-        <Box
+        {/* <Box
           sx={{
             display: "flex",
             justifyContent: "center",
             alignItems: "center",
           }}
-        >
+        > */}
           <TablePagination
             component="div"
             count={suppliersData.length}
@@ -220,7 +248,7 @@ const Suppliers = () => {
             labelRowsPerPage={isMobile ? "" : "Rows per page"}
             labelDisplayedRows={customLabelDisplayedRows}
           />
-        </Box>
+        {/* </Box> */}
       </CardContent>
 
       <Dialog open={deleteDialogOpen} onClose={handleDeleteDialogClose}>
