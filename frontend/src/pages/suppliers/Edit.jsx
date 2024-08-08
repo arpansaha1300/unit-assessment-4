@@ -12,12 +12,27 @@ import {
 } from "../../redux/editSupplierSlice";
 
 export default function EditSupplier() {
+  const [contactError, setContactError] = useState();
   const dispatch = useDispatch();
   const params = useParams();
   const location = useLocation();
   const [supplier, setSupplier] = useState(null);
   const sessions = useSelector((state) => state.editSupplier.sessions);
   const [session, setSession] = useState(null);
+
+  const validateDetails = (contact) => {
+    const regExp = /^[0-9]+$/g;
+    let res = true;
+    if (!regExp.test(contact)) {
+      setContactError("Contact number should contain only numbers");
+      res = false;
+    }
+    if (contact.length != 10) {
+      setContactError("Contact number should be 10 digits only");
+      res = false;
+    }
+    return res;
+  };
 
   const isDirty = useMemo(() => {
     if (!supplier || !session) return false;
@@ -57,31 +72,21 @@ export default function EditSupplier() {
     }
   }, [dispatch, supplier]);
 
-  // useEffect(() => {
-  //   if (isDirty && supplier) {
-  //     dispatch(
-  //       createOrUpdateEditSupplierSession({
-  //         id: supplier.id,
-  //         name: sessionName,
-  //         email: sessionEmail,
-  //         contactInfo: sessionContact,
-  //       })
-  //     );
-  //   }
-  // }, [isDirty, sessionName, sessionEmail, sessionContact, dispatch, supplier]);
-
   const updateSupplier = async (e) => {
     e.preventDefault();
     const formData = new FormData(e.currentTarget);
+    const res = validateDetails(session.contactInfo);
 
-    try {
-      await axios.put(`http://localhost:8080/api/suppliers/${supplier.id}`, {
-        name: formData.get("name"),
-        email: formData.get("email"),
-        contactInfo: formData.get("contact"),
-      });
-    } catch (error) {
-      console.error("Error updating supplier:", error);
+    if (res) {
+      try {
+        await axios.put(`http://localhost:8080/api/suppliers/${supplier.id}`, {
+          name: formData.get("name"),
+          email: formData.get("email"),
+          contactInfo: formData.get("contact"),
+        });
+      } catch (error) {
+        console.error("Error updating supplier:", error);
+      }
     }
   };
 
@@ -98,6 +103,7 @@ export default function EditSupplier() {
   }
 
   function updateContact(e) {
+    setContactError('');
     dispatch(
       updateEditSupplierSessionContact({
         id: supplier.id,
@@ -115,6 +121,7 @@ export default function EditSupplier() {
             label="Name"
             name="name"
             fullWidth
+            required
             value={session.name}
             onChange={updateName}
           />
@@ -122,6 +129,8 @@ export default function EditSupplier() {
             margin="dense"
             label="Email"
             name="email"
+            type="email"
+            required
             fullWidth
             value={session.email}
             onChange={updateEmail}
@@ -131,6 +140,9 @@ export default function EditSupplier() {
             label="Contact"
             name="contact"
             fullWidth
+            required
+            error={!!contactError}
+            helperText={contactError}
             value={session.contactInfo}
             onChange={updateContact}
           />

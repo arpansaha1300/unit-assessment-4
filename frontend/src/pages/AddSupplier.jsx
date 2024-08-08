@@ -45,10 +45,14 @@ function AddSupplier() {
   }, [dispatch]);
 
   const validateDetails = (contact) => {
-    const regExp = /[a-zA-Z]/g;
+    const regExp = /^[0-9]+$/g;
     let res = true;
-    if (regExp.test(contact)) {
+    if (!regExp.test(contact)) {
       setContactError("Contact number should contain only numbers");
+      res = false;
+    }
+    if (contact.length != 10){
+      setContactError("Contact number should be 10 digits only");
       res = false;
     }
     return res;
@@ -107,9 +111,6 @@ function AddSupplier() {
           <TextField
             margin="dense"
             label="Contact"
-            inputProps={{
-              minlength: 10,
-            }}
             required
             onChange={(e) => {
               setContact(e.target.value);
