@@ -22,6 +22,7 @@ import {
   DialogContent,
   DialogTitle,
   Button,
+  TableSortLabel,
 } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
@@ -57,6 +58,8 @@ const Suppliers = () => {
     fetchSuppliers();
   }, []);
 
+  const [order, setOrder] = useState("asc");
+  const [orderBy, setOrderBy] = useState("id");
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
   };
@@ -66,6 +69,11 @@ const Suppliers = () => {
     setPage(0);
   };
 
+  const handleRequestSort = (event, property) => {
+    const isAsc = orderBy === property && order === "asc";
+    setOrder(isAsc ? "desc" : "asc");
+    setOrderBy(property);
+  };
   const totalPages = Math.ceil(suppliersData.length / rowsPerPage);
 
   const customLabelDisplayedRows = ({ page }) => {
@@ -86,7 +94,7 @@ const Suppliers = () => {
   const handleDeleteSupplier = async () => {
     try {
       await axios.delete(
-        `http://localhost8080/api/suppliers/${supplierToDelete.id}`
+        `http://localhost:8080/api/suppliers/${supplierToDelete.id}`
       );
     } catch (error) {
       console.error("Error deleting supplier:", error);
@@ -144,10 +152,18 @@ const Suppliers = () => {
           <Table sx={{ width: "100%" }}>
             <TableHead>
               <TableRow sx={{ "&:hover": { background: "#f0f0f0" } }}>
-                <TableCell sx={{ fontWeight: "bold" }}>ID</TableCell>
+                <TableCell sx={{ fontWeight: "bold" }}>
+                  <TableSortLabel
+                    active={orderBy === "quantity"}
+                    direction={orderBy === "quantity" ? order : "asc"}
+                    onClick={(event) => handleRequestSort(event, "quantity")}
+                  >
+                    ID
+                  </TableSortLabel>
+                </TableCell>
                 <TableCell sx={{ fontWeight: "bold" }}>Name</TableCell>
                 <TableCell sx={{ fontWeight: "bold" }}>Email</TableCell>
-                <TableCell sx={{ fontWeight: "bold" }}>contactInfo</TableCell>
+                <TableCell sx={{ fontWeight: "bold" }}>Contact</TableCell>
                 <TableCell sx={{ fontWeight: "bold", textAlign: "right" }}>
                   Actions
                 </TableCell>
