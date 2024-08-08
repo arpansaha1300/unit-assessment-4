@@ -1,4 +1,11 @@
-import { Alert, Box, Button, FormControl, Snackbar, TextField } from "@mui/material";
+import {
+  Alert,
+  Box,
+  Button,
+  FormControl,
+  Snackbar,
+  TextField,
+} from "@mui/material";
 import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { createOrUpdateTab } from "../redux/tabSlice";
@@ -16,15 +23,17 @@ function AddSupplier() {
   const [pass, setPass] = useState();
   const [state, setState] = useState({
     open: false,
-    vertical: 'bottom',
-    horizontal: 'right',
+    vertical: "bottom",
+    horizontal: "right",
   });
   const { vertical, horizontal, open } = state;
 
   const handleSubmission = () => {
     setState({
-      vertical: 'bottom',
-      horizontal: 'right', open: true });
+      vertical: "bottom",
+      horizontal: "right",
+      open: true,
+    });
   };
 
   const handleClose = () => {
@@ -35,35 +44,11 @@ function AddSupplier() {
     dispatch(createOrUpdateTab("/add-supplier"));
   }, [dispatch]);
 
-  const validateDetails = (name, email, contact, pass) => {
-    var regExp = /[a-zA-Z]/g;
-    var res = true;
-    if (!name) {
-      setNameError("Please enter a name");
-      res = false;
-    }
-    if (!email) {
-      setEmailError("Please enter an email address");
-      res = false;
-    }
-    if (!contact) {
-      setContactError("Please enter a contact number");
-      res = false;
-    }
-    if (!pass) {
-      setPassError("Please enter a password");
-      res = false;
-    }
-    if (!(contact.length === 10)) {
-      setContactError("Please enter a 10 digit contact number");
-      res = false;
-    }
+  const validateDetails = (contact) => {
+    const regExp = /[a-zA-Z]/g;
+    let res = true;
     if (regExp.test(contact)) {
       setContactError("Contact number should contain only numbers");
-      res = false;
-    }
-    if (!email.includes("@gmail.com")) {
-      setEmailError("Please enter a valid email (e.g. user@gmail.com)");
       res = false;
     }
     return res;
@@ -71,21 +56,22 @@ function AddSupplier() {
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    const res = validateDetails(name, email, contact, pass);
+    const res = validateDetails(contact);
     if (res) {
-      axios.post('http://localhost:8080/api/suppliers', {
+      axios
+        .post("http://localhost:8080/api/suppliers", {
           name: name,
           email: email,
           password: pass,
-          contactInfo: contact
-      })
-      .then(function (response) {
-        console.log(response);
-        handleSubmission();
-      })
-      .catch(function (error) {
-        console.log(error);
-      });
+          contactInfo: contact,
+        })
+        .then(function (response) {
+          console.log(response);
+          handleSubmission();
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
     }
   };
 
@@ -96,6 +82,7 @@ function AddSupplier() {
           <TextField
             margin="dense"
             label="Name"
+            required
             onChange={(e) => {
               setName(e.target.value);
               setNameError("");
@@ -107,6 +94,8 @@ function AddSupplier() {
           <TextField
             margin="dense"
             label="Email"
+            type="email"
+            required
             onChange={(e) => {
               setEmail(e.target.value);
               setEmailError("");
@@ -118,6 +107,10 @@ function AddSupplier() {
           <TextField
             margin="dense"
             label="Contact"
+            inputProps={{
+              minlength: 10,
+            }}
+            required
             onChange={(e) => {
               setContact(e.target.value);
               setContactError("");
@@ -130,6 +123,7 @@ function AddSupplier() {
             margin="dense"
             label="Password"
             type="password"
+            required
             onChange={(e) => {
               setPass(e.target.value);
               setPassError("");
@@ -154,11 +148,11 @@ function AddSupplier() {
         onClose={handleClose}
         key={vertical + horizontal}
       >
-          <Alert
+        <Alert
           onClose={handleClose}
           severity="success"
           variant="filled"
-          sx={{ width: '100%' }}
+          sx={{ width: "100%" }}
         >
           Supplier successfully added
         </Alert>
