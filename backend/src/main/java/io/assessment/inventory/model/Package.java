@@ -70,6 +70,11 @@ public class Package {
     public Long getSupplierId() {
         return (supplier != null) ? supplier.getId() : null;
     }
+
+    public void setSupplier_id(Long supplier_id) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'setSupplier_id'");
+    }
 }
 
     
