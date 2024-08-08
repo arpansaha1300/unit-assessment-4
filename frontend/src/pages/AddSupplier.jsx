@@ -29,12 +29,12 @@ function AddSupplier() {
       setEmailError("Please enter an email address");
       res = false;
     }
-    if (!email.includes("@gmail.com")) {
-      setEmailError("Please enter a valid email (e.g. user@gmail.com)");
-      res = false;
-    }
     if (!contact) {
       setContactError("Please enter a contact number");
+      res = false;
+    }
+    if (!pass) {
+      setPassError("Please enter a password");
       res = false;
     }
     if (!(contact.length === 10)) {
@@ -45,8 +45,8 @@ function AddSupplier() {
       setContactError("Contact number should contain only numbers");
       res = false;
     }
-    if (!pass) {
-      setPassError("Please enter a password");
+    if (!email.includes("@gmail.com")) {
+      setEmailError("Please enter a valid email (e.g. user@gmail.com)");
       res = false;
     }
     return res;
