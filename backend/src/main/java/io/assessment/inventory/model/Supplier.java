@@ -71,10 +71,5 @@ public class Supplier {
     public void setEmail(String email) {
         this.email = email;
     }
-
-    public static Supplier getSupplierById(Long supplier_id) {
-        throw new UnsupportedOperationException("Unimplemented method 'getSupplierById'");
-    }
-
     
 }

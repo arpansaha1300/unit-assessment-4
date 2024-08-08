@@ -73,16 +73,8 @@ public class Package {
     }
 
     public void setSupplier_id(Long supplier_id) {
-        if (supplier_id != null) {
-            Supplier newSupplier = Supplier.getSupplierById(supplier_id);
-            if (newSupplier != null) {
-                this.supplier = newSupplier;
-            } else {
-                throw new SupplierNotFoundException("Supplier not found with id " + supplier_id);
-            }
-        } else {
-            this.supplier = null;
-        }
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'setSupplier_id'");
     }
 }
 
