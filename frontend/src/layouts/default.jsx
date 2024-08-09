@@ -25,6 +25,8 @@ import { useEffect, useState } from "react";
 import AddIcon from "@mui/icons-material/Add";
 import CloseIcon from "@mui/icons-material/Close";
 import styles from "./default.module.css";
+import { removeEditSupplierSession } from "../redux/editSupplierSlice";
+import { removeEditPackageSession } from "../redux/editPackageSlice";
 
 const drawerWidth = 240;
 
@@ -288,6 +290,12 @@ function TabList() {
     }
 
     dispatch(removeTab(tab));
+
+    if (tab.type === "edit-supplier") {
+      dispatch(removeEditSupplierSession({ id: tab.data.id }));
+    } else if (tab.type === "edit-package") {
+      dispatch(removeEditPackageSession({ id: tab.data.id }));
+    }
   };
 
   return tabs.length > 0 && value ? (
@@ -312,6 +320,7 @@ function TabList() {
                 {tab.name}
                 {tabs.length > 1 && (
                   <span
+                    role="button"
                     onClick={(e) => closeTab(e, tab, i)}
                     className={styles.tabButton}
                   >
