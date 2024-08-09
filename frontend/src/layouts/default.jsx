@@ -109,20 +109,20 @@ export default function Layout() {
     dispatch(createOrUpdateTab(path));
     navigate(path);
   };
-  const openEditSupplierTab = async () => {
-    const path = `/suppliers-list/${userId}/edit`;
-    const response = await axios.get(
-      `http://localhost:8080/api/suppliers/${userId}`
-    );
+  // const openEditSupplierTab = async () => {
+  //   const path = `/suppliers-list/${userId}/edit`;
+  //   const response = await axios.get(
+  //     `http://localhost:8080/api/suppliers/${userId}`
+  //   );
 
-    dispatch(
-      createOrUpdateTab({
-        path: path,
-        data: response.data,
-      })
-    );
-    navigate(path);
-  };
+  //   dispatch(
+  //     createOrUpdateTab({
+  //       path: path,
+  //       data: response.data,
+  //     })
+  //   );
+  //   navigate(path);
+  // };
   const directToAddPackage = () => {
     const path = "/add-package";
     dispatch(createOrUpdateTab(path));

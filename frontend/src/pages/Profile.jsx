@@ -54,10 +54,8 @@ export default function ProfilePage() {
   }
 
   return (
-    <section style={{ backgroundColor: "#eee" }}>
-      <Container sx={{ py: 5 }}>
-        <Grid container spacing={3}>
-          <Grid item xs={12}>
+        <Grid container spacing={2}  sx={{ py: 2,}}>
+          <Grid item xs={12} >
             <Breadcrumbs aria-label="breadcrumb" sx={{ mb: 4 }}>
               <Link color="inherit" href="#">
                 Home
@@ -70,7 +68,7 @@ export default function ProfilePage() {
           </Grid>
 
           <Grid item xs={12} lg={4}>
-            <Card>
+            <Card sx={{boxShadow:'none',border:'1px solid #f0f0f0'}}>
               <CardContent sx={{ textAlign: "center" }}>
                 <Typography variant="h6" sx={{ mt: 2, fontWeight: "" }}>
                   Supplier
@@ -89,7 +87,7 @@ export default function ProfilePage() {
               </CardContent>
             </Card>
 
-            <Card sx={{ mt: 3 }}>
+            <Card sx={{ mt: 3,boxShadow:'none',border:'1px solid #f0f0f0'}}>
               <CardContent>
                 <List>
                   <ListItem>
@@ -112,8 +110,8 @@ export default function ProfilePage() {
             </Card>
           </Grid>
 
-          <Grid item xs={12} lg={8}>
-            <TableContainer component={Paper}>
+          <Grid item xs={12} lg={8} sx={{p:1.5, }} >
+            <TableContainer component={Paper}sx={{boxShadow:'none',border:'1px solid #f0f0f0'}}>
               <Typography
                 variant="h6"
                 sx={{
@@ -151,7 +149,5 @@ export default function ProfilePage() {
             </TableContainer>
           </Grid>
         </Grid>
-      </Container>
-    </section>
   );
 }
