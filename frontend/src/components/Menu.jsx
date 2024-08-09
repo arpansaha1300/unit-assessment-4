@@ -77,7 +77,7 @@ export function MenuItem({ onClick, children }) {
   const { setAnchorEl } = useMenuContext();
 
   function handleClick() {
-    onClick();
+    if (onClick) onClick();
     setAnchorEl(null);
   }
   return (
