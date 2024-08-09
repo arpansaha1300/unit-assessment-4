@@ -18,7 +18,7 @@ import ListItemText from "@mui/material/ListItemText";
 import InventoryIcon from "@mui/icons-material/Inventory";
 import LocalShippingIcon from "@mui/icons-material/LocalShipping";
 import { useDispatch, useSelector } from "react-redux";
-import { Outlet, useLocation, useNavigate } from "react-router-dom";
+import { Link, Outlet, useLocation, useNavigate } from "react-router-dom";
 import { createOrUpdateTab, removeTab } from "../redux/tabSlice";
 import { Avatar, Tab, Tabs, useMediaQuery } from "@mui/material";
 import { useEffect, useState } from "react";
@@ -36,6 +36,8 @@ import {
   MenuWrapper,
 } from "../components/Menu";
 import Edit from "@mui/icons-material/Edit";
+import { setAuthenticated, setEmail, setId, setRole } from "../redux/authSlice";
+import axios from "axios";
 
 const drawerWidth = 240;
 
@@ -91,8 +93,8 @@ export default function Layout() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [open, setOpen] = useState(!isMobile);
-  // const user = useSelector((state) => state.auth);
   const userRole = useSelector((state) => state.auth.role);
+  const userId = useSelector((state) => state.auth.id);
 
   const handleDrawerOpen = () => {
     setOpen(true);
@@ -107,22 +109,31 @@ export default function Layout() {
     dispatch(createOrUpdateTab(path));
     navigate(path);
   };
+  const openEditSupplierTab = async () => {
+    const path = `/suppliers-list/${userId}/edit`;
+    const response = await axios.get(
+      `http://localhost:8080/api/suppliers/${userId}`
+    );
 
-  // const openEditSupplierTab = (supplier) => {
-  //   const path = `/suppliers-list/${user.id}/edit`;
-  //   console.log(user);
-  //   dispatch(
-  //     createOrUpdateTab({
-  //       path: path,
-  //       data: user,
-  //     })
-  //   );
-  //   navigate(path);
-  // };
+    dispatch(
+      createOrUpdateTab({
+        path: path,
+        data: response.data,
+      })
+    );
+    navigate(path);
+  };
   const directToAddPackage = () => {
     const path = "/add-package";
     dispatch(createOrUpdateTab(path));
     navigate(path);
+  };
+  const handleLogout = () => {
+    dispatch(setEmail(""));
+    dispatch(setRole(""));
+    dispatch(setId(""));
+    dispatch(setAuthenticated(false));
+    navigate("/");
   };
 
   return (
@@ -191,12 +202,14 @@ export default function Layout() {
                 </MenuItems>
               ) : (
                 <MenuItems>
-                  <MenuItem>
-                    <Edit sx={{ marginRight: "1rem", color: "grey" }} />
-                    Edit Profile
-                  </MenuItem>
+                  <Link to={`/suppliers-list/${userId}/edit`}  style={{ textDecoration: 'none',color:'black' }}>
+                    <MenuItem>
+                      <Edit sx={{ marginRight: "1rem", color: "grey" }} />
+                      Edit Profile
+                    </MenuItem>
+                  </Link>
                   <Divider />
-                  <MenuItem>
+                  <MenuItem onClick={handleLogout} sx={{color:'black'}}>
                     <Logout sx={{ marginRight: "1rem", color: "grey" }} />
                     Logout
                   </MenuItem>
