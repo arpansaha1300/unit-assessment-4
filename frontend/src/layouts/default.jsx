@@ -109,20 +109,7 @@ export default function Layout() {
     dispatch(createOrUpdateTab(path));
     navigate(path);
   };
-  const openEditSupplierTab = async () => {
-    const path = `/suppliers-list/${userId}/edit`;
-    const response = await axios.get(
-      `http://localhost:8080/api/suppliers/${userId}`
-    );
 
-    dispatch(
-      createOrUpdateTab({
-        path: path,
-        data: response.data,
-      })
-    );
-    navigate(path);
-  };
   const directToAddPackage = () => {
     const path = "/add-package";
     dispatch(createOrUpdateTab(path));
@@ -202,14 +189,17 @@ export default function Layout() {
                 </MenuItems>
               ) : (
                 <MenuItems>
-                  <Link to={`/suppliers-list/${userId}/edit`}  style={{ textDecoration: 'none',color:'black' }}>
+                  <Link
+                    to={`/suppliers-list/${userId}/edit`}
+                    style={{ textDecoration: "none", color: "black" }}
+                  >
                     <MenuItem>
                       <Edit sx={{ marginRight: "1rem", color: "grey" }} />
                       Edit Profile
                     </MenuItem>
                   </Link>
                   <Divider />
-                  <MenuItem onClick={handleLogout} sx={{color:'black'}}>
+                  <MenuItem onClick={handleLogout} sx={{ color: "black" }}>
                     <Logout sx={{ marginRight: "1rem", color: "grey" }} />
                     Logout
                   </MenuItem>
@@ -247,7 +237,7 @@ export default function Layout() {
         </Drawer>
       )}
 
-      <Container open={userRole === "ADMIN" && open}>
+      <Container open={userRole === "ADMIN" ? open : true}>
         <DrawerHeader />
         <Box sx={{ marginBottom: "1rem" }}>
           <TabList />
