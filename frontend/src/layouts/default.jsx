@@ -37,7 +37,6 @@ import {
 } from "../components/Menu";
 import Edit from "@mui/icons-material/Edit";
 import { setAuthenticated, setEmail, setId, setRole } from "../redux/authSlice";
-import axios from "axios";
 
 const drawerWidth = 240;
 
@@ -109,7 +108,6 @@ export default function Layout() {
     dispatch(createOrUpdateTab(path));
     navigate(path);
   };
-
   const directToAddPackage = () => {
     const path = "/add-package";
     dispatch(createOrUpdateTab(path));
