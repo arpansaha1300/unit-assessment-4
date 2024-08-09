@@ -4,7 +4,7 @@ import backgroundImg from '../assets/background.jpg';
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { useDispatch } from "react-redux";
-import {setEmail, setRole, setId} from '../redux/authSlice'
+import { setEmail, setRole, setId } from '../redux/authSlice'
 
 function Login() {
   const [name, setName] = useState('');
@@ -24,24 +24,18 @@ function Login() {
     event.preventDefault();
 
     axios.post("http://localhost:8080/api/login", {
-        email: name,
-        password: pass
-      })
+      email: name,
+      password: pass
+    })
       .then((response) => {
-        if(response.data.role == 'ADMIN'){
-          dispatch(() => {
-            setEmail(response.data.email);
-            setRole(response.data.role);
-            setId(response.data.id);
-          });
+        dispatch(setEmail(response.data.email))
+        dispatch(setRole(response.data.role))
+        dispatch(setId(response.data.id))
+
+        if (response.data.role == 'ADMIN') {
           navigate('/suppliers-list');
         }
-        else{
-          dispatch(() => {
-            setEmail(response.data.email);
-            setRole(response.data.role);
-            setId(response.data.id);
-          });
+        else {
           navigate('/supplier-profile');
         }
       }
@@ -60,7 +54,7 @@ function Login() {
     backgroundImage: `url(${backgroundImg})`,
     filter: "blur(8px)",
     WebkitFilter: "blur(8px)",
-    zIndex: 0, 
+    zIndex: 0,
   };
 
   const inputStyle = {
@@ -107,7 +101,7 @@ function Login() {
           </FormControl>
         </form>
         <Typography sx={{ textAlign: "center", marginTop: "0.4rem", color: "rgb(66, 66, 66)" }}>
-          New User?  
+          New User?
           <Link to="/sign-up">SignUp</Link>
         </Typography>
       </Box>
