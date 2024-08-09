@@ -1,4 +1,4 @@
-import { Box, Button, FormControl, TextField } from "@mui/material";
+import { Alert, Box, Button, FormControl, Snackbar, TextField } from "@mui/material";
 import { useEffect, useMemo, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useLocation, useParams } from "react-router-dom";
@@ -19,6 +19,12 @@ export default function EditSupplier() {
   const [supplier, setSupplier] = useState(null);
   const sessions = useSelector((state) => state.editSupplier.sessions);
   const [session, setSession] = useState(null);
+  const [state, setState] = useState({
+    open: false,
+    vertical: "bottom",
+    horizontal: "right",
+  });
+  const { vertical, horizontal, open } = state;
 
   const validateDetails = (contact) => {
     const regExp = /^[0-9]+$/g;
@@ -42,6 +48,18 @@ export default function EditSupplier() {
       supplier.contactInfo !== session.contactInfo
     );
   }, [session, supplier]);
+
+  const handleClose = () => {
+    setState({ ...state, open: false });
+  };
+
+  const handleSubmission = () => {
+    setState({
+      vertical: "bottom",
+      horizontal: "right",
+      open: true,
+    });
+  };
 
   useEffect(() => {
     setSession(sessions[params.supplierId]);
@@ -79,11 +97,13 @@ export default function EditSupplier() {
 
     if (res) {
       try {
-        await axios.put(`http://localhost:8080/api/suppliers/${supplier.id}`, {
+        const response = await axios.put(`http://localhost:8080/api/suppliers/${supplier.id}`, {
           name: formData.get("name"),
           email: formData.get("email"),
           contactInfo: formData.get("contact"),
         });
+        console.log(response);
+        handleSubmission();
       } catch (error) {
         console.error("Error updating supplier:", error);
       }
@@ -156,6 +176,22 @@ export default function EditSupplier() {
           </Button>
         </FormControl>
       </form>
+      <Snackbar
+        anchorOrigin={{ vertical, horizontal }}
+        open={open}
+        autoHideDuration={4000}
+        onClose={handleClose}
+        key={vertical + horizontal}
+      >
+        <Alert
+          onClose={handleClose}
+          severity="success"
+          variant="filled"
+          sx={{ width: "100%" }}
+        >
+          Supplier successfully edited
+        </Alert>
+      </Snackbar>
     </Box>
   ) : null;
 }

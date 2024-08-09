@@ -3,6 +3,7 @@ import { createSlice } from '@reduxjs/toolkit';
 const initialState = {
   isAuthenticated: false,
   email: '',
+  id: '',
   role: '',
 };
 
@@ -15,6 +16,9 @@ const authSlice = createSlice({
     },
     setEmail: (state, action) => {
       state.email = action.payload;
+    },
+    setId: (state, action) => {
+      state.id = action.payload;
     },
     setRole: (state, action) => {
       state.role = action.payload;
