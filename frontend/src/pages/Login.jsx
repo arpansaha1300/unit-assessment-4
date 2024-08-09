@@ -7,11 +7,11 @@ import {
   Typography,
 } from "@mui/material";
 import { useState } from "react";
-import backgroundImg from "../assets/background.jpg";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { useDispatch } from "react-redux";
 import { setEmail, setRole, setId, setAuthenticated } from "../redux/authSlice";
+import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 
 function Login() {
   const [name, setName] = useState("");
@@ -48,6 +48,7 @@ function Login() {
         }
       })
       .catch(function (error) {
+        alert("Invalid credentials");
         console.log(error);
       });
   };
@@ -58,25 +59,33 @@ function Login() {
     left: 0,
     height: "100%",
     width: "100%",
-    backgroundImage: `url(${backgroundImg})`,
-    filter: "blur(8px)",
-    WebkitFilter: "blur(8px)",
+    backgroundColor: "#70a5fa",
     zIndex: 0,
   };
 
-  const inputStyle = {
-    marginBottom: "1rem",
-  };
+  
 
   const formStyle = {
-    border: "0.2rem solid #ffffff",
-    padding: "3rem 1rem",
+    padding: "3rem 2rem",
     borderRadius: "1rem",
-    backgroundColor: "rgba(255, 255, 255, 0.479)",
+    backgroundColor: "rgba(255, 255, 255, 0.89)",
     position: "relative",
     zIndex: 1,
     width: "25rem",
-    boxShadow: "#ffffff 0 0 9px 2px",
+    boxShadow: "10px 10px 10px 4px #2669d4"
+  };
+
+  const headingStyle = {
+    color: "#545454",
+    textAlign: "center",
+    fontSize: "2rem",
+    fontWeight: "700",
+    marginBottom: "1rem"
+  };
+
+  const iconStyle = {
+    transform: "scale(1.6)",
+    marginBottom: "0.5rem"
   };
 
   return (
@@ -92,22 +101,25 @@ function Login() {
       <CssBaseline />
       <div style={backgroundStyle} />
       <Box style={formStyle}>
+        <Box sx={{display: "flex", justifyContent: "center", color: "green"}}>
+          <LockOutlinedIcon style={iconStyle}/>
+        </Box>
+        <Typography style={headingStyle}>Log In</Typography>
         <form onSubmit={handleSubmit}>
           <FormControl fullWidth>
             <TextField
-              style={inputStyle}
               value={name}
               onChange={handleNameChange}
-              variant="outlined"
+              variant="standard"
               label="Email"
               type="email"
               required
             />
             <TextField
-              style={inputStyle}
+              sx={{marginBottom: "3rem"}}
               value={pass}
               onChange={handlePassChange}
-              variant="outlined"
+              variant="standard"
               label="Password"
               type="password"
               required
