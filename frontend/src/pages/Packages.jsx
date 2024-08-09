@@ -1,5 +1,10 @@
-import { useEffect, useState } from 'react';
-import {Card,CardContent,Typography,Table,TableBody,
+import { useEffect, useState } from "react";
+import {
+  Card,
+  CardContent,
+  Typography,
+  Table,
+  TableBody,
   TableCell,
   TableHead,
   TableRow,
@@ -15,47 +20,40 @@ import {Card,CardContent,Typography,Table,TableBody,
   DialogContent,
   DialogTitle,
   Button,
-  TextField,
 } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import axios from "axios";
 import { useDispatch } from "react-redux";
 import { createOrUpdateTab } from "../redux/tabSlice";
+import { useNavigate } from "react-router-dom";
 
 const Packages = () => {
   const theme = useTheme();
   const dispatch = useDispatch();
-  const isMobile = useMediaQuery(theme.breakpoints.down('md'));
+  const navigate = useNavigate();
+  const isMobile = useMediaQuery(theme.breakpoints.down("md"));
   const [packagesData, setPackagesData] = useState([]);
 
-  useEffect(()=>{
+  useEffect(() => {
     const fetchPackages = async () => {
       try {
-        const response = await axios.get('http://localhost:8080/api/packages');
+        const response = await axios.get("http://localhost:8080/api/packages");
         console.log(response.data);
         setPackagesData(response.data);
       } catch (error) {
-        console.error('Error fetching suppliers data:', error);
+        console.error("Error fetching suppliers data:", error);
       }
     };
     fetchPackages();
-  },[]);
+  }, []);
 
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [order, setOrder] = useState("asc");
   const [orderBy, setOrderBy] = useState("id");
-  const [editDialogOpen, setEditDialogOpen] = useState(false);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [selectedPackage, setSelectedPackage] = useState(null);
-  const [updatedPackage, setUpdatedPackage] = useState({
-    id: "",
-    packageName: "",
-    address: "",
-    supplierId: "",
-    quantity: "",
-  });
 
   useEffect(() => {
     dispatch(createOrUpdateTab("/package-list"));
@@ -70,30 +68,10 @@ const Packages = () => {
     setPage(0);
   };
 
-  
-
-  const handleEditClick = (pkg) => {
-    setSelectedPackage(pkg);
-    setUpdatedPackage({ ...pkg });
-    setEditDialogOpen(true);
-  };
-
-  const handleEditDialogClose = () => {
-    setEditDialogOpen(false);
-    setSelectedPackage(null);
-  };
-
-  const handleUpdatePackage = async () => {
-    try {
-      await axios.put(
-        `http://localhost:8080/api/packages/${selectedPackage.id}`,
-        updatedPackage
-      );
-    } catch (error) {
-      console.error("Error updating package:", error);
-    } finally {
-      handleEditDialogClose();
-    }
+  const openEditPackageTab = (pkg) => {
+    const path = `/package-list/${pkg.id}/edit`;
+    dispatch(createOrUpdateTab({ path: path, data: pkg }));
+    navigate(path);
   };
 
   const handleDeleteClick = (pkg) => {
@@ -123,7 +101,7 @@ const Packages = () => {
     setOrder(isAsc ? "desc" : "asc");
     setOrderBy(property);
   };
-  
+
   const sortedData = packagesData.sort((a, b) => {
     if (orderBy === "packageName") {
       return order === "asc"
@@ -184,7 +162,7 @@ const Packages = () => {
                     <IconButton
                       size="small"
                       sx={{ color: "black" }}
-                      onClick={() => handleEditClick(pkg)}
+                      onClick={() => openEditPackageTab(pkg)}
                     >
                       <EditIcon fontSize="small" />
                     </IconButton>
@@ -214,9 +192,9 @@ const Packages = () => {
                 </TableCell>
                 <TableCell sx={{ fontWeight: "bold", width: "20%" }}>
                   <TableSortLabel
-                    active={orderBy === 'packageName'}
-                    direction={orderBy === 'packageName' ? order : 'asc'}
-                    onClick={(event) => handleRequestSort(event, 'packageName')}
+                    active={orderBy === "packageName"}
+                    direction={orderBy === "packageName" ? order : "asc"}
+                    onClick={(event) => handleRequestSort(event, "packageName")}
                   >
                     Name
                   </TableSortLabel>
@@ -267,7 +245,7 @@ const Packages = () => {
                         <IconButton
                           size="small"
                           sx={{ color: "black" }}
-                          onClick={() => handleEditClick(pkg)}
+                          onClick={() => openEditPackageTab(pkg)}
                         >
                           <EditIcon fontSize="small" />
                         </IconButton>
@@ -297,56 +275,7 @@ const Packages = () => {
           labelDisplayedRows={customLabelDisplayedRows}
         />
       </CardContent>
-      <Dialog open={editDialogOpen} onClose={handleEditDialogClose}>
-        <DialogTitle>Edit Package</DialogTitle>
-        <DialogContent>
-          <TextField
-            label="packageName"
-            value={updatedPackage.packageName}
-            onChange={(e) => setUpdatedPackage({ ...updatedPackage, packageName: e.target.value })}
-            fullWidth
-            margin="dense"
-          />
-          <TextField
-            label="Address"
-            value={updatedPackage.address}
-            onChange={(e) =>
-              setUpdatedPackage({ ...updatedPackage, address: e.target.value })
-            }
-            fullWidth
-            margin="dense"
-          />
-          <TextField
-            label="Supplier ID"
-            value={updatedPackage.supplierId}
-            onChange={(e) =>
-              setUpdatedPackage({
-                ...updatedPackage,
-                supplierId: e.target.value,
-              })
-            }
-            fullWidth
-            margin="dense"
-          />
-          <TextField
-            label="Quantity"
-            value={updatedPackage.quantity}
-            onChange={(e) =>
-              setUpdatedPackage({ ...updatedPackage, quantity: e.target.value })
-            }
-            fullWidth
-            margin="dense"
-          />
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleEditDialogClose} color="primary">
-            Cancel
-          </Button>
-          <Button onClick={handleUpdatePackage} color="primary">
-            Save
-          </Button>
-        </DialogActions>
-      </Dialog>
+
       <Dialog open={deleteDialogOpen} onClose={handleDeleteDialogClose}>
         <DialogTitle>Delete Package</DialogTitle>
         <DialogContent>
