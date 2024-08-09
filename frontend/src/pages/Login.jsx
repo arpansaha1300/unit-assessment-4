@@ -3,11 +3,14 @@ import { useState } from "react";
 import backgroundImg from '../assets/background.jpg';
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
+import { useDispatch } from "react-redux";
+import {setEmail, setRole, setId} from '../redux/authSlice'
 
 function Login() {
   const [name, setName] = useState('');
   const [pass, setPass] = useState('');
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const handleNameChange = (event) => {
     setName(event.target.value);
@@ -24,11 +27,25 @@ function Login() {
         email: name,
         password: pass
       })
-      .then(function (response) {
-        if((response.data.split(" "))[0]){
-        navigate('/suppliers-list');
+      .then((response) => {
+        if(response.data.role == 'ADMIN'){
+          dispatch(() => {
+            setEmail(response.data.email);
+            setRole(response.data.role);
+            setId(response.data.id);
+          });
+          navigate('/suppliers-list');
+        }
+        else{
+          dispatch(() => {
+            setEmail(response.data.email);
+            setRole(response.data.role);
+            setId(response.data.id);
+          });
+          navigate('/supplier-profile');
+        }
       }
-      })
+      )
       .catch(function (error) {
         console.log(error);
       });
@@ -73,7 +90,7 @@ function Login() {
               value={name}
               onChange={handleNameChange}
               variant="outlined"
-              label="Username"
+              label="Email"
               type="email"
               required
             />
