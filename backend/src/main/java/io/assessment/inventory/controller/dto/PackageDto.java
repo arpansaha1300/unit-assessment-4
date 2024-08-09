@@ -5,7 +5,7 @@ import lombok.ToString;
 @ToString
 public class PackageDto {
     private String packageName;
-    private String Address;
+    private String address;
     private Long quantity;
     private Long supplierId;
 
@@ -18,11 +18,11 @@ public class PackageDto {
     }
 
     public String getAddress() {
-        return Address;
+        return address;
     }
 
     public void setAddress(String address) {
-        Address = address;
+        this.address = address;
     }
 
     public Long getQuantity() {
