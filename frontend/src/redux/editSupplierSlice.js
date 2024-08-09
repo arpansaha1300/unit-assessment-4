@@ -7,6 +7,7 @@ const initialState = {
 const editSupplierSlice = createSlice({
   name: "edit-supplier",
   initialState,
+  reducerPath: "edit-supplier",
   reducers: {
     createEditSupplierSession: (state, action) => {
       const supplierId = action.payload.id;

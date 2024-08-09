@@ -20,10 +20,12 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
-const supplierId = 6;
+import {useSelector} from 'react-redux'
+
 
 export default function ProfilePage() {
   const [supplier, setSupplier] = useState(null);
+  const supplierId = useSelector((state) => state.auth.id);
 
   useEffect(() => {
     const fetchSupplierData = async () => {

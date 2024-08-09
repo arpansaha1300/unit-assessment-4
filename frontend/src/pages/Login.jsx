@@ -1,55 +1,56 @@
-import { Box, Button, CssBaseline, FormControl, TextField, Typography } from "@mui/material";
+import {
+  Box,
+  Button,
+  CssBaseline,
+  FormControl,
+  TextField,
+  Typography,
+} from "@mui/material";
 import { useState } from "react";
-import backgroundImg from '../assets/background.jpg';
+import backgroundImg from "../assets/background.jpg";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { useDispatch } from "react-redux";
-import {setEmail, setRole, setId} from '../redux/authSlice'
+import { setEmail, setRole, setId, setAuthenticated } from "../redux/authSlice";
 
 function Login() {
-  const [name, setName] = useState('');
-  const [pass, setPass] = useState('');
+  const [name, setName] = useState("");
+  const [pass, setPass] = useState("");
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
   const handleNameChange = (event) => {
     setName(event.target.value);
-  }
+  };
 
   const handlePassChange = (event) => {
     setPass(event.target.value);
-  }
+  };
 
   const handleSubmit = (event) => {
     event.preventDefault();
 
-    axios.post("http://localhost:8080/api/login", {
+    axios
+      .post("http://localhost:8080/api/login", {
         email: name,
-        password: pass
+        password: pass,
       })
       .then((response) => {
-        if(response.data.role == 'ADMIN'){
-          dispatch(() => {
-            setEmail(response.data.email);
-            setRole(response.data.role);
-            setId(response.data.id);
-          });
-          navigate('/suppliers-list');
+        dispatch(setEmail(response.data.email));
+        dispatch(setRole(response.data.role));
+        dispatch(setId(response.data.id));
+        dispatch(setAuthenticated(true));
+
+        if (response.data.role == "ADMIN") {
+          navigate("/suppliers-list");
+        } else {
+          navigate("/supplier-profile");
         }
-        else{
-          dispatch(() => {
-            setEmail(response.data.email);
-            setRole(response.data.role);
-            setId(response.data.id);
-          });
-          navigate('/supplier-profile');
-        }
-      }
-      )
+      })
       .catch(function (error) {
         console.log(error);
       });
-  }
+  };
 
   const backgroundStyle = {
     position: "absolute",
@@ -60,11 +61,11 @@ function Login() {
     backgroundImage: `url(${backgroundImg})`,
     filter: "blur(8px)",
     WebkitFilter: "blur(8px)",
-    zIndex: 0, 
+    zIndex: 0,
   };
 
   const inputStyle = {
-    marginBottom: "1rem"
+    marginBottom: "1rem",
   };
 
   const formStyle = {
@@ -75,11 +76,19 @@ function Login() {
     position: "relative",
     zIndex: 1,
     width: "25rem",
-    boxShadow: "#ffffff 0 0 9px 2px"
+    boxShadow: "#ffffff 0 0 9px 2px",
   };
 
   return (
-    <Box style={{ position: "relative", height: "100vh", display: "flex", justifyContent: "center", alignItems: "center" }}>
+    <Box
+      style={{
+        position: "relative",
+        height: "100vh",
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+      }}
+    >
       <CssBaseline />
       <div style={backgroundStyle} />
       <Box style={formStyle}>
@@ -103,11 +112,23 @@ function Login() {
               type="password"
               required
             />
-            <Button variant="contained" type="submit" sx={{ textTransform: "none", marginTop: '0.2rem' }}>Log In</Button>
+            <Button
+              variant="contained"
+              type="submit"
+              sx={{ textTransform: "none", marginTop: "0.2rem" }}
+            >
+              Log In
+            </Button>
           </FormControl>
         </form>
-        <Typography sx={{ textAlign: "center", marginTop: "0.4rem", color: "rgb(66, 66, 66)" }}>
-          New User?  
+        <Typography
+          sx={{
+            textAlign: "center",
+            marginTop: "0.4rem",
+            color: "rgb(66, 66, 66)",
+          }}
+        >
+          New User?
           <Link to="/sign-up">SignUp</Link>
         </Typography>
       </Box>
