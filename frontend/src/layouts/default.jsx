@@ -20,7 +20,7 @@ import LocalShippingIcon from "@mui/icons-material/LocalShipping";
 import { useDispatch, useSelector } from "react-redux";
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
 import { createOrUpdateTab, removeTab } from "../redux/tabSlice";
-import { Tab, Tabs, useMediaQuery } from "@mui/material";
+import { Menu, MenuItem, Tab, Tabs, useMediaQuery } from "@mui/material";
 import { useEffect, useState } from "react";
 import AddIcon from "@mui/icons-material/Add";
 import CloseIcon from "@mui/icons-material/Close";
@@ -86,6 +86,15 @@ export default function Layout() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [open, setOpen] = useState(!isMobile);
+  const [anchorEl, setAnchorEl] = useState(null);
+  const openState = Boolean(anchorEl);
+
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
 
   const handleDrawerOpen = () => {
     setOpen(true);
@@ -125,9 +134,12 @@ export default function Layout() {
           <Box sx={{ position: "absolute", right: "0" }}>
             <IconButton
               color="inherit"
-              aria-label="open drawer"
+              id="basic-button"
               edge="start"
-              onClick={directToAdd}
+              aria-controls={openState ? 'basic-menu' : undefined}
+              aria-haspopup="true"
+              aria-expanded={openState ? 'true' : undefined}
+              onClick={handleClick}
               sx={{
                 mr: 2,
                 ":hover": { backgroundColor: "rgba(255, 255, 255, 0.274)" },
@@ -135,6 +147,37 @@ export default function Layout() {
             >
               <AddIcon />
             </IconButton>
+            <Menu
+                id="basic-menu"
+                anchorEl={anchorEl}
+                open={openState}
+                onClose={handleClose}
+                MenuListProps={{
+                  'aria-labelledby': 'basic-button',
+                }}
+                sx={{
+                  marginTop: "0.9rem"
+                }}
+              >
+                <MenuItem onClick={() => {
+                  directToAdd();
+                  handleClose();
+                  }}
+                  sx={{height: "3rem"}}
+                  >
+                    <LocalShippingIcon sx={{marginRight: "1rem", color: "grey"}}/>
+                    Add Supplier
+                </MenuItem>
+                <MenuItem onClick={() => {
+                  directToAdd();
+                  handleClose();
+                  }}
+                  sx={{height: "3rem"}}
+                  >
+                    <InventoryIcon sx={{marginRight: "1rem", color: "grey"}}/>
+                    Add Package
+                </MenuItem>
+              </Menu>
           </Box>
         </Toolbar>
       </AppBar>
