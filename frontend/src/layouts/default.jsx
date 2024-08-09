@@ -20,13 +20,22 @@ import LocalShippingIcon from "@mui/icons-material/LocalShipping";
 import { useDispatch, useSelector } from "react-redux";
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
 import { createOrUpdateTab, removeTab } from "../redux/tabSlice";
-import { Menu, MenuItem, Tab, Tabs, useMediaQuery } from "@mui/material";
+import { Avatar, Tab, Tabs, useMediaQuery } from "@mui/material";
 import { useEffect, useState } from "react";
 import AddIcon from "@mui/icons-material/Add";
 import CloseIcon from "@mui/icons-material/Close";
 import styles from "./default.module.css";
 import { removeEditSupplierSession } from "../redux/editSupplierSlice";
 import { removeEditPackageSession } from "../redux/editPackageSlice";
+import { deepOrange } from "@mui/material/colors";
+import Logout from "@mui/icons-material/Logout";
+import {
+  MenuButton,
+  MenuItems,
+  MenuItem,
+  MenuWrapper,
+} from "../components/Menu";
+import Edit from "@mui/icons-material/Edit";
 
 const drawerWidth = 240;
 
@@ -64,12 +73,6 @@ const Container = styled("main", {
     }),
     marginLeft: 0,
   }),
-  /**
-   * This is necessary to enable the selection of content. In the DOM, the stacking order is determined
-   * by the order of appearance. Following this rule, elements appearing later in the markup will overlay
-   * those that appear earlier. Since the Drawer comes after the Main content, this adjustment ensures
-   * proper interaction with the underlying content.
-   */
   position: "relative",
 }));
 
@@ -88,15 +91,8 @@ export default function Layout() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [open, setOpen] = useState(!isMobile);
-  const [anchorEl, setAnchorEl] = useState(null);
-  const openState = Boolean(anchorEl);
-
-  const handleClick = (event) => {
-    setAnchorEl(event.currentTarget);
-  };
-  const handleClose = () => {
-    setAnchorEl(null);
-  };
+  // const user = useSelector((state) => state.auth);
+  const userRole = useSelector((state) => state.auth.role);
 
   const handleDrawerOpen = () => {
     setOpen(true);
@@ -111,6 +107,18 @@ export default function Layout() {
     dispatch(createOrUpdateTab(path));
     navigate(path);
   };
+
+  // const openEditSupplierTab = (supplier) => {
+  //   const path = `/suppliers-list/${user.id}/edit`;
+  //   console.log(user);
+  //   dispatch(
+  //     createOrUpdateTab({
+  //       path: path,
+  //       data: user,
+  //     })
+  //   );
+  //   navigate(path);
+  // };
 
   return (
     <Box sx={{ display: "flex" }}>
@@ -134,52 +142,59 @@ export default function Layout() {
             Inventory Management
           </Typography>
           <Box sx={{ position: "absolute", right: "0" }}>
-            <IconButton
-              color="inherit"
-              id="basic-button"
-              edge="start"
-              aria-controls={openState ? 'basic-menu' : undefined}
-              aria-haspopup="true"
-              aria-expanded={openState ? 'true' : undefined}
-              onClick={handleClick}
-              sx={{
-                mr: 2,
-                ":hover": { backgroundColor: "rgba(255, 255, 255, 0.274)" },
-              }}
-            >
-              <AddIcon />
-            </IconButton>
-            <Menu
-                id="basic-menu"
-                anchorEl={anchorEl}
-                open={openState}
-                onClose={handleClose}
-                MenuListProps={{
-                  'aria-labelledby': 'basic-button',
-                }}
-                sx={{
-                  marginTop: "0.9rem"
-                }}
-              >
-                <MenuItem onClick={() => {
-                  directToAdd();
-                  handleClose();
-                  }}
-                  sx={{height: "3rem"}}
+            <MenuWrapper>
+              <MenuButton>
+                {userRole === "ADMIN" ? (
+                  <AddIcon />
+                ) : (
+                  <Avatar
+                    sx={{
+                      bgcolor: deepOrange[500],
+                      width: "30px",
+                      height: "30px",
+                    }}
                   >
-                    <LocalShippingIcon sx={{marginRight: "1rem", color: "grey"}}/>
+                    A
+                  </Avatar>
+                )}
+              </MenuButton>
+
+              {userRole === "ADMIN" ? (
+                <MenuItems>
+                  <MenuItem
+                    onClick={() => {
+                      directToAdd();
+                    }}
+                  >
+                    <LocalShippingIcon
+                      sx={{ marginRight: "1rem", color: "grey" }}
+                    />
                     Add Supplier
-                </MenuItem>
-                <MenuItem onClick={() => {
-                  directToAdd();
-                  handleClose();
-                  }}
-                  sx={{height: "3rem"}}
+                  </MenuItem>
+                  <MenuItem
+                    onClick={() => {
+                      directToAdd();
+                    }}
                   >
-                    <InventoryIcon sx={{marginRight: "1rem", color: "grey"}}/>
+                    <InventoryIcon
+                      sx={{ marginRight: "1rem", color: "grey" }}
+                    />
                     Add Package
-                </MenuItem>
-              </Menu>
+                  </MenuItem>
+                </MenuItems>
+              ) : (
+                <MenuItems>
+                  <MenuItem>
+                  <Edit sx={{ marginRight: "1rem", color: "grey" }} />
+                  Edit Profile</MenuItem>
+                  <Divider />
+                  <MenuItem>
+                      <Logout sx={{ marginRight: "1rem", color: "grey" }} />
+                    Logout
+                  </MenuItem>
+                </MenuItems>
+              )}
+            </MenuWrapper>
           </Box>
         </Toolbar>
       </AppBar>
