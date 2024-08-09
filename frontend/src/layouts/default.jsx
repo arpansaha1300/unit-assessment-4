@@ -106,8 +106,14 @@ export default function Layout() {
     setOpen(false);
   };
 
-  const directToAdd = () => {
+  const directToAddSupplier = () => {
     const path = "/add-supplier";
+    dispatch(createOrUpdateTab(path));
+    navigate(path);
+  };
+
+  const directToAddPackage = () => {
+    const path = "/add-package";
     dispatch(createOrUpdateTab(path));
     navigate(path);
   };
@@ -162,7 +168,7 @@ export default function Layout() {
                 }}
               >
                 <MenuItem onClick={() => {
-                  directToAdd();
+                  directToAddSupplier();
                   handleClose();
                   }}
                   sx={{height: "3rem"}}
@@ -171,7 +177,7 @@ export default function Layout() {
                     Add Supplier
                 </MenuItem>
                 <MenuItem onClick={() => {
-                  directToAdd();
+                  directToAddPackage();
                   handleClose();
                   }}
                   sx={{height: "3rem"}}
