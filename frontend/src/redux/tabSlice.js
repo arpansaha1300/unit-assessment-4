@@ -46,7 +46,12 @@ function getRouteName(path, data) {
       if (path.startsWith("/suppliers-list") && path.endsWith("/edit")) {
         const supplier = data;
         if (!supplier) return "Edit Supplier";
-        return supplier.name + " | Edit Supplier";
+        return supplier.name.split(" ")[0] + " | Edit Supplier";
+      }
+      if (path.startsWith("/package-list") && path.endsWith("/edit")) {
+        const pkg = data;
+        if (!pkg) return "Edit Package";
+        return pkg.packageName.split(" ")[0] + " | Edit Package";
       }
     }
   }

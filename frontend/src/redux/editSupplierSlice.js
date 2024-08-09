@@ -5,7 +5,7 @@ const initialState = {
 };
 
 const editSupplierSlice = createSlice({
-  name: "auth",
+  name: "edit-supplier",
   initialState,
   reducers: {
     createEditSupplierSession: (state, action) => {
