@@ -128,21 +128,23 @@ export default function Layout() {
   return (
     <Box sx={{ display: "flex" }}>
       <CssBaseline />
-      <AppBar position="fixed" open={open}>
+      <AppBar position="fixed" open={userRole === "ADMIN" && open}>
         <Toolbar>
-          <IconButton
-            color="inherit"
-            aria-label="open drawer"
-            edge="start"
-            onClick={handleDrawerOpen}
-            sx={{
-              mr: 2,
-              ...(open && { display: "none" }),
-              ":hover": { backgroundColor: "rgba(255, 255, 255, 0.274)" },
-            }}
-          >
-            <MenuIcon />
-          </IconButton>
+          {userRole === "ADMIN" && (
+            <IconButton
+              color="inherit"
+              aria-label="open drawer"
+              edge="start"
+              onClick={handleDrawerOpen}
+              sx={{
+                mr: 2,
+                ...(open && { display: "none" }),
+                ":hover": { backgroundColor: "rgba(255, 255, 255, 0.274)" },
+              }}
+            >
+              <MenuIcon />
+            </IconButton>
+          )}
           <Typography variant="h6" noWrap component="div">
             Inventory Management
           </Typography>
@@ -205,32 +207,34 @@ export default function Layout() {
         </Toolbar>
       </AppBar>
 
-      <Drawer
-        sx={{
-          width: drawerWidth,
-          flexShrink: 0,
-          "& .MuiDrawer-paper": {
+      {userRole === "ADMIN" && (
+        <Drawer
+          sx={{
             width: drawerWidth,
-          },
-        }}
-        variant="persistent"
-        anchor="left"
-        open={open}
-      >
-        <DrawerHeader>
-          <IconButton onClick={handleDrawerClose}>
-            {theme.direction === "ltr" ? (
-              <ChevronLeftIcon />
-            ) : (
-              <ChevronRightIcon />
-            )}
-          </IconButton>
-        </DrawerHeader>
-        <Divider />
-        <DrawerTabs />
-      </Drawer>
+            flexShrink: 0,
+            "& .MuiDrawer-paper": {
+              width: drawerWidth,
+            },
+          }}
+          variant="persistent"
+          anchor="left"
+          open={open}
+        >
+          <DrawerHeader>
+            <IconButton onClick={handleDrawerClose}>
+              {theme.direction === "ltr" ? (
+                <ChevronLeftIcon />
+              ) : (
+                <ChevronRightIcon />
+              )}
+            </IconButton>
+          </DrawerHeader>
+          <Divider />
+          <DrawerTabs />
+        </Drawer>
+      )}
 
-      <Container open={open}>
+      <Container open={userRole === "ADMIN" && open}>
         <DrawerHeader />
         <Box sx={{ marginBottom: "1rem" }}>
           <TabList />
