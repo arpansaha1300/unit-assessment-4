@@ -3,11 +3,14 @@ import { useState } from "react";
 import backgroundImg from '../assets/background.jpg';
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
+import { useDispatch } from "react-redux";
+import { setEmail, setRole, setId } from '../redux/authSlice'
 
 function Login() {
   const [name, setName] = useState('');
   const [pass, setPass] = useState('');
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const handleNameChange = (event) => {
     setName(event.target.value);
@@ -21,14 +24,22 @@ function Login() {
     event.preventDefault();
 
     axios.post("http://localhost:8080/api/login", {
-        email: name,
-        password: pass
-      })
-      .then(function (response) {
-        if((response.data.split(" "))[0]){
-        navigate('/suppliers-list');
+      email: name,
+      password: pass
+    })
+      .then((response) => {
+        dispatch(setEmail(response.data.email))
+        dispatch(setRole(response.data.role))
+        dispatch(setId(response.data.id))
+
+        if (response.data.role == 'ADMIN') {
+          navigate('/suppliers-list');
+        }
+        else {
+          navigate('/supplier-profile');
+        }
       }
-      })
+      )
       .catch(function (error) {
         console.log(error);
       });
@@ -43,7 +54,7 @@ function Login() {
     backgroundImage: `url(${backgroundImg})`,
     filter: "blur(8px)",
     WebkitFilter: "blur(8px)",
-    zIndex: 0, 
+    zIndex: 0,
   };
 
   const inputStyle = {
@@ -73,7 +84,7 @@ function Login() {
               value={name}
               onChange={handleNameChange}
               variant="outlined"
-              label="Username"
+              label="Email"
               type="email"
               required
             />
@@ -90,7 +101,7 @@ function Login() {
           </FormControl>
         </form>
         <Typography sx={{ textAlign: "center", marginTop: "0.4rem", color: "rgb(66, 66, 66)" }}>
-          New User?  
+          New User?
           <Link to="/sign-up">SignUp</Link>
         </Typography>
       </Box>
