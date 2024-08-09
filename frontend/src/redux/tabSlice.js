@@ -5,8 +5,9 @@ const initialState = {
 };
 
 const tabSlice = createSlice({
-  name: "auth",
+  name: "tabs",
   initialState,
+  reducerPath: "tabs",
   reducers: {
     createOrUpdateTab: (state, action) => {
       const payloadIsString = typeof action.payload === "string";
