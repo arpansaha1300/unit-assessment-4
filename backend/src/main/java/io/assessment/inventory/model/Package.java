@@ -2,7 +2,6 @@ package io.assessment.inventory.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 
-import io.assessment.inventory.exception.SupplierNotFoundException;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -73,7 +72,6 @@ public class Package {
     }
 
     public void setSupplier_id(Long supplier_id) {
-        // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'setSupplier_id'");
     }
 }
