@@ -22,12 +22,13 @@ function Signup() {
   };
 
   const formStyle = {
+    display: "flex",
     padding: "3rem 2rem",
     borderRadius: "1rem",
     backgroundColor: "rgba(255, 255, 255, 0.89)",
     position: "relative",
     zIndex: 1,
-    width: "25rem",
+    height: "30rem",
     boxShadow: "10px 10px 10px 4px #2669d4"
   };
 
@@ -61,7 +62,7 @@ function Signup() {
 
   const validateDetails = (pass, confirmPass) => {
     let valid = true;
-    if(pass != confirmPass){
+    if (pass != confirmPass) {
       setConfirmPassError("Passwords do not match");
       valid = false;
     }
@@ -83,43 +84,47 @@ function Signup() {
       <CssBaseline />
       <div style={backgroundStyle} />
       <Box style={formStyle}>
-        <Box sx={{display: "flex", justifyContent: "center", color: "green"}}>
-          <VpnKeyOutlinedIcon style={iconStyle}/>
+        <Box sx={{ margin: "auto 4rem" }}>
+          <Box sx={{ display: "flex", justifyContent: "center", color: "green" }}>
+            <VpnKeyOutlinedIcon style={iconStyle} />
+          </Box>
+          <Typography style={headingStyle}>Sign Up</Typography>
         </Box>
-        <Typography style={headingStyle}>Sign Up</Typography>
-        <form onSubmit={handleSubmit}>
-          <FormControl fullWidth>
-            <TextField
-              value={name}
-              onChange={handleNameChange}
-              variant="standard"
-              label="Username"
-              required
-            />
-            <TextField
-              value={pass}
-              onChange={handlePassChange}
-              variant="standard"
-              label="Password"
-              type="password"
-              required
-              error={!!passError}
-              helperText={passError}
-            />
-            <TextField
-              sx={{marginBottom: "3rem"}}
-              value={confirmPass}
-              onChange={handleConfirmPassChange}
-              variant="standard"
-              label="Confirm Password"
-              type="password"
-              required
-              error={!!confirmPassError}
-              helperText={confirmPassError}
-            />
-            <Button variant="contained" type="submit" sx={{ textTransform: "none", marginTop: '0.2rem' }}>Register</Button>
-          </FormControl>
-        </form>
+        <Box sx={{ margin: "auto 4rem auto 2rem", borderLeft: "1px solid grey", paddingLeft: "6rem" }}>
+          <form onSubmit={handleSubmit}>
+            <FormControl fullWidth>
+              <TextField
+                value={name}
+                onChange={handleNameChange}
+                variant="standard"
+                label="Username"
+                required
+              />
+              <TextField
+                value={pass}
+                onChange={handlePassChange}
+                variant="standard"
+                label="Password"
+                type="password"
+                required
+                error={!!passError}
+                helperText={passError}
+              />
+              <TextField
+                sx={{ marginBottom: "3rem" }}
+                value={confirmPass}
+                onChange={handleConfirmPassChange}
+                variant="standard"
+                label="Confirm Password"
+                type="password"
+                required
+                error={!!confirmPassError}
+                helperText={confirmPassError}
+              />
+              <Button variant="contained" type="submit" sx={{ textTransform: "none", marginTop: '0.2rem' }}>Register</Button>
+            </FormControl>
+          </form>
+        </Box>
       </Box>
     </Box>
   );
