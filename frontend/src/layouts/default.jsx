@@ -102,7 +102,7 @@ export default function Layout() {
     setOpen(false);
   };
 
-  const directToAdd = () => {
+  const directToAddSupplier = () => {
     const path = "/add-supplier";
     dispatch(createOrUpdateTab(path));
     navigate(path);
@@ -119,6 +119,11 @@ export default function Layout() {
   //   );
   //   navigate(path);
   // };
+  const directToAddPackage = () => {
+    const path = "/add-package";
+    dispatch(createOrUpdateTab(path));
+    navigate(path);
+  };
 
   return (
     <Box sx={{ display: "flex" }}>
@@ -163,7 +168,7 @@ export default function Layout() {
                 <MenuItems>
                   <MenuItem
                     onClick={() => {
-                      directToAdd();
+                      directToAddSupplier();
                     }}
                   >
                     <LocalShippingIcon
@@ -173,7 +178,7 @@ export default function Layout() {
                   </MenuItem>
                   <MenuItem
                     onClick={() => {
-                      directToAdd();
+                      directToAddPackage();
                     }}
                   >
                     <InventoryIcon
@@ -185,11 +190,12 @@ export default function Layout() {
               ) : (
                 <MenuItems>
                   <MenuItem>
-                  <Edit sx={{ marginRight: "1rem", color: "grey" }} />
-                  Edit Profile</MenuItem>
+                    <Edit sx={{ marginRight: "1rem", color: "grey" }} />
+                    Edit Profile
+                  </MenuItem>
                   <Divider />
                   <MenuItem>
-                      <Logout sx={{ marginRight: "1rem", color: "grey" }} />
+                    <Logout sx={{ marginRight: "1rem", color: "grey" }} />
                     Logout
                   </MenuItem>
                 </MenuItems>

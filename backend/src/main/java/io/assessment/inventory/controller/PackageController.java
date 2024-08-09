@@ -36,10 +36,11 @@ public class PackageController {
     @PostMapping
     public Package addPackages(@RequestBody PackageDto packagedto) {
         Package packages = new Package();
+        Supplier supplier = supplierService.getSupplierById(packagedto.getSupplier_id());
         packages.setPackageName(packagedto.getPackageName());
         packages.setAddress(packagedto.getAddress());
         packages.setQuantity(packagedto.getQuantity());
-        packages.setSupplier_id(packagedto.getSupplier_id());
+        packages.setSupplier(supplier);
         return packageService.savePackage(packages);
     }
 

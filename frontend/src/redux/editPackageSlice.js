@@ -7,6 +7,7 @@ const initialState = {
 const editPackageSlice = createSlice({
   name: "edit-package",
   initialState,
+  reducerPath: "edit-package",
   reducers: {
     createEditPackageSession: (state, action) => {
       const packageId = action.payload.id;

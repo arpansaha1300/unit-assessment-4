@@ -8,6 +8,7 @@ import Profile from "./pages/Profile";
 import EditSupplier from "./pages/suppliers/Edit";
 import EditPackage from "./pages/packages/Edit";
 import AddSupplier from "./pages/AddSupplier";
+import AddPackage from "./pages/AddPackage";
 
 const router = createBrowserRouter([
   {
@@ -41,6 +42,10 @@ const router = createBrowserRouter([
         path: "/add-supplier",
         element: <AddSupplier />,
       },
+      {
+        path: "/add-package",
+        element: <AddPackage />,
+      }
     ],
   },
 
