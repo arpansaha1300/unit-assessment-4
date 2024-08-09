@@ -109,20 +109,7 @@ export default function Layout() {
     dispatch(createOrUpdateTab(path));
     navigate(path);
   };
-  const openEditSupplierTab = async () => {
-    const path = `/suppliers-list/${userId}/edit`;
-    const response = await axios.get(
-      `http://localhost:8080/api/suppliers/${userId}`
-    );
 
-    dispatch(
-      createOrUpdateTab({
-        path: path,
-        data: response.data,
-      })
-    );
-    navigate(path);
-  };
   const directToAddPackage = () => {
     const path = "/add-package";
     dispatch(createOrUpdateTab(path));
@@ -139,21 +126,23 @@ export default function Layout() {
   return (
     <Box sx={{ display: "flex" }}>
       <CssBaseline />
-      <AppBar position="fixed" open={open}>
+      <AppBar position="fixed" open={userRole === "ADMIN" && open}>
         <Toolbar>
-          <IconButton
-            color="inherit"
-            aria-label="open drawer"
-            edge="start"
-            onClick={handleDrawerOpen}
-            sx={{
-              mr: 2,
-              ...(open && { display: "none" }),
-              ":hover": { backgroundColor: "rgba(255, 255, 255, 0.274)" },
-            }}
-          >
-            <MenuIcon />
-          </IconButton>
+          {userRole === "ADMIN" && (
+            <IconButton
+              color="inherit"
+              aria-label="open drawer"
+              edge="start"
+              onClick={handleDrawerOpen}
+              sx={{
+                mr: 2,
+                ...(open && { display: "none" }),
+                ":hover": { backgroundColor: "rgba(255, 255, 255, 0.274)" },
+              }}
+            >
+              <MenuIcon />
+            </IconButton>
+          )}
           <Typography variant="h6" noWrap component="div">
             Inventory Management
           </Typography>
@@ -200,14 +189,17 @@ export default function Layout() {
                 </MenuItems>
               ) : (
                 <MenuItems>
-                  <Link to={`/suppliers-list/${userId}/edit`}  style={{ textDecoration: 'none',color:'black' }}>
+                  <Link
+                    to={`/suppliers-list/${userId}/edit`}
+                    style={{ textDecoration: "none", color: "black" }}
+                  >
                     <MenuItem>
                       <Edit sx={{ marginRight: "1rem", color: "grey" }} />
                       Edit Profile
                     </MenuItem>
                   </Link>
                   <Divider />
-                  <MenuItem onClick={handleLogout} sx={{color:'black'}}>
+                  <MenuItem onClick={handleLogout} sx={{ color: "black" }}>
                     <Logout sx={{ marginRight: "1rem", color: "grey" }} />
                     Logout
                   </MenuItem>
@@ -218,32 +210,34 @@ export default function Layout() {
         </Toolbar>
       </AppBar>
 
-      <Drawer
-        sx={{
-          width: drawerWidth,
-          flexShrink: 0,
-          "& .MuiDrawer-paper": {
+      {userRole === "ADMIN" && (
+        <Drawer
+          sx={{
             width: drawerWidth,
-          },
-        }}
-        variant="persistent"
-        anchor="left"
-        open={open}
-      >
-        <DrawerHeader>
-          <IconButton onClick={handleDrawerClose}>
-            {theme.direction === "ltr" ? (
-              <ChevronLeftIcon />
-            ) : (
-              <ChevronRightIcon />
-            )}
-          </IconButton>
-        </DrawerHeader>
-        <Divider />
-        <DrawerTabs />
-      </Drawer>
+            flexShrink: 0,
+            "& .MuiDrawer-paper": {
+              width: drawerWidth,
+            },
+          }}
+          variant="persistent"
+          anchor="left"
+          open={open}
+        >
+          <DrawerHeader>
+            <IconButton onClick={handleDrawerClose}>
+              {theme.direction === "ltr" ? (
+                <ChevronLeftIcon />
+              ) : (
+                <ChevronRightIcon />
+              )}
+            </IconButton>
+          </DrawerHeader>
+          <Divider />
+          <DrawerTabs />
+        </Drawer>
+      )}
 
-      <Container open={open}>
+      <Container open={userRole === "ADMIN" ? open : true}>
         <DrawerHeader />
         <Box sx={{ marginBottom: "1rem" }}>
           <TabList />
