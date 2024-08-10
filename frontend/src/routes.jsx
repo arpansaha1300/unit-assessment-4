@@ -1,4 +1,8 @@
-import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import {
+  createBrowserRouter,
+  redirect,
+  RouterProvider,
+} from "react-router-dom";
 import Layout from "./layouts/default";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
@@ -9,10 +13,22 @@ import EditSupplier from "./pages/suppliers/Edit";
 import EditPackage from "./pages/packages/Edit";
 import AddSupplier from "./pages/AddSupplier";
 import AddPackage from "./pages/AddPackage";
+import store from "./redux/store";
 
 const router = createBrowserRouter([
   {
     element: <Layout />,
+    loader: () => {
+      if (store.getState().auth.isAuthenticated) return null;
+
+      return new Promise((res, rej) => {
+        const unsub = store.subscribe(() => {
+          unsub();
+          if (store.getState().auth.isAuthenticated) res(null);
+          else rej(redirect("/"));
+        });
+      });
+    },
     children: [
       {
         path: "/suppliers-list",
@@ -45,18 +61,37 @@ const router = createBrowserRouter([
       {
         path: "/add-package",
         element: <AddPackage />,
-      }
+      },
     ],
   },
 
   {
-    path: "/",
-    element: <Login />,
-  },
+    loader: () => {
+      const isAuth = store.getState().auth.isAuthenticated;
 
-  {
-    path: "/sign-up",
-    element: <Signup />,
+      if (isAuth === false) return null;
+      else if (isAuth) throw new Error("Forbidden");
+
+      return new Promise((res, rej) => {
+        const unsub = store.subscribe(() => {
+          unsub();
+          if (!store.getState().auth.isAuthenticated) res(null);
+          else rej("Forbidden");
+        });
+      });
+    },
+    errorElement: <div>Not Found</div>,
+    children: [
+      {
+        path: "/",
+        element: <Login />,
+      },
+
+      {
+        path: "/sign-up",
+        element: <Signup />,
+      },
+    ],
   },
 ]);
 
