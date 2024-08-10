@@ -1,14 +1,10 @@
 import { styled, useTheme } from "@mui/material/styles";
 import Box from "@mui/material/Box";
 import Drawer from "@mui/material/Drawer";
-import MuiAppBar from "@mui/material/AppBar";
-import Toolbar from "@mui/material/Toolbar";
 import CssBaseline from "@mui/material/CssBaseline";
 import List from "@mui/material/List";
-import Typography from "@mui/material/Typography";
 import Divider from "@mui/material/Divider";
 import IconButton from "@mui/material/IconButton";
-import MenuIcon from "@mui/icons-material/Menu";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import ListItem from "@mui/material/ListItem";
@@ -18,44 +14,17 @@ import ListItemText from "@mui/material/ListItemText";
 import InventoryIcon from "@mui/icons-material/Inventory";
 import LocalShippingIcon from "@mui/icons-material/LocalShipping";
 import { useDispatch, useSelector } from "react-redux";
-import { Link, Outlet, useLocation, useNavigate } from "react-router-dom";
+import { Outlet, useLocation, useNavigate } from "react-router-dom";
 import { createOrUpdateTab, removeTab } from "../redux/tabSlice";
-import { Avatar, Tab, Tabs, useMediaQuery } from "@mui/material";
+import { Tab, Tabs, useMediaQuery } from "@mui/material";
 import { useEffect, useState } from "react";
-import AddIcon from "@mui/icons-material/Add";
 import CloseIcon from "@mui/icons-material/Close";
 import styles from "./default.module.css";
 import { removeEditSupplierSession } from "../redux/editSupplierSlice";
 import { removeEditPackageSession } from "../redux/editPackageSlice";
-import { deepOrange } from "@mui/material/colors";
-import Logout from "@mui/icons-material/Logout";
-import {
-  MenuButton,
-  MenuItems,
-  MenuItem,
-  MenuWrapper,
-} from "../components/Menu";
-import Edit from "@mui/icons-material/Edit";
-import { setAuthenticated, setEmail, setId, setRole } from "../redux/authSlice";
+import Navbar from "../components/Navbar";
 
 const drawerWidth = 240;
-
-const AppBar = styled(MuiAppBar, {
-  shouldForwardProp: (prop) => prop !== "open",
-})(({ theme, open }) => ({
-  transition: theme.transitions.create(["margin", "width"], {
-    easing: theme.transitions.easing.sharp,
-    duration: theme.transitions.duration.leavingScreen,
-  }),
-  ...(open && {
-    width: `calc(100% - ${drawerWidth}px)`,
-    marginLeft: `${drawerWidth}px`,
-    transition: theme.transitions.create(["margin", "width"], {
-      easing: theme.transitions.easing.easeOut,
-      duration: theme.transitions.duration.enteringScreen,
-    }),
-  }),
-}));
 
 const Container = styled("main", {
   shouldForwardProp: (prop) => prop !== "open",
@@ -89,11 +58,8 @@ const DrawerHeader = styled("div")(({ theme }) => ({
 export default function Layout() {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
-  const dispatch = useDispatch();
-  const navigate = useNavigate();
-  const [open, setOpen] = useState(!isMobile);
   const userRole = useSelector((state) => state.auth.role);
-  const userId = useSelector((state) => state.auth.id);
+  const [open, setOpen] = useState(!isMobile);
 
   const handleDrawerOpen = () => {
     setOpen(true);
@@ -103,110 +69,10 @@ export default function Layout() {
     setOpen(false);
   };
 
-  const directToAddSupplier = () => {
-    const path = "/add-supplier";
-    dispatch(createOrUpdateTab(path));
-    navigate(path);
-  };
-  const directToAddPackage = () => {
-    const path = "/add-package";
-    dispatch(createOrUpdateTab(path));
-    navigate(path);
-  };
-  const handleLogout = () => {
-    dispatch(setEmail(""));
-    dispatch(setRole(""));
-    dispatch(setId(""));
-    dispatch(setAuthenticated(false));
-    navigate("/");
-  };
-
   return (
     <Box sx={{ display: "flex" }}>
       <CssBaseline />
-      <AppBar position="fixed" open={userRole === "ADMIN" && open}>
-        <Toolbar>
-          {userRole === "ADMIN" && (
-            <IconButton
-              color="inherit"
-              aria-label="open drawer"
-              edge="start"
-              onClick={handleDrawerOpen}
-              sx={{
-                mr: 2,
-                ...(open && { display: "none" }),
-                ":hover": { backgroundColor: "rgba(255, 255, 255, 0.274)" },
-              }}
-            >
-              <MenuIcon />
-            </IconButton>
-          )}
-          <Typography variant="h6" noWrap component="div">
-            Inventory Management
-          </Typography>
-          <Box sx={{ position: "absolute", right: "0" }}>
-            <MenuWrapper>
-              <MenuButton>
-                {userRole === "ADMIN" ? (
-                  <AddIcon />
-                ) : (
-                  <Avatar
-                    sx={{
-                      bgcolor: deepOrange[500],
-                      width: "30px",
-                      height: "30px",
-                    }}
-                  >
-                    A
-                  </Avatar>
-                )}
-              </MenuButton>
-
-              {userRole === "ADMIN" ? (
-                <MenuItems>
-                  <MenuItem
-                    onClick={() => {
-                      directToAddSupplier();
-                    }}
-                  >
-                    <LocalShippingIcon
-                      sx={{ marginRight: "1rem", color: "grey" }}
-                    />
-                    Add Supplier
-                  </MenuItem>
-                  <MenuItem
-                    onClick={() => {
-                      directToAddPackage();
-                    }}
-                  >
-                    <InventoryIcon
-                      sx={{ marginRight: "1rem", color: "grey" }}
-                    />
-                    Add Package
-                  </MenuItem>
-                </MenuItems>
-              ) : (
-                <MenuItems>
-                  <Link
-                    to={`/suppliers-list/${userId}/edit`}
-                    style={{ textDecoration: "none", color: "black" }}
-                  >
-                    <MenuItem>
-                      <Edit sx={{ marginRight: "1rem", color: "grey" }} />
-                      Edit Profile
-                    </MenuItem>
-                  </Link>
-                  <Divider />
-                  <MenuItem onClick={handleLogout} sx={{ color: "black" }}>
-                    <Logout sx={{ marginRight: "1rem", color: "grey" }} />
-                    Logout
-                  </MenuItem>
-                </MenuItems>
-              )}
-            </MenuWrapper>
-          </Box>
-        </Toolbar>
-      </AppBar>
+      <Navbar drawerOpen={open} handleDrawerOpen={handleDrawerOpen} />
 
       {userRole === "ADMIN" && (
         <Drawer
