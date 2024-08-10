@@ -68,17 +68,8 @@ const router = createBrowserRouter([
   {
     loader: () => {
       const isAuth = store.getState().auth.isAuthenticated;
-
-      if (isAuth === false) return null;
-      else if (isAuth) throw new Error("Forbidden");
-
-      return new Promise((res, rej) => {
-        const unsub = store.subscribe(() => {
-          unsub();
-          if (!store.getState().auth.isAuthenticated) res(null);
-          else rej("Forbidden");
-        });
-      });
+      if (isAuth === null || isAuth === false) return null;
+      else throw new Error("Forbidden");
     },
     errorElement: <div>Not Found</div>,
     children: [

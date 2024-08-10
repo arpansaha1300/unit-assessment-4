@@ -1,5 +1,6 @@
 /* eslint-disable react/prop-types */
-import { IconButton, Menu, MenuItem as RMenuItem } from "@mui/material";
+import { IconButton, Menu } from "@mui/material";
+import RMenuItem from "@mui/material/MenuItem";
 import { createContext, useContext, useMemo, useState } from "react";
 
 const MenuContext = createContext(null);
@@ -65,7 +66,7 @@ export function MenuItems({ children }) {
         "aria-labelledby": "basic-button",
       }}
       sx={{
-        marginTop: "0.9rem",
+        marginTop: "0.5rem",
       }}
     >
       {children}
