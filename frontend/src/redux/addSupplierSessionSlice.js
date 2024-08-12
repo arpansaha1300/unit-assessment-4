@@ -20,7 +20,7 @@ const addSupplierSessionSlice = createSlice({
     updateAddSupplierSessionContact: (state, action) => {
       state.contactInfo = action.payload;
     },
-    removeAddSupplierSession: (state) => {
+    clearAddSupplierSession: (state) => {
       state.name = "";
       state.email = "";
       state.contactInfo = "";
@@ -29,7 +29,7 @@ const addSupplierSessionSlice = createSlice({
 });
 
 export const {
-  removeAddSupplierSession,
+  clearAddSupplierSession,
   updateAddSupplierSessionContact,
   updateAddSupplierSessionEmail,
   updateAddSupplierSessionName,

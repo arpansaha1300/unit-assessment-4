@@ -26,9 +26,9 @@ const addPackageSessionSlice = createSlice({
     },
     clearAddPackageSession: (state) => {
       state.name = "";
-      state.email = "";
-      state.contactInfo = "";
-      state.password = "";
+      state.address = "";
+      state.quantity = "";
+      state.supplierId = "";
     },
   },
 });
