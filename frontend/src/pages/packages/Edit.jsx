@@ -29,7 +29,7 @@ export default function EditPackage() {
     return (
       pkg.packageName !== session.packageName ||
       pkg.address !== session.address ||
-      pkg.quantity.toString() !== session.quantity
+      pkg.quantity.toString() !== session.quantity.toString()
     );
   }, [session, pkg]);
 
