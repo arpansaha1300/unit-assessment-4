@@ -1,7 +1,8 @@
-import { Box, Button, CssBaseline, FormControl, Grid, TextField, Typography } from "@mui/material";
+import { Alert, Box, Button, CssBaseline, FormControl, Grid, Snackbar, TextField, Typography } from "@mui/material";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import VpnKeyOutlinedIcon from '@mui/icons-material/VpnKeyOutlined';
+import axios from "axios";
 
 function Signup() {
   const [passError, setPassError] = useState('');
@@ -9,6 +10,9 @@ function Signup() {
   const [name, setName] = useState('');
   const [pass, setPass] = useState('');
   const [confirmPass, setConfirmPass] = useState('');
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const [alertText, setAlertText] = useState('');
+  const [alertStyle, setAlertStyle] = useState('success');
   const navigate = useNavigate();
 
   const formStyle = {
@@ -58,6 +62,23 @@ function Signup() {
     setConfirmPassError('');
   }
 
+  const handleResponse = (data) => {
+    
+    if(data === "Password set for supplier."){
+      navigate('/');
+    }
+    else if(data === "Supplier already has a password."){
+      setAlertStyle("warning");
+      setAlertText("Supplier already has a password.");
+      setSnackbarOpen(true);
+    }
+    else {
+      setAlertStyle("error");
+      setAlertText("Email does not exist \n please contact admin.");
+      setSnackbarOpen(true);
+    }
+  };
+
   const validateDetails = (pass, confirmPass) => {
     let valid = true;
     if (pass != confirmPass) {
@@ -72,8 +93,17 @@ function Signup() {
     const valid = validateDetails(pass, confirmPass);
 
     if (valid) {
-      console.log('Form submitted successfully!');
-      navigate('/');
+      axios
+      .post("http://localhost:8080/api/signup", {
+        email: name,
+        password: confirmPass,
+      })
+      .then((response) => {
+        handleResponse(response.data);
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
     }
   }
 
@@ -94,7 +124,8 @@ function Signup() {
                   value={name}
                   onChange={handleNameChange}
                   variant="standard"
-                  label="Username"
+                  label="Email"
+                  type="email"
                   required
                 />
                 <TextField
@@ -123,6 +154,21 @@ function Signup() {
             </form>
           </Grid>
         </Grid>
+        <Snackbar
+        anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+        open={snackbarOpen}
+        autoHideDuration={5000}
+        onClose={() => setSnackbarOpen(false)}
+      >
+        <Alert
+          onClose={() => setSnackbarOpen(false)}
+          severity={alertStyle}
+          variant="filled"
+          sx={{ width: "100%" }}
+        >
+          {alertText}
+        </Alert>
+      </Snackbar>
     </Box>
   );
 }
