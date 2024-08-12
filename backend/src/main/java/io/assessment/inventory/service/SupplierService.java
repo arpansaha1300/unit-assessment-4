@@ -22,6 +22,7 @@ public class SupplierService {
     }
 
     public Supplier saveSupplier(Supplier supplier) {
+        supplier.setPassword(supplier.getPassword());
         return supplierRepository.save(supplier);
     }
 
