@@ -19,3 +19,21 @@ INSERT INTO package (id, address, package_name, supplier_id, quantity) VALUES (4
 INSERT INTO package (id, address, package_name, supplier_id, quantity) VALUES (5, 'Mumbai','Kuchina',5,1);
 INSERT INTO package (id, address, package_name, supplier_id, quantity) VALUES (6, 'Chandigarh','Jeans',6,3);
 INSERT INTO package (id, address, package_name, supplier_id, quantity) VALUES (7, 'Agra','Car',8,4);
+
+
+----for admin update----
+UPDATE `admin` SET `role` = 'admin' WHERE (`id` = '1');
+
+
+----for supplier table update---
+UPDATE `supplier` SET `role` = 'supplier' WHERE (`id` = '1');
+UPDATE `supplier` SET `role` = 'supplier' WHERE (`id` = '3');
+UPDATE `supplier` SET `role` = 'supplier' WHERE (`id` = '4');
+UPDATE `supplier` SET `role` = 'supplier' WHERE (`id` = '5');
+UPDATE `supplier` SET `role` = 'supplier' WHERE (`id` = '6');
+UPDATE `supplier` SET `role` = 'supplier' WHERE (`id` = '7');
+UPDATE `supplier` SET `role` = 'supplier' WHERE (`id` = '8');
+UPDATE `supplier` SET `role` = 'supplier' WHERE (`id` = '9');
+UPDATE `supplier` SET `role` = 'supplier' WHERE (`id` = '10');
+UPDATE `supplier` SET `role` = 'supplier' WHERE (`id` = '11');
+UPDATE `supplier` SET `role` = 'supplier' WHERE (`id` = '12');
