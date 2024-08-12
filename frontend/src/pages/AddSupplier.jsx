@@ -7,9 +7,15 @@ import {
   TextField,
 } from "@mui/material";
 import { useEffect, useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { createOrUpdateTab } from "../redux/tabSlice";
 import axios from "axios";
+import {
+  updateAddSupplierSessionContact,
+  updateAddSupplierSessionEmail,
+  updateAddSupplierSessionName,
+  updateAddSupplierSessionPassword,
+} from "../redux/addSupplierSessionSlice";
 
 function AddSupplier() {
   const dispatch = useDispatch();
@@ -17,28 +23,8 @@ function AddSupplier() {
   const [passError, setPassError] = useState("");
   const [contactError, setContactError] = useState("");
   const [emailError, setEmailError] = useState("");
-  const [name, setName] = useState();
-  const [email, setEmail] = useState();
-  const [contact, setContact] = useState();
-  const [pass, setPass] = useState();
-  const [state, setState] = useState({
-    open: false,
-    vertical: "bottom",
-    horizontal: "right",
-  });
-  const { vertical, horizontal, open } = state;
-
-  const handleSubmission = () => {
-    setState({
-      vertical: "bottom",
-      horizontal: "right",
-      open: true,
-    });
-  };
-
-  const handleClose = () => {
-    setState({ ...state, open: false });
-  };
+  const session = useSelector((state) => state.addSupplier);
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
 
   useEffect(() => {
     dispatch(createOrUpdateTab("/add-supplier"));
@@ -51,7 +37,7 @@ function AddSupplier() {
       setContactError("Contact number should contain only numbers");
       res = false;
     }
-    if (contact.length != 10){
+    if (contact.length != 10) {
       setContactError("Contact number should be 10 digits only");
       res = false;
     }
@@ -60,24 +46,43 @@ function AddSupplier() {
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    const res = validateDetails(contact);
+    const res = validateDetails(session.contactInfo);
     if (res) {
       axios
         .post("http://localhost:8080/api/suppliers", {
-          name: name,
-          email: email,
-          password: pass,
-          contactInfo: contact,
+          name: session.name,
+          email: session.email,
+          contactInfo: session.contactInfo,
+          password: session.password,
         })
-        .then(function (response) {
-          console.log(response);
-          handleSubmission();
+        .then(() => {
+          setSnackbarOpen(true);
         })
-        .catch(function (error) {
+        .catch((error) => {
           console.log(error);
         });
     }
   };
+
+  function updateName(e) {
+    dispatch(updateAddSupplierSessionName(e.target.value));
+    setNameError("");
+  }
+
+  function updateEmail(e) {
+    dispatch(updateAddSupplierSessionEmail(e.target.value));
+    setEmailError("");
+  }
+
+  function updateContact(e) {
+    dispatch(updateAddSupplierSessionContact(e.target.value));
+    setContactError("");
+  }
+
+  function updatePassword(e) {
+    dispatch(updateAddSupplierSessionPassword(e.target.value));
+    setPassError("");
+  }
 
   return (
     <Box sx={{ maxWidth: "24rem", margin: "auto" }}>
@@ -87,10 +92,8 @@ function AddSupplier() {
             margin="dense"
             label="Name"
             required
-            onChange={(e) => {
-              setName(e.target.value);
-              setNameError("");
-            }}
+            value={session.name}
+            onChange={updateName}
             error={!!nameError}
             helperText={nameError}
             fullWidth
@@ -100,10 +103,8 @@ function AddSupplier() {
             label="Email"
             type="email"
             required
-            onChange={(e) => {
-              setEmail(e.target.value);
-              setEmailError("");
-            }}
+            value={session.email}
+            onChange={updateEmail}
             error={!!emailError}
             helperText={emailError}
             fullWidth
@@ -112,10 +113,8 @@ function AddSupplier() {
             margin="dense"
             label="Contact"
             required
-            onChange={(e) => {
-              setContact(e.target.value);
-              setContactError("");
-            }}
+            value={session.contactInfo}
+            onChange={updateContact}
             error={!!contactError}
             helperText={contactError}
             fullWidth
@@ -125,10 +124,8 @@ function AddSupplier() {
             label="Password"
             type="password"
             required
-            onChange={(e) => {
-              setPass(e.target.value);
-              setPassError("");
-            }}
+            value={session.password}
+            onChange={updatePassword}
             error={!!passError}
             helperText={passError}
             fullWidth
@@ -143,14 +140,13 @@ function AddSupplier() {
         </FormControl>
       </form>
       <Snackbar
-        anchorOrigin={{ vertical, horizontal }}
-        open={open}
+        anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+        open={snackbarOpen}
         autoHideDuration={4000}
-        onClose={handleClose}
-        key={vertical + horizontal}
+        onClose={() => setSnackbarOpen(false)}
       >
         <Alert
-          onClose={handleClose}
+          onClose={() => setSnackbarOpen(false)}
           severity="success"
           variant="filled"
           sx={{ width: "100%" }}
