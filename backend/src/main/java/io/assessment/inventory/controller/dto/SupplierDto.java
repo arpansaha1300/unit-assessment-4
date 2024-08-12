@@ -5,6 +5,7 @@ public class SupplierDto {
     private String email;
     private String password;
     private String contactInfo;
+    private String role;
     public String getName() {
         return name;
     }
@@ -29,6 +30,13 @@ public class SupplierDto {
     public void setContactInfo(String contactInfo) {
         this.contactInfo = contactInfo;
     }
+    public String getRole() {
+        return role;
+    }
+    public void setRole(String role) {
+        this.role = role;
+    }
+    
     
 
     

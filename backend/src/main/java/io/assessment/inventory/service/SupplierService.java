@@ -29,5 +29,8 @@ public class SupplierService {
     public void deleteSupplier(Long id) {
         supplierRepository.deleteById(id);
     }
+    public boolean emailExists(String email) {
+        return supplierRepository.findByEmail(email) != null;
+    }
 }
 

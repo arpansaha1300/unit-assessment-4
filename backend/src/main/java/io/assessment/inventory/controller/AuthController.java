@@ -43,17 +43,6 @@ public class AuthController {
                 return "Supplier already has a password.";
             }
         }
-
-        // Admin admin = adminRepository.findByEmail(body.getEmail());
-        // if (admin != null) {
-        //     if (admin.getPassword() == null || admin.getPassword().isEmpty()) {
-        //         admin.setPassword(body.getPassword());
-        //         a.saveAdmin(admin);
-        //         return "Password set for admin. You can now log in.";
-        //     } else {
-        //         return "Admin already has a password.";
-        //     }
-        // }
         return "Error: Email does not exist";
     }
 }

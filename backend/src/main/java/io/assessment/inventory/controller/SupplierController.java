@@ -5,6 +5,8 @@ import io.assessment.inventory.exception.SupplierNotFoundException;
 import io.assessment.inventory.model.Supplier;
 import io.assessment.inventory.service.SupplierService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -20,14 +22,34 @@ public class SupplierController {
         return supplierService.getAllSuppliers();
     }
 
+    // @PostMapping
+    // public ResponseEntity<Supplier> addSupplier(@RequestBody SupplierDto
+    // supplierdto) {
+    // if(supplierService.emailExists(supplierdto.getEmail())){
+    // return ResponseEntity.status(HttpStatus.CONFLICT).body(null);
+    // }
+    // Supplier supplier=new Supplier();
+    // supplier.setName(supplierdto.getName());
+    // supplier.setEmail(supplierdto.getEmail());
+    // supplier.setPassword(supplierdto.getPassword());
+    // supplier.setContactInfo(supplierdto.getContactInfo());
+    // return supplierService.saveSupplier(supplier);
+    // }
+
     @PostMapping
-    public Supplier addSupplier(@RequestBody SupplierDto supplierdto) {
-        Supplier supplier=new Supplier();
-        supplier.setName(supplierdto.getName());
-        supplier.setEmail(supplierdto.getEmail());
-        supplier.setPassword(supplierdto.getPassword());
-        supplier.setContactInfo(supplierdto.getContactInfo());
-        return supplierService.saveSupplier(supplier);
+    public ResponseEntity<?> addSupplier(@RequestBody SupplierDto supplierDto) {
+        if (supplierService.emailExists(supplierDto.getEmail())) {
+            return ResponseEntity.status(HttpStatus.CONFLICT)
+                    .body("Email already exists. Please use a different email.");
+        }
+        Supplier supplier = new Supplier();
+        supplier.setName(supplierDto.getName());
+        supplier.setEmail(supplierDto.getEmail());
+        supplier.setPassword(supplierDto.getPassword());
+        supplier.setContactInfo(supplierDto.getContactInfo());
+        supplier.setRole(supplierDto.getRole());
+        Supplier savedSupplier = supplierService.saveSupplier(supplier);
+        return ResponseEntity.status(HttpStatus.CREATED).body(savedSupplier);
     }
 
     @GetMapping("/{id}")
@@ -36,9 +58,10 @@ public class SupplierController {
     }
 
     // @PutMapping("/{id}")
-    // public Supplier updateSupplier(@PathVariable Long id, @RequestBody Supplier supplier) {
-    //     supplier.setId(id);
-    //     return supplierService.saveSupplier(supplier);
+    // public Supplier updateSupplier(@PathVariable Long id, @RequestBody Supplier
+    // supplier) {
+    // supplier.setId(id);
+    // return supplierService.saveSupplier(supplier);
     // }
     @PutMapping("/{id}")
     public Supplier updateSupplier(@PathVariable Long id, @RequestBody SupplierDto supplierdto) {
