@@ -71,7 +71,7 @@ export default function Layout() {
   };
 
   return (
-    <Box sx={{ display: "flex" }}>
+    <Box sx={{ display: "flex", }}>
       <CssBaseline />
       <Navbar drawerOpen={open} handleDrawerOpen={handleDrawerOpen} />
 
