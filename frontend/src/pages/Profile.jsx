@@ -100,7 +100,9 @@ export default function ProfilePage() {
 
       <Grid item xs={12} lg={8}>
         {isMobile ? (
-          <Card sx={{ boxShadow: "none", border: "1px solid #f0f0f0" }}>
+          <>
+          {supplier.packages.length==0? <Typography variant="h5" sx={{fontWeight:'bold',display:'flex',justifyContent:'center',alignItems:'center',}}>No Packages Assigned</Typography>
+          :<Card sx={{ boxShadow: "none", border: "1px solid #f0f0f0" }}>
             <CardContent>
               <Typography variant="h6" sx={{ fontWeight: "bold",p:1,display:'flex',justifyContent:'center' }}>
                 Packages Assigned
@@ -131,8 +133,12 @@ export default function ProfilePage() {
                 ))}
               </Stack>
             </CardContent>
-          </Card>
+          </Card>}
+          </>
+          
         ) : (
+          <>
+          {supplier.packages.length===0?<Typography variant="h5" sx={{fontWeight:'bold',display:'flex',justifyContent:'center',alignItems:'center'}}>No Packages Assigned</Typography>:
           <TableContainer
             component={Paper}
             sx={{ boxShadow: "none", border: "1px solid #f0f0f0" }}
@@ -172,7 +178,8 @@ export default function ProfilePage() {
                 ))}
               </TableBody>
             </Table>
-          </TableContainer>
+          </TableContainer>}
+          </>
         )}
       </Grid>
     </Grid>
