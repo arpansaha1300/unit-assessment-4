@@ -115,6 +115,14 @@ const Suppliers = () => {
       await axios.delete(
         `http://localhost:8080/api/suppliers/${supplierToDelete.id}`
       );
+      setSuppliersData((state) => {
+        const newState = [...state];
+        newState.splice(
+          newState.findIndex((s) => s.id === supplierToDelete.id),
+          1
+        );
+        return newState;
+      });
     } catch (error) {
       console.error("Error deleting supplier:", error);
     } finally {
