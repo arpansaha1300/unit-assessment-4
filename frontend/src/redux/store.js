@@ -3,6 +3,8 @@ import authReducer from "./authSlice";
 import tabsReducer from "./tabSlice";
 import editSupplierReducer from "./editSupplierSlice";
 import editPackageReducer from "./editPackageSlice";
+import addSupplierSessionReducer from "./addSupplierSessionSlice";
+import addPackageSessionReducer from "./addPackageSessionSlice";
 import { persistReducer, persistStore } from "redux-persist";
 import storage from "redux-persist/lib/storage";
 
@@ -17,6 +19,8 @@ const store = configureStore({
     tabs: tabsReducer,
     editSupplier: editSupplierReducer,
     editPackage: editPackageReducer,
+    addSupplier: addSupplierSessionReducer,
+    addPackage: addPackageSessionReducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
