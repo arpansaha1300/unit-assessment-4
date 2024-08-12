@@ -18,6 +18,7 @@ public class Supplier {
     private String email;
     private String password;
     private String contactInfo;
+    private String role;
 
     @OneToMany(mappedBy = "supplier", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Package> packages;
@@ -70,6 +71,14 @@ public class Supplier {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public String getRole() {
+        return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
     }
     
 }
