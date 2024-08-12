@@ -88,6 +88,15 @@ const Packages = () => {
       await axios.delete(
         `http://localhost:8080/api/packages/${selectedPackage.id}`
       );
+
+      setPackagesData((state) => {
+        const newState = [...state];
+        newState.splice(
+          newState.findIndex((s) => s.id === selectedPackage.id),
+          1
+        );
+        return newState;
+      });
     } catch (error) {
       console.error("Error deleting package:", error);
     } finally {
@@ -146,16 +155,19 @@ const Packages = () => {
                   key={index}
                   sx={{ border: "1px solid #ddd", borderRadius: "4px", p: 2 }}
                 >
-                  <Typography variant="h6" > {pkg.packageName}</Typography>
-                  <Typography variant="body2" >
-                  <strong>Product ID:</strong> {pkg.id}
-                  </Typography>
-                  <Typography variant="body2"> <strong>Address:</strong>  {pkg.address}</Typography>
+                  <Typography variant="h6"> {pkg.packageName}</Typography>
                   <Typography variant="body2">
-                  <strong>Supplier ID: </strong> {pkg.supplierId}
+                    <strong>Product ID:</strong> {pkg.id}
                   </Typography>
                   <Typography variant="body2">
-                  <strong>Quantity:</strong> {pkg.quantity}
+                    {" "}
+                    <strong>Address:</strong> {pkg.address}
+                  </Typography>
+                  <Typography variant="body2">
+                    <strong>Supplier ID: </strong> {pkg.supplierId}
+                  </Typography>
+                  <Typography variant="body2">
+                    <strong>Quantity:</strong> {pkg.quantity}
                   </Typography>
                   <Box sx={{ display: "flex", alignItems: "center" }}>
                     <IconButton
