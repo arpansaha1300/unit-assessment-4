@@ -17,20 +17,20 @@ export default function EditPackage() {
   const location = useLocation();
   const [pkg, setPkg] = useState(null);
   const sessions = useSelector((state) => state.editPackage.sessions);
-  const [session, setSession] = useState(null);
+
+  const session = useMemo(
+    () => sessions[params.packageId],
+    [params.packageId, sessions]
+  );
 
   const isDirty = useMemo(() => {
     if (!pkg || !session) return false;
     return (
       pkg.packageName !== session.packageName ||
       pkg.address !== session.address ||
-      pkg.quantity !== session.quantity
+      pkg.quantity.toString() !== session.quantity
     );
   }, [session, pkg]);
-
-  useEffect(() => {
-    setSession(sessions[params.packageId]);
-  }, [params.packageId, sessions]);
 
   useEffect(() => {
     axios
@@ -61,11 +61,15 @@ export default function EditPackage() {
     e.preventDefault();
 
     try {
-      await axios.put(`http://localhost:8080/api/packages/${pkg.id}`, {
-        packageName: session.packageName,
-        address: session.address,
-        quantity: session.quantity,
-      });
+      const res = await axios.put(
+        `http://localhost:8080/api/packages/${pkg.id}`,
+        {
+          packageName: session.packageName,
+          address: session.address,
+          quantity: session.quantity,
+        }
+      );
+      setPkg(res.data);
     } catch (error) {
       console.error("Error updating package:", error);
     }
