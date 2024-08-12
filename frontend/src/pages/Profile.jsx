@@ -7,8 +7,6 @@ import {
   CardContent,
   CardMedia,
   Typography,
-  Breadcrumbs,
-  Link,
   List,
   ListItem,
   ListItemText,
@@ -20,8 +18,7 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
-import {useSelector} from 'react-redux'
-
+import { useSelector } from "react-redux";
 
 export default function ProfilePage() {
   const [supplier, setSupplier] = useState(null);
@@ -39,7 +36,7 @@ export default function ProfilePage() {
       }
     };
     fetchSupplierData();
-  }, []);
+  }, [supplierId]);
 
   if (!supplier) {
     return (
@@ -54,101 +51,92 @@ export default function ProfilePage() {
   }
 
   return (
-        <Grid container spacing={2}  sx={{ py: 2,}}>
-          <Grid item xs={12} >
-            <Breadcrumbs aria-label="breadcrumb" sx={{ mb: 4 }}>
-              <Link color="inherit" href="#">
-                Home
-              </Link>
-              <Link color="inherit" href="#">
-                Suppliers
-              </Link>
-              <Typography color="textPrimary">Supplier Profile</Typography>
-            </Breadcrumbs>
-          </Grid>
+    <Grid container spacing={2} sx={{ py: 2 }}>
+      <Grid item xs={12} lg={4}>
+        <Card sx={{ boxShadow: "none", border: "1px solid #f0f0f0" }}>
+          <CardContent sx={{ textAlign: "center" }}>
+            <Typography variant="h5" sx={{ mt: 2, fontWeight: "bold" }}>
+              Supplier
+            </Typography>
+            <CardMedia
+              component="img"
+              image="https://st2.depositphotos.com/1092019/10717/i/450/depositphotos_107178150-stock-photo-suppliers-on-office-folder-blurred.jpg"
+              alt="Supplier"
+              sx={{
+                width: 150,
+                height: 140,
+                borderRadius: "50%",
+                margin: "auto",
+              }}
+            />
+          </CardContent>
+        </Card>
 
-          <Grid item xs={12} lg={4}>
-            <Card sx={{boxShadow:'none',border:'1px solid #f0f0f0'}}>
-              <CardContent sx={{ textAlign: "center" }}>
-                <Typography variant="h5" sx={{ mt: 2, fontWeight: "bold" }}>
-                  Supplier
-                </Typography>
-                <CardMedia
-                  component="img"
-                  image="https://st2.depositphotos.com/1092019/10717/i/450/depositphotos_107178150-stock-photo-suppliers-on-office-folder-blurred.jpg"
-                  alt="Supplier"
-                  sx={{
-                    width: 150,
-                    height: 140,
-                    borderRadius: "50%",
-                    margin: "auto",
-                  }}
+        <Card sx={{ mt: 3, boxShadow: "none", border: "1px solid #f0f0f0" }}>
+          <CardContent>
+            <List>
+              <ListItem>
+                <ListItemText primary="ID" secondary={supplier.id} />
+              </ListItem>
+              <ListItem>
+                <ListItemText primary="Name" secondary={supplier.name} />
+              </ListItem>
+              <ListItem>
+                <ListItemText primary="Email" secondary={supplier.email} />
+              </ListItem>
+              <ListItem>
+                <ListItemText
+                  primary="Phone"
+                  secondary={supplier.contactInfo}
                 />
-              </CardContent>
-            </Card>
+              </ListItem>
+            </List>
+          </CardContent>
+        </Card>
+      </Grid>
 
-            <Card sx={{ mt: 3,boxShadow:'none',border:'1px solid #f0f0f0'}}>
-              <CardContent>
-                <List>
-                  <ListItem>
-                    <ListItemText primary="ID" secondary={supplier.id} />
-                  </ListItem>
-                  <ListItem>
-                    <ListItemText primary="Name" secondary={supplier.name} />
-                  </ListItem>
-                  <ListItem>
-                    <ListItemText primary="Email" secondary={supplier.email} />
-                  </ListItem>
-                  <ListItem>
-                    <ListItemText
-                      primary="Phone"
-                      secondary={supplier.contactInfo}
-                    />
-                  </ListItem>
-                </List>
-              </CardContent>
-            </Card>
-          </Grid>
-
-          <Grid item xs={12} lg={8} sx={{p:1.5, }} >
-            <TableContainer component={Paper}sx={{boxShadow:'none',border:'1px solid #f0f0f0'}}>
-              <Typography
-                variant="h6"
-                sx={{
-                  display: "flex",
-                  justifyContent: "center",
-                  alignItems: "center",
-                  fontWeight: "bold",
-                  padding:1
-                }}
-              >
-                Packages Assigned
-              </Typography>
-              <Table sx={{ minWidth: 650 }} aria-label="simple table">
-                <TableHead>
-                  <TableRow>
-                    <TableCell sx={{fontWeight:'bold'}}>Package ID</TableCell>
-                    <TableCell sx={{fontWeight:'bold'}}>Name</TableCell>
-                    <TableCell sx={{fontWeight:'bold'}}>Quantity</TableCell>
-                    <TableCell sx={{fontWeight:'bold'}}>Address</TableCell>
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  {supplier.packages.map((pkg) => (
-                    <TableRow
-                      key={pkg.id}
-                      sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
-                    >
-                      <TableCell>{pkg.id}</TableCell>
-                      <TableCell>{pkg.packageName}</TableCell>
-                      <TableCell>{pkg.quantity}</TableCell>
-                      <TableCell>{pkg.address}</TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            </TableContainer>
-          </Grid>
-        </Grid>
+      <Grid item xs={12} lg={8} sx={{ p: 1.5 }}>
+        <TableContainer
+          component={Paper}
+          sx={{ boxShadow: "none", border: "1px solid #f0f0f0" }}
+        >
+          <Typography
+            variant="h6"
+            sx={{
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              fontWeight: "bold",
+              padding: 1,
+            }}
+          >
+            Packages Assigned
+          </Typography>
+          <Table sx={{ minWidth: 650 }} aria-label="simple table">
+            <TableHead>
+              <TableRow>
+                <TableCell sx={{ fontWeight: "bold" }}>Package ID</TableCell>
+                <TableCell sx={{ fontWeight: "bold" }}>Name</TableCell>
+                <TableCell sx={{ fontWeight: "bold" }}>Quantity</TableCell>
+                <TableCell sx={{ fontWeight: "bold" }}>Address</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {supplier.packages.map((pkg) => (
+                <TableRow
+                  key={pkg.id}
+                  sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
+                >
+                  <TableCell>{pkg.id}</TableCell>
+                  <TableCell>{pkg.packageName}</TableCell>
+                  <TableCell>{pkg.quantity}</TableCell>
+                  <TableCell>{pkg.address}</TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
+      </Grid>
+    </Grid>
   );
 }
