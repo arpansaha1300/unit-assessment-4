@@ -121,6 +121,12 @@ const Packages = () => {
   const customLabelDisplayedRows = ({ page }) => {
     return `page ${page + 1} of ${totalPages}`;
   };
+  function truncateString(str, maxLength) {
+    if (str.length > maxLength) {
+        return str.substring(0, maxLength - 3) + '...';
+    }
+    return str;
+}
 
   return (
     <Card>
@@ -150,7 +156,7 @@ const Packages = () => {
                   <Typography variant="body2" >
                   <strong>Product ID:</strong> {pkg.id}
                   </Typography>
-                  <Typography variant="body2"> <strong>Address:</strong>  {pkg.address}</Typography>
+                  <Typography variant="body2"> <strong>Address:</strong>  {truncateString(pkg.address,36)}</Typography>
                   <Typography variant="body2">
                   <strong>Supplier ID: </strong> {pkg.supplierId}
                   </Typography>
@@ -230,7 +236,7 @@ const Packages = () => {
                   >
                     <TableCell>{pkg.id}</TableCell>
                     <TableCell>{pkg.packageName}</TableCell>
-                    <TableCell>{pkg.address}</TableCell>
+                    <TableCell>{truncateString(pkg.address,36)}</TableCell>
                     <TableCell>{pkg.supplierId}</TableCell>
                     <TableCell>{pkg.quantity}</TableCell>
                     <TableCell sx={{ textAlign: "right" }}>
