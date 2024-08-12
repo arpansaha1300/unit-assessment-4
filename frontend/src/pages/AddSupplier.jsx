@@ -14,13 +14,11 @@ import {
   updateAddSupplierSessionContact,
   updateAddSupplierSessionEmail,
   updateAddSupplierSessionName,
-  updateAddSupplierSessionPassword,
 } from "../redux/addSupplierSessionSlice";
 
 function AddSupplier() {
   const dispatch = useDispatch();
   const [nameError, setNameError] = useState("");
-  const [passError, setPassError] = useState("");
   const [contactError, setContactError] = useState("");
   const [emailError, setEmailError] = useState("");
   const session = useSelector((state) => state.addSupplier);
@@ -53,7 +51,6 @@ function AddSupplier() {
           name: session.name,
           email: session.email,
           contactInfo: session.contactInfo,
-          password: session.password,
         })
         .then(() => {
           setSnackbarOpen(true);
@@ -77,11 +74,6 @@ function AddSupplier() {
   function updateContact(e) {
     dispatch(updateAddSupplierSessionContact(e.target.value));
     setContactError("");
-  }
-
-  function updatePassword(e) {
-    dispatch(updateAddSupplierSessionPassword(e.target.value));
-    setPassError("");
   }
 
   return (
@@ -117,17 +109,6 @@ function AddSupplier() {
             onChange={updateContact}
             error={!!contactError}
             helperText={contactError}
-            fullWidth
-          />
-          <TextField
-            margin="dense"
-            label="Password"
-            type="password"
-            required
-            value={session.password}
-            onChange={updatePassword}
-            error={!!passError}
-            helperText={passError}
             fullWidth
           />
           <Button
