@@ -1,9 +1,11 @@
 import {
+  Alert,
   Box,
   Button,
   CssBaseline,
   FormControl,
   Grid,
+  Snackbar,
   TextField,
   Typography,
 } from "@mui/material";
@@ -17,6 +19,7 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 function Login() {
   const [name, setName] = useState("");
   const [pass, setPass] = useState("");
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
@@ -49,7 +52,7 @@ function Login() {
         }
       })
       .catch(function (error) {
-        alert("Invalid credentials");
+        setSnackbarOpen(true);
         console.log(error);
       });
   };
@@ -142,12 +145,27 @@ function Login() {
                   color: "rgb(66, 66, 66)",
                 }}
               >
-                New User?
+                New User?&nbsp;
                 <Link to="/sign-up">SignUp</Link>
               </Typography>
             </form>
           </Grid>
         </Grid>
+        <Snackbar
+        anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+        open={snackbarOpen}
+        autoHideDuration={4000}
+        onClose={() => setSnackbarOpen(false)}
+      >
+        <Alert
+          onClose={() => setSnackbarOpen(false)}
+          severity="error"
+          variant="filled"
+          sx={{ width: "100%" }}
+        >
+          Invalid Credentials
+        </Alert>
+      </Snackbar>
     </Box>
   );
 }
