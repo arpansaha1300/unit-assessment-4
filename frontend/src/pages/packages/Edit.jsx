@@ -1,4 +1,4 @@
-import { Box, Button, FormControl, TextField } from "@mui/material";
+import { Alert, Box, Button, FormControl, Snackbar, TextField } from "@mui/material";
 import { useEffect, useMemo, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useLocation, useParams } from "react-router-dom";
@@ -16,6 +16,7 @@ export default function EditPackage() {
   const params = useParams();
   const location = useLocation();
   const [pkg, setPkg] = useState(null);
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
   const sessions = useSelector((state) => state.editPackage.sessions);
 
   const session = useMemo(
@@ -28,7 +29,7 @@ export default function EditPackage() {
     return (
       pkg.packageName !== session.packageName ||
       pkg.address !== session.address ||
-      pkg.quantity.toString() !== session.quantity
+      pkg.quantity.toString() !== session.quantity.toString()
     );
   }, [session, pkg]);
 
@@ -70,6 +71,7 @@ export default function EditPackage() {
         }
       );
       setPkg(res.data);
+      setSnackbarOpen(true);
     } catch (error) {
       console.error("Error updating package:", error);
     }
@@ -140,6 +142,21 @@ export default function EditPackage() {
           </Button>
         </FormControl>
       </form>
+      <Snackbar
+        anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+        open={snackbarOpen}
+        autoHideDuration={4000}
+        onClose={() => setSnackbarOpen(false)}
+      >
+        <Alert
+          onClose={() => setSnackbarOpen(false)}
+          severity="success"
+          variant="filled"
+          sx={{ width: "100%" }}
+        >
+          Package successfully edited
+        </Alert>
+      </Snackbar>
     </Box>
   ) : null;
 }
