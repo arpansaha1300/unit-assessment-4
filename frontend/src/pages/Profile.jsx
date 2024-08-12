@@ -70,7 +70,7 @@ export default function ProfilePage() {
           <Grid item xs={12} lg={4}>
             <Card sx={{boxShadow:'none',border:'1px solid #f0f0f0'}}>
               <CardContent sx={{ textAlign: "center" }}>
-                <Typography variant="h6" sx={{ mt: 2, fontWeight: "" }}>
+                <Typography variant="h5" sx={{ mt: 2, fontWeight: "bold" }}>
                   Supplier
                 </Typography>
                 <CardMedia
@@ -119,6 +119,7 @@ export default function ProfilePage() {
                   justifyContent: "center",
                   alignItems: "center",
                   fontWeight: "bold",
+                  padding:1
                 }}
               >
                 Packages Assigned
@@ -126,10 +127,10 @@ export default function ProfilePage() {
               <Table sx={{ minWidth: 650 }} aria-label="simple table">
                 <TableHead>
                   <TableRow>
-                    <TableCell>Package ID</TableCell>
-                    <TableCell>Name</TableCell>
-                    <TableCell>Quantity</TableCell>
-                    <TableCell>Address</TableCell>
+                    <TableCell sx={{fontWeight:'bold'}}>Package ID</TableCell>
+                    <TableCell sx={{fontWeight:'bold'}}>Name</TableCell>
+                    <TableCell sx={{fontWeight:'bold'}}>Quantity</TableCell>
+                    <TableCell sx={{fontWeight:'bold'}}>Address</TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
