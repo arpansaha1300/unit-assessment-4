@@ -22,20 +22,6 @@ public class SupplierController {
         return supplierService.getAllSuppliers();
     }
 
-    // @PostMapping
-    // public ResponseEntity<Supplier> addSupplier(@RequestBody SupplierDto
-    // supplierdto) {
-    // if(supplierService.emailExists(supplierdto.getEmail())){
-    // return ResponseEntity.status(HttpStatus.CONFLICT).body(null);
-    // }
-    // Supplier supplier=new Supplier();
-    // supplier.setName(supplierdto.getName());
-    // supplier.setEmail(supplierdto.getEmail());
-    // supplier.setPassword(supplierdto.getPassword());
-    // supplier.setContactInfo(supplierdto.getContactInfo());
-    // return supplierService.saveSupplier(supplier);
-    // }
-
     @PostMapping
     public ResponseEntity<?> addSupplier(@RequestBody SupplierDto supplierDto) {
         if (supplierService.emailExists(supplierDto.getEmail())) {
@@ -45,9 +31,8 @@ public class SupplierController {
         Supplier supplier = new Supplier();
         supplier.setName(supplierDto.getName());
         supplier.setEmail(supplierDto.getEmail());
-        supplier.setPassword(supplierDto.getPassword());
         supplier.setContactInfo(supplierDto.getContactInfo());
-        supplier.setRole(supplierDto.getRole());
+        supplier.setRole("supplier");
         Supplier savedSupplier = supplierService.saveSupplier(supplier);
         return ResponseEntity.status(HttpStatus.CREATED).body(savedSupplier);
     }
@@ -57,12 +42,6 @@ public class SupplierController {
         return supplierService.getSupplierById(id);
     }
 
-    // @PutMapping("/{id}")
-    // public Supplier updateSupplier(@PathVariable Long id, @RequestBody Supplier
-    // supplier) {
-    // supplier.setId(id);
-    // return supplierService.saveSupplier(supplier);
-    // }
     @PutMapping("/{id}")
     public Supplier updateSupplier(@PathVariable Long id, @RequestBody SupplierDto supplierdto) {
         Supplier existingSupplier = supplierService.getSupplierById(id);
