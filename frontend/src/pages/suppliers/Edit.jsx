@@ -1,4 +1,11 @@
-import { Alert, Box, Button, FormControl, Snackbar, TextField } from "@mui/material";
+import {
+  Alert,
+  Box,
+  Button,
+  FormControl,
+  Snackbar,
+  TextField,
+} from "@mui/material";
 import { useEffect, useMemo, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useLocation, useParams } from "react-router-dom";
@@ -18,6 +25,7 @@ export default function EditSupplier() {
   const location = useLocation();
   const [supplier, setSupplier] = useState(null);
   const sessions = useSelector((state) => state.editSupplier.sessions);
+  const userRole = useSelector((state) => state.auth.role);
   const [session, setSession] = useState(null);
   const [state, setState] = useState({
     open: false,
@@ -80,7 +88,7 @@ export default function EditSupplier() {
   }, [supplier, session, dispatch]);
 
   useEffect(() => {
-    if (supplier) {
+    if (userRole === "ADMIN" && supplier) {
       dispatch(
         createOrUpdateTab({
           path: location.pathname,
@@ -92,16 +100,18 @@ export default function EditSupplier() {
 
   const updateSupplier = async (e) => {
     e.preventDefault();
-    const formData = new FormData(e.currentTarget);
     const res = validateDetails(session.contactInfo);
 
     if (res) {
       try {
-        const response = await axios.put(`http://localhost:8080/api/suppliers/${supplier.id}`, {
-          name: formData.get("name"),
-          email: formData.get("email"),
-          contactInfo: formData.get("contact"),
-        });
+        const response = await axios.put(
+          `http://localhost:8080/api/suppliers/${supplier.id}`,
+          {
+            name: session.name,
+            email: session.email,
+            contactInfo: session.contactInfo,
+          }
+        );
         console.log(response);
         handleSubmission();
       } catch (error) {
@@ -123,7 +133,7 @@ export default function EditSupplier() {
   }
 
   function updateContact(e) {
-    setContactError('');
+    setContactError("");
     dispatch(
       updateEditSupplierSessionContact({
         id: supplier.id,

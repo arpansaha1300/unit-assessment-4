@@ -39,7 +39,6 @@ const Packages = () => {
     const fetchPackages = async () => {
       try {
         const response = await axios.get("http://localhost:8080/api/packages");
-        // console.log(response.data);
         setPackagesData(response.data);
       } catch (error) {
         console.error("Error fetching suppliers data:", error);
