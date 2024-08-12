@@ -23,6 +23,8 @@ import styles from "./default.module.css";
 import { removeEditSupplierSession } from "../redux/editSupplierSlice";
 import { removeEditPackageSession } from "../redux/editPackageSlice";
 import Navbar from "../components/Navbar";
+import { clearAddSupplierSession } from "../redux/addSupplierSessionSlice";
+import { clearAddPackageSession } from "../redux/addPackageSessionSlice";
 
 const drawerWidth = 240;
 
@@ -187,6 +189,10 @@ function TabList() {
       dispatch(removeEditSupplierSession({ id: tab.data.id }));
     } else if (tab.type === "edit-package") {
       dispatch(removeEditPackageSession({ id: tab.data.id }));
+    } else if (tab.type === "add-supplier") {
+      dispatch(clearAddSupplierSession());
+    } else if (tab.type === "add-package") {
+      dispatch(clearAddPackageSession());
     }
   };
 

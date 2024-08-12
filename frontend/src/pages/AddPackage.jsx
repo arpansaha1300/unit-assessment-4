@@ -1,5 +1,6 @@
 import {
   Alert,
+  Autocomplete,
   Box,
   Button,
   FormControl,
@@ -14,7 +15,7 @@ import {
   updateAddPackageSessionAddress,
   updateAddPackageSessionName,
   updateAddPackageSessionQuantity,
-  updateAddPackageSessionSupplierId,
+  updateAddPackageSessionSupplier,
 } from "../redux/addPackageSessionSlice";
 
 function AddPackage() {
@@ -22,6 +23,20 @@ function AddPackage() {
   const session = useSelector((state) => state.addPackage);
   const [quantityError, setQuantityError] = useState("");
   const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const [suppliersData, setSuppliersData] = useState([]);
+
+  useEffect(() => {
+    const fetchSuppliers = async () => {
+      try {
+        const response = await axios.get("http://localhost:8080/api/suppliers");
+        setSuppliersData(response.data);
+      } catch (error) {
+        console.error("Error fetching suppliers data:", error);
+      }
+    };
+
+    fetchSuppliers();
+  }, []);
 
   useEffect(() => {
     dispatch(createOrUpdateTab("/add-package"));
@@ -45,7 +60,7 @@ function AddPackage() {
           packageName: session.name,
           address: session.address,
           quantity: session.quantity,
-          supplierId: session.supplierId,
+          supplierId: session.supplier.id,
         })
         .then(() => {
           setSnackbarOpen(true);
@@ -69,8 +84,18 @@ function AddPackage() {
     setQuantityError("");
   }
 
-  function updateSupplierId(e) {
-    dispatch(updateAddPackageSessionSupplierId(e.target.value));
+  function updateSupplier(_, newValue) {
+    dispatch(
+      updateAddPackageSessionSupplier(
+        newValue
+          ? {
+              id: newValue.id,
+              name: newValue.name,
+              email: newValue.email,
+            }
+          : null
+      )
+    );
   }
 
   return (
@@ -103,13 +128,20 @@ function AddPackage() {
             helperText={quantityError}
             fullWidth
           />
-          <TextField
-            margin="dense"
-            label="Supplier Id"
-            required
-            value={session.supplierId}
-            onChange={updateSupplierId}
-            fullWidth
+          <Autocomplete
+            id="supplier"
+            options={suppliersData}
+            value={session.supplier}
+            onChange={updateSupplier}
+            getOptionLabel={(option) =>
+              option ? `${option.name} (${option.email})` : ""
+            }
+            isOptionEqualToValue={(option, value) => {
+              if (!value) return false;
+              return option.id === value.id;
+            }}
+            sx={{ paddingTop: "0.5rem", paddingBottom: "0.5rem" }}
+            renderInput={(params) => <TextField {...params} label="Supplier" />}
           />
           <Button
             variant="contained"

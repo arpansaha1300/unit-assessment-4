@@ -73,6 +73,9 @@ function getRouteType(path) {
     case "/add-supplier": {
       return "add-supplier";
     }
+    case "/add-package": {
+      return "add-package";
+    }
     default: {
       if (path.startsWith("/suppliers-list") && path.endsWith("/edit")) {
         return "edit-supplier";

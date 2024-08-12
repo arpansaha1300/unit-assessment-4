@@ -24,15 +24,14 @@ export default function EditSupplier() {
   const params = useParams();
   const location = useLocation();
   const [supplier, setSupplier] = useState(null);
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
   const sessions = useSelector((state) => state.editSupplier.sessions);
   const userRole = useSelector((state) => state.auth.role);
-  const [session, setSession] = useState(null);
-  const [state, setState] = useState({
-    open: false,
-    vertical: "bottom",
-    horizontal: "right",
-  });
-  const { vertical, horizontal, open } = state;
+
+  const session = useMemo(
+    () => sessions[params.supplierId],
+    [params.supplierId, sessions]
+  );
 
   const validateDetails = (contact) => {
     const regExp = /^[0-9]+$/g;
@@ -56,22 +55,6 @@ export default function EditSupplier() {
       supplier.contactInfo !== session.contactInfo
     );
   }, [session, supplier]);
-
-  const handleClose = () => {
-    setState({ ...state, open: false });
-  };
-
-  const handleSubmission = () => {
-    setState({
-      vertical: "bottom",
-      horizontal: "right",
-      open: true,
-    });
-  };
-
-  useEffect(() => {
-    setSession(sessions[params.supplierId]);
-  }, [params.supplierId, sessions]);
 
   useEffect(() => {
     axios
@@ -104,7 +87,7 @@ export default function EditSupplier() {
 
     if (res) {
       try {
-        const response = await axios.put(
+        const res = await axios.put(
           `http://localhost:8080/api/suppliers/${supplier.id}`,
           {
             name: session.name,
@@ -112,8 +95,8 @@ export default function EditSupplier() {
             contactInfo: session.contactInfo,
           }
         );
-        console.log(response);
-        handleSubmission();
+        setSupplier(res.data);
+        setSnackbarOpen(true);
       } catch (error) {
         console.error("Error updating supplier:", error);
       }
@@ -187,14 +170,13 @@ export default function EditSupplier() {
         </FormControl>
       </form>
       <Snackbar
-        anchorOrigin={{ vertical, horizontal }}
-        open={open}
+        anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+        open={snackbarOpen}
         autoHideDuration={4000}
-        onClose={handleClose}
-        key={vertical + horizontal}
+        onClose={() => setSnackbarOpen(false)}
       >
         <Alert
-          onClose={handleClose}
+          onClose={() => setSnackbarOpen(false)}
           severity="success"
           variant="filled"
           sx={{ width: "100%" }}

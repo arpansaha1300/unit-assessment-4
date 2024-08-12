@@ -4,7 +4,7 @@ const initialState = {
   name: "",
   address: "",
   quantity: "",
-  supplierId: "",
+  supplier: null,
 };
 
 const addPackageSessionSlice = createSlice({
@@ -21,14 +21,14 @@ const addPackageSessionSlice = createSlice({
     updateAddPackageSessionQuantity: (state, action) => {
       state.quantity = action.payload;
     },
-    updateAddPackageSessionSupplierId: (state, action) => {
-      state.supplierId = action.payload;
+    updateAddPackageSessionSupplier: (state, action) => {
+      state.supplier = action.payload;
     },
     clearAddPackageSession: (state) => {
       state.name = "";
-      state.email = "";
-      state.contactInfo = "";
-      state.password = "";
+      state.address = "";
+      state.quantity = "";
+      state.supplier = null;
     },
   },
 });
@@ -37,7 +37,7 @@ export const {
   updateAddPackageSessionAddress,
   updateAddPackageSessionName,
   updateAddPackageSessionQuantity,
-  updateAddPackageSessionSupplierId,
+  updateAddPackageSessionSupplier,
   clearAddPackageSession,
 } = addPackageSessionSlice.actions;
 
