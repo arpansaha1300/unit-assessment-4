@@ -27,6 +27,8 @@ import {
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { createOrUpdateTab } from "../redux/tabSlice";
+import LaunchIcon from "@mui/icons-material/Launch";
+import { setId } from "../redux/authSlice";
 
 const Suppliers = () => {
   const theme = useTheme();
@@ -75,21 +77,17 @@ const Suppliers = () => {
     setOrderBy(property);
   };
 
-  const sortedData=suppliersData.sort((a,b)=>{
-    if(orderBy==='id'){
-      if(order==='asc'){
-        return a.id-b.id;
+  const sortedData = suppliersData.sort((a, b) => {
+    if (orderBy === "id") {
+      if (order === "asc") {
+        return a.id - b.id;
+      } else {
+        return b.id - a.id;
       }
-      else {
-        return b.id-a.id;
-      }
-    }
-    else if(orderBy==='name')
-    {
-      if(order==='asc'){
+    } else if (orderBy === "name") {
+      if (order === "asc") {
         return a.name.localeCompare(b.name);
-      }
-      else {
+      } else {
         return b.name.localeCompare(a.name);
       }
     }
@@ -129,6 +127,11 @@ const Suppliers = () => {
     setDeleteDialogOpen(true);
   };
 
+  const handleLaunchClick = (supplier) => {
+    dispatch(setId(supplier.id));
+    navigate("/supplier-profile");
+  };
+
   const handleDeleteDialogClose = () => {
     setDeleteDialogOpen(false);
     setSupplierToDelete(null);
@@ -166,6 +169,27 @@ const Suppliers = () => {
                   <Typography variant="body2">
                     {supplier.contactInfo}
                   </Typography>
+                  <IconButton
+                    size="small"
+                    sx={{ color: "black" }}
+                    onClick={() => openEditSupplierTab(supplier)}
+                  >
+                    <EditIcon fontSize="small" />
+                  </IconButton>
+                  <IconButton
+                    size="small"
+                    sx={{ color: "red", ml: "20px" }}
+                    onClick={() => handleDeleteClick(supplier)}
+                  >
+                    <DeleteIcon fontSize="small" />
+                  </IconButton>
+                  <IconButton
+                    size="small"
+                    sx={{ color: "blue", ml: "20px" }}
+                    onClick={() => handleLaunchClick(supplier)}
+                  >
+                    <LaunchIcon fontSize="small" />
+                  </IconButton>
                 </Box>
               ))}
           </Stack>
@@ -184,15 +208,18 @@ const Suppliers = () => {
                 </TableCell>
                 <TableCell sx={{ fontWeight: "bold" }}>
                   <TableSortLabel
-                  active={orderBy==='name'}
-                  direction={orderBy==='name'?order:'desc'}
-                  onClick={(event)=>handleRequestSort(event,"name")}>
-                  Name
+                    active={orderBy === "name"}
+                    direction={orderBy === "name" ? order : "desc"}
+                    onClick={(event) => handleRequestSort(event, "name")}
+                  >
+                    Name
                   </TableSortLabel>
                 </TableCell>
                 <TableCell sx={{ fontWeight: "bold" }}>Email</TableCell>
                 <TableCell sx={{ fontWeight: "bold" }}>Contact</TableCell>
-                <TableCell sx={{ fontWeight: "bold", textAlign: "right" }}>
+                <TableCell
+                  sx={{ fontWeight: "bold", textAlign: "right", pr: "44px" }}
+                >
                   Actions
                 </TableCell>
               </TableRow>
@@ -224,6 +251,13 @@ const Suppliers = () => {
                       >
                         <DeleteIcon fontSize="small" />
                       </IconButton>
+                      <IconButton
+                        size="small"
+                        sx={{ color: "blue", ml: "20px" }}
+                        onClick={() => handleLaunchClick(supplier)}
+                      >
+                        <LaunchIcon fontSize="small" />
+                      </IconButton>
                     </TableCell>
                   </TableRow>
                 ))}
@@ -237,17 +271,17 @@ const Suppliers = () => {
             alignItems: "center",
           }}
         > */}
-          <TablePagination
-            component="div"
-            count={suppliersData.length}
-            page={page}
-            onPageChange={handleChangePage}
-            rowsPerPage={rowsPerPage}
-            onRowsPerPageChange={handleChangeRowsPerPage}
-            rowsPerPageOptions={isMobile ? [] : [5, 10, 15]}
-            labelRowsPerPage={isMobile ? "" : "Rows per page"}
-            labelDisplayedRows={customLabelDisplayedRows}
-          />
+        <TablePagination
+          component="div"
+          count={suppliersData.length}
+          page={page}
+          onPageChange={handleChangePage}
+          rowsPerPage={rowsPerPage}
+          onRowsPerPageChange={handleChangeRowsPerPage}
+          rowsPerPageOptions={isMobile ? [] : [5, 10, 15]}
+          labelRowsPerPage={isMobile ? "" : "Rows per page"}
+          labelDisplayedRows={customLabelDisplayedRows}
+        />
         {/* </Box> */}
       </CardContent>
 

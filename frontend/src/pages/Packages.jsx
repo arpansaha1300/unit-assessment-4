@@ -146,16 +146,16 @@ const Packages = () => {
                   key={index}
                   sx={{ border: "1px solid #ddd", borderRadius: "4px", p: 2 }}
                 >
-                  <Typography variant="body1" sx={{ fontWeight: "bold" }}>
-                    {pkg.id}
+                  <Typography variant="h6" > {pkg.packageName}</Typography>
+                  <Typography variant="body2" >
+                  <strong>Product ID:</strong> {pkg.id}
                   </Typography>
-                  <Typography variant="h6">{pkg.packageName}</Typography>
-                  <Typography variant="body2">{pkg.address}</Typography>
+                  <Typography variant="body2"> <strong>Address:</strong>  {pkg.address}</Typography>
                   <Typography variant="body2">
-                    Supplier ID: {pkg.supplierId}
+                  <strong>Supplier ID: </strong> {pkg.supplierId}
                   </Typography>
                   <Typography variant="body2">
-                    Quantity: {pkg.quantity}
+                  <strong>Quantity:</strong> {pkg.quantity}
                   </Typography>
                   <Box sx={{ display: "flex", alignItems: "center" }}>
                     <IconButton
