@@ -117,12 +117,16 @@ export default function EditSupplier() {
 
   function updateContact(e) {
     setContactError("");
-    dispatch(
-      updateEditSupplierSessionContact({
-        id: supplier.id,
-        contactInfo: e.target.value,
-      })
-    );
+    const value=e.target.value;
+    if(value.length<=10)
+    {
+      dispatch(
+        updateEditSupplierSessionContact({
+          id: supplier.id,
+          contactInfo: e.target.value,
+        })
+      );
+    }
   }
 
   return session ? (
@@ -136,6 +140,7 @@ export default function EditSupplier() {
             fullWidth
             required
             value={session.name}
+            disabled={userRole === "SUPPLIER"}
             onChange={updateName}
           />
           <TextField
@@ -146,6 +151,7 @@ export default function EditSupplier() {
             required
             fullWidth
             value={session.email}
+            disabled={userRole === "SUPPLIER"}
             onChange={updateEmail}
           />
           <TextField
@@ -154,6 +160,8 @@ export default function EditSupplier() {
             name="contact"
             fullWidth
             required
+            type="number"
+            InputProps={{ inputProps: { min: 0 } }}
             error={!!contactError}
             helperText={contactError}
             value={session.contactInfo}
