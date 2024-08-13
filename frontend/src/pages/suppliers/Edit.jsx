@@ -136,6 +136,7 @@ export default function EditSupplier() {
             fullWidth
             required
             value={session.name}
+            disabled={userRole === "SUPPLIER"}
             onChange={updateName}
           />
           <TextField
@@ -146,6 +147,7 @@ export default function EditSupplier() {
             required
             fullWidth
             value={session.email}
+            disabled={userRole === "SUPPLIER"}
             onChange={updateEmail}
           />
           <TextField
