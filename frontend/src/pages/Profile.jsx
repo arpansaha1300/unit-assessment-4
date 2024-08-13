@@ -44,6 +44,13 @@ export default function ProfilePage() {
     fetchSupplierData();
   }, [supplierId]);
 
+  const  truncateString=(str, maxLength) =>{
+    if (str.length > maxLength) {
+        return str.substring(0, maxLength - 3) + '...';
+    }
+    return str;
+}
+
   if (!supplier) {
     return (
       <Container sx={{ py: 5 }}>
@@ -173,7 +180,7 @@ export default function ProfilePage() {
                     <TableCell>{pkg.id}</TableCell>
                     <TableCell>{pkg.packageName}</TableCell>
                     <TableCell>{pkg.quantity}</TableCell>
-                    <TableCell>{pkg.address}</TableCell>
+                    <TableCell>{truncateString(pkg.address,36)}</TableCell>
                   </TableRow>
                 ))}
               </TableBody>
