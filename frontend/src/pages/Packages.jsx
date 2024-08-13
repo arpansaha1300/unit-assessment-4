@@ -20,6 +20,7 @@ import {
   DialogContent,
   DialogTitle,
   Button,
+  Grid,
 } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
@@ -53,6 +54,7 @@ const Packages = () => {
   const [orderBy, setOrderBy] = useState("id");
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [selectedPackage, setSelectedPackage] = useState(null);
+  const [goToPage,setGoToPage]=useState('');
 
   useEffect(() => {
     dispatch(createOrUpdateTab("/package-list"));
@@ -88,15 +90,6 @@ const Packages = () => {
       await axios.delete(
         `http://localhost:8080/api/packages/${selectedPackage.id}`
       );
-
-      setPackagesData((state) => {
-        const newState = [...state];
-        newState.splice(
-          newState.findIndex((s) => s.id === selectedPackage.id),
-          1
-        );
-        return newState;
-      });
     } catch (error) {
       console.error("Error deleting package:", error);
     } finally {
@@ -132,10 +125,25 @@ const Packages = () => {
   };
   function truncateString(str, maxLength) {
     if (str.length > maxLength) {
-        return str.substring(0, maxLength - 3) + '...';
+      return str.substring(0, maxLength - 3) + "...";
     }
     return str;
-}
+  }
+  const handleGoToPageChange = (event) => {
+    setGoToPage(event.target.value);
+  };
+
+  const handleGoToPage = () => {
+    const newPage = parseInt(goToPage, 10) - 1;
+    if (
+      newPage >= 0 &&
+      newPage < Math.ceil(packagesData.length / rowsPerPage)
+    ) {
+      setPage(newPage);
+    } else {
+      alert("Invalid page number");
+    }
+  };
 
   return (
     <Card>
@@ -167,9 +175,8 @@ const Packages = () => {
                   </Typography>
                   <Typography variant="body2">
                     {" "}
-                    <strong>Address:</strong> {pkg.address}
+                    <strong>Address:</strong> {truncateString(pkg.address, 36)}
                   </Typography>
-                  <Typography variant="body2"> <strong>Address:</strong>  {truncateString(pkg.address,36)}</Typography>
                   <Typography variant="body2">
                     <strong>Supplier ID: </strong> {pkg.supplierId}
                   </Typography>
@@ -249,7 +256,7 @@ const Packages = () => {
                   >
                     <TableCell>{pkg.id}</TableCell>
                     <TableCell>{pkg.packageName}</TableCell>
-                    <TableCell>{truncateString(pkg.address,36)}</TableCell>
+                    <TableCell>{truncateString(pkg.address, 36)}</TableCell>
                     <TableCell>{pkg.supplierId}</TableCell>
                     <TableCell>{pkg.quantity}</TableCell>
                     <TableCell sx={{ textAlign: "right" }}>
@@ -281,17 +288,60 @@ const Packages = () => {
             </TableBody>
           </Table>
         )}
-        <TablePagination
-          component="div"
-          count={packagesData.length}
-          page={page}
-          onPageChange={handleChangePage}
-          rowsPerPage={rowsPerPage}
-          rowsPerPageOptions={isMobile ? [] : [5, 10, 15]}
-          onRowsPerPageChange={handleChangeRowsPerPage}
-          labelRowsPerPage="Packages per page"
-          labelDisplayedRows={customLabelDisplayedRows}
-        />
+        <Grid
+          sx={{
+            display: "flex",
+            justifyContent: "right",
+            flexDirection: "row",
+            spacing: 3,
+            p: 1,
+          }}
+        >
+          <TablePagination
+            component="div"
+            count={packagesData.length}
+            page={page}
+            onPageChange={handleChangePage}
+            rowsPerPage={rowsPerPage}
+            rowsPerPageOptions={isMobile ? [] : [5, 10, 15]}
+            onRowsPerPageChange={handleChangeRowsPerPage}
+            labelRowsPerPage=""
+            labelDisplayedRows={customLabelDisplayedRows}
+          />
+
+          <Typography
+            sx={{
+              display: "flex",
+              justifyContent: "right",
+            }}
+          >
+            <input
+              type="number"
+              onChange={handleGoToPageChange}
+              value={goToPage}
+              placeholder="page"
+              onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                  handleGoToPage();
+                }
+              }}
+              min={0}
+              style={{
+                width: "60px",
+                height: "30px",
+                marginRight: "8px",
+                marginTop: "15px",
+              }}
+            />
+            <Button
+              variant="contained"
+              onClick={handleGoToPage}
+              sx={{ width: "20px", height: "30px", mt: "15px" }}
+            >
+              Go
+            </Button>
+          </Typography>
+        </Grid>
       </CardContent>
 
       <Dialog open={deleteDialogOpen} onClose={handleDeleteDialogClose}>

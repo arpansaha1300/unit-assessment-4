@@ -72,8 +72,11 @@ function AddSupplier() {
   }
 
   function updateContact(e) {
-    dispatch(updateAddSupplierSessionContact(e.target.value));
-    setContactError("");
+    const value = e.target.value;
+    if (value.length <= 10) {
+      dispatch(updateAddSupplierSessionContact(e.target.value));
+      setContactError("");
+    }
   }
 
   return (
@@ -105,6 +108,8 @@ function AddSupplier() {
             margin="dense"
             label="Contact"
             required
+            type="number"
+            InputProps={{ inputProps: { min: 0 } }}
             value={session.contactInfo}
             onChange={updateContact}
             error={!!contactError}
