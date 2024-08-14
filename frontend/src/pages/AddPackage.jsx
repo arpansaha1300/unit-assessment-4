@@ -101,7 +101,7 @@ function AddPackage() {
   return (
     <Box sx={{ maxWidth: "24rem", margin: "auto" }}>
       <form onSubmit={handleSubmit}>
-        <FormControl sx={{ width: "24rem", marginTop: "3rem" }}>
+        <FormControl fullWidth sx={{ marginTop: "3rem" }}>
           <TextField
             margin="dense"
             label="Name"

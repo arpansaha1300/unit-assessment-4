@@ -5,6 +5,7 @@ import editSupplierReducer from "./editSupplierSlice";
 import editPackageReducer from "./editPackageSlice";
 import addSupplierSessionReducer from "./addSupplierSessionSlice";
 import addPackageSessionReducer from "./addPackageSessionSlice";
+import estimationReducer from "./estimationSlice";
 import { persistReducer, persistStore } from "redux-persist";
 import storage from "redux-persist/lib/storage";
 
@@ -21,6 +22,7 @@ const store = configureStore({
     editPackage: editPackageReducer,
     addSupplier: addSupplierSessionReducer,
     addPackage: addPackageSessionReducer,
+    estimation: estimationReducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({

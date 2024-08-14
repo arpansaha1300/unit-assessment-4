@@ -111,6 +111,14 @@ const Packages = () => {
       await axios.delete(
         `http://localhost:8080/api/packages/${selectedPackage.id}`
       );
+      setPackagesData((state) => {
+        const newState = [...state];
+        newState.splice(
+          newState.findIndex((s) => s.id === selectedPackage.id),
+          1
+        );
+        return newState;
+      });
     } catch (error) {
       console.error("Error deleting package:", error);
     } finally {
