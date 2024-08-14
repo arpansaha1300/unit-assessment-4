@@ -3,13 +3,11 @@ import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { createOrUpdateTab } from "../redux/tabSlice";
 import {
-  Alert,
   Autocomplete,
   Box,
   Button,
   FormControl,
   IconButton,
-  Snackbar,
   Table,
   TableBody,
   TableCell,
@@ -30,7 +28,6 @@ import CloseIcon from "@mui/icons-material/Close";
 
 export default function Estimation() {
   const dispatch = useDispatch();
-  const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [suppliersData, setSuppliersData] = useState([]);
   const estimation = useSelector((state) => state.estimation.rows);
   const [responseData, setResponseData] = useState();
@@ -55,7 +52,7 @@ export default function Estimation() {
   const handleSubmit = async (ev) => {
     ev.preventDefault();
 
-    if (ev.nativeEvent.srcElement.name === "estimate") {
+    if (ev.nativeEvent.submitter.name === "estimate") {
       const requestBody = estimation.map((e) => ({
         id: e.package.id,
         quantity: e.quantity,
@@ -79,7 +76,7 @@ export default function Estimation() {
   return (
     <>
       <Box sx={{ maxWidth: "44rem", margin: "auto" }}>
-        <form onSubmit={handleSubmit}>
+        <form id="estimation-form" onSubmit={handleSubmit}>
           {estimation.map((row, i) => (
             <Box
               key={i}
@@ -95,36 +92,26 @@ export default function Estimation() {
               )}
             </Box>
           ))}
-
-          <Box sx={{ display: "flex", gap: "1rem", marginTop: "1.2rem" }}>
-            <Button
-              variant="contained"
-              type="submit"
-              name="estimate"
-              sx={{ textTransform: "none" }}
-            >
-              Estimate
-            </Button>
-            <Button type="submit" name="add" variant="outlined">
-              Add more
-            </Button>
-          </Box>
         </form>
-        <Snackbar
-          anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
-          open={snackbarOpen}
-          autoHideDuration={4000}
-          onClose={() => setSnackbarOpen(false)}
-        >
-          <Alert
-            onClose={() => setSnackbarOpen(false)}
-            severity="success"
-            variant="filled"
-            sx={{ width: "100%" }}
+        <Box sx={{ display: "flex", gap: "1rem", marginTop: "1.2rem" }}>
+          <Button
+            variant="contained"
+            type="submit"
+            name="estimate"
+            form="estimation-form"
+            sx={{ textTransform: "none" }}
           >
-            Package successfully added
-          </Alert>
-        </Snackbar>
+            Estimate
+          </Button>
+          <Button
+            type="submit"
+            name="add"
+            variant="outlined"
+            form="estimation-form"
+          >
+            Add more
+          </Button>
+        </Box>
       </Box>
       {responseData && (
         <Table
