@@ -18,6 +18,7 @@ public class Package {
     private String packageName;
     private String Address;
     private Long quantity;
+    private Double pricePerUnit;
 
     @ManyToOne
     @JoinColumn(name = "supplier_id",referencedColumnName = "id")
@@ -65,6 +66,14 @@ public class Package {
     public void setSupplier(Supplier supplier) {
         this.supplier = supplier;
     }
+    public Double getPricePerUnit() {
+        return pricePerUnit;
+    }
+
+    public void setPricePerUnit(Double pricePerUnit) {
+        this.pricePerUnit = pricePerUnit;
+    }
+    
 
     @Transient
     public Long getSupplierId() {

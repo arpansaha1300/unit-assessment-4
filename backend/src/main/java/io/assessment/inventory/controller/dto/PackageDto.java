@@ -7,7 +7,9 @@ public class PackageDto {
     private String packageName;
     private String address;
     private Long quantity;
+    private Double pricePerUnit;
     private Long supplierId;
+
 
     public String getPackageName() {
         return packageName;
@@ -31,6 +33,13 @@ public class PackageDto {
 
     public void setQuantity(long quantity) {
         this.quantity = quantity;
+    }
+    public Double getPricePerUnit() {
+        return pricePerUnit;
+    }
+
+    public void setPricePerUnit(Double pricePerUnit) {
+        this.pricePerUnit = pricePerUnit;
     }
 
     public Long getSupplier_id() {

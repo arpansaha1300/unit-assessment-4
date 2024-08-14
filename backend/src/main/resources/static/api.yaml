@@ -1,0 +1,379 @@
+openapi: 3.0.0
+info:
+  description: "API documentation for Inventory Management"
+  version: "1.0.0"
+  title: "Inventory API"
+tags:
+  - name: auth
+    description: Operations related to authentication
+  - name: packages
+    description: Operations related to packages
+  - name: suppliers
+    description: Operations related to suppliers
+
+paths:
+  /api/login:
+    post:
+      tags:
+        - auth
+      summary: Admin and supplier login
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/LoginDto"
+      responses:
+        "200":
+          description: Login successful
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/LoginResponse"
+
+  /api/signup:
+    post:
+      tags:
+        - auth
+      summary: Supplier signup
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/LoginDto"
+      responses:
+        "200":
+          description: Password set for supplier
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    description: Response message
+                required:
+                  - message
+        "400":
+          description: Error in the signup process
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Error message
+                required:
+                  - error
+
+  /api/packages:
+    get:
+      tags:
+        - packages
+      summary: Get all packages
+      responses:
+        "200":
+          description: A list of packages
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Package"
+    post:
+      tags:
+        - packages
+      summary: Add a new package
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PackageDto"
+      responses:
+        "201":
+          description: Package created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Package"
+
+  /api/packages/{id}:
+    get:
+      tags:
+        - packages
+      summary: Retrieve details of a particular package
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+          description: ID of the package to retrieve
+      responses:
+        "200":
+          description: Details of the package
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Package"
+    put:
+      tags:
+        - packages
+      summary: Update details of a particular package
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+          description: ID of the package to update
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PackageDto"
+      responses:
+        "200":
+          description: Package updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Package"
+    delete:
+      tags:
+        - packages
+      summary: Delete a particular package
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+          description: ID of the package to delete
+      responses:
+        "204":
+          description: Package deleted
+
+  /api/suppliers:
+    get:
+      tags:
+        - suppliers
+      summary: Retrieve all suppliers
+      responses:
+        "200":
+          description: A list of suppliers
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Supplier"
+    post:
+      tags:
+        - suppliers
+      summary: Add a new supplier
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SupplierDto"
+      responses:
+        "201":
+          description: Supplier created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Supplier"
+
+  /api/suppliers/{id}:
+    get:
+      tags:
+        - suppliers
+      summary: Retrieve details of a particular supplier
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+          description: ID of the supplier to retrieve
+      responses:
+        "200":
+          description: Details of the supplier
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Supplier"
+    put:
+      tags:
+        - suppliers
+      summary: Update details of a particular supplier
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+          description: ID of the supplier to update
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SupplierDto"
+      responses:
+        "200":
+          description: Supplier updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Supplier"
+    delete:
+      tags:
+        - suppliers
+      summary: Delete a particular supplier
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+          description: ID of the supplier to delete
+      responses:
+        "204":
+          description: Supplier deleted
+
+components:
+  schemas:
+    LoginDto:
+      type: object
+      properties:
+        email:
+          type: string
+          format: email
+          description: User's email address
+        password:
+          type: string
+          description: Admin's and suppliers' password
+      required:
+        - email
+        - password
+
+    LoginResponse:
+      type: object
+      properties:
+        token:
+          type: string
+          description: Authentication token
+        role:
+          type: string
+          description: Role of the user
+      required:
+        - token
+        - role
+
+    Package:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          description: Unique identifier for the package
+        packageName:
+          type: string
+          description: Name of the package
+        address:
+          type: string
+          description: Address of the package
+        quantity:
+          type: integer
+          description: Quantity of items in the package
+        supplier:
+          $ref: "#/components/schemas/Supplier"
+      required:
+        - packageName
+        - address
+        - quantity
+
+    PackageDto:
+      type: object
+      properties:
+        packageName:
+          type: string
+          description: Name of the package
+        address:
+          type: string
+          description: Address of the package
+        quantity:
+          type: integer
+          description: Quantity of items in the package
+        supplier_id:
+          type: integer
+          format: int64
+          description: ID of the supplier for the package
+      required:
+        - packageName
+        - address
+        - quantity
+
+    Supplier:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          description: Unique identifier for the supplier
+        name:
+          type: string
+          description: Name of the supplier
+        email:
+          type: string
+          format: email
+          description: Email of the supplier
+        password:
+          type: string
+          description: Password of the supplier
+        contactInfo:
+          type: string
+          description: Contact information of the supplier
+        packages:
+          type: array
+          items:
+            $ref: "#/components/schemas/Package"
+          description: List of packages associated with the supplier
+      required:
+        - name
+        - email
+        - password
+
+    SupplierDto:
+      type: object
+      properties:
+        name:
+          type: string
+          description: Name of the supplier
+        email:
+          type: string
+          format: email
+          description: Email of the supplier
+        password:
+          type: string
+          description: Password of the supplier
+        contactInfo:
+          type: string
+          description: Contact information of the supplier
+      required:
+        - name
+        - email
+        - password
