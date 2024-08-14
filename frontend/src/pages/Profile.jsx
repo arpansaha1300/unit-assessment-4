@@ -30,7 +30,8 @@ export default function ProfilePage() {
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
   const [supplier, setSupplier] = useState(null);
   const supplierId = useSelector((state) => state.auth.id);
-  const [image, setImage] = useState('');
+  const [image, setImage] = useState(null);
+
   useEffect(() => {
     const fetchSupplierData = async () => {
       try {
@@ -51,17 +52,30 @@ export default function ProfilePage() {
     }
     return str;
   };
-  const handleFileChange = (event) => {
+  const handleFileChange = async (event) => {
     const file = event.target.files[0];
     if (file) {
       const validFormats = ["image/jpeg", "image/png"];
       if (validFormats.includes(file.type)) {
+        const formData = new FormData();
+        formData.append("image", file);
+
         const reader = new FileReader();
         reader.onloadend = () => {
           setImage(reader.result);
-          // console.log(reader.result);
         };
         reader.readAsDataURL(file);
+
+        await axios.post(
+          `http://localhost:8080/api/suppliers/${supplierId}/uploadImage`,
+          formData,
+          {
+            headers: {
+              "Content-Type": "multipart/form-data",
+            },
+          }
+        );
+        // console.log(response.data)
       } else {
         alert("Please upload a JPG or PNG image.");
       }
@@ -89,7 +103,11 @@ export default function ProfilePage() {
             </Typography>
             <CardMedia
               component="img"
-              image={image?image:'https://st2.depositphotos.com/1092019/10717/i/450/depositphotos_107178150-stock-photo-suppliers-on-office-folder-blurred.jpg'}
+              image={
+                image
+                  ? image
+                  : `data:image/png;base64, ${supplier.profileImage}`
+              }
               alt="Supplier"
               sx={{
                 width: 150,
@@ -98,12 +116,17 @@ export default function ProfilePage() {
                 margin: "auto",
               }}
             />
-            <Button variant="outlined" component="label" sx={{marginTop:'7px'}}>
+            <Button
+              variant="outlined"
+              component="label"
+              sx={{ marginTop: "7px" }}
+            >
               Upload Image
-              <input type="file" 
+              <input
+                type="file"
                 accept="image/jpeg,image/png"
                 onChange={handleFileChange}
-                hidden 
+                hidden
               />
             </Button>
           </CardContent>
