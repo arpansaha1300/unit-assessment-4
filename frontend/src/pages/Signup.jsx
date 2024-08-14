@@ -1,6 +1,6 @@
 import { Alert, Box, Button, CssBaseline, FormControl, Grid, Snackbar, TextField, Typography } from "@mui/material";
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import VpnKeyOutlinedIcon from '@mui/icons-material/VpnKeyOutlined';
 import axios from "axios";
 
@@ -151,6 +151,14 @@ function Signup() {
                 />
                 <Button variant="contained" type="submit" sx={{ textTransform: "none", marginTop: '0.2rem' }}>Register</Button>
               </FormControl>
+              <Typography
+              sx={{
+                textAlign: "center",
+                marginTop: "0.4rem",
+                color: "rgb(66, 66, 66)",
+              }}>Already registered?&nbsp; 
+                <Link to="/">Login</Link>
+              </Typography>
             </form>
           </Grid>
         </Grid>
