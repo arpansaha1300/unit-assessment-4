@@ -8,7 +8,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 
 @RestController
@@ -63,5 +65,26 @@ public class SupplierController {
     @DeleteMapping("/{id}")
     public void deleteSupplier(@PathVariable Long id) {
         supplierService.deleteSupplier(id);
+    }
+
+    @PostMapping("/{id}/uploadImage")
+    public ResponseEntity<?> uploadImage(@PathVariable Long id, @RequestParam("image") MultipartFile file) {
+        if (file.isEmpty() || !(file.getContentType().equals("image/png") || file.getContentType().equals("image/jpeg"))) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Only PNG and JPEG images are allowed.");
+        }
+        try {
+            Supplier supplier = supplierService.getSupplierById(id);
+            if (supplier == null) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                        .body("Supplier not found.");
+            }
+            supplier.setProfileImage(file.getBytes());
+            supplierService.saveSupplier(supplier);
+            return ResponseEntity.ok("Image uploaded successfully.");
+        } 
+        catch (IOException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Failed to upload image.");
+        }
     }
 }
