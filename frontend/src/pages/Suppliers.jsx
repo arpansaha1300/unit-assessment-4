@@ -23,6 +23,7 @@ import {
   DialogTitle,
   Button,
   TableSortLabel,
+  Grid,
 } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
@@ -42,6 +43,7 @@ const Suppliers = () => {
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [supplierToDelete, setSupplierToDelete] = useState(null);
+  const [goToPage, setGoToPage] = useState("");
 
   useEffect(() => {
     dispatch(createOrUpdateTab("/suppliers-list"));
@@ -96,6 +98,7 @@ const Suppliers = () => {
   const totalPages = Math.ceil(suppliersData.length / rowsPerPage);
 
   const customLabelDisplayedRows = ({ page }) => {
+    <input />;
     return `page ${page + 1} of ${totalPages}`;
   };
 
@@ -143,6 +146,22 @@ const Suppliers = () => {
   const handleDeleteDialogClose = () => {
     setDeleteDialogOpen(false);
     setSupplierToDelete(null);
+  };
+
+  const handleGoToPageChange = (event) => {
+    setGoToPage(event.target.value);
+  };
+
+  const handleGoToPage = () => {
+    const newPage = parseInt(goToPage, 10) - 1;
+    if (
+      newPage >= 0 &&
+      newPage < Math.ceil(suppliersData.length / rowsPerPage)
+    ) {
+      setPage(newPage);
+    } else {
+      alert("Invalid page number");
+    }
   };
 
   return (
@@ -272,25 +291,60 @@ const Suppliers = () => {
             </TableBody>
           </Table>
         )}
-        {/* <Box
+        <Grid
           sx={{
             display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
+            justifyContent: "right",
+            flexDirection: "row",
+            spacing: 3,
+            p: 1,
           }}
-        > */}
-        <TablePagination
-          component="div"
-          count={suppliersData.length}
-          page={page}
-          onPageChange={handleChangePage}
-          rowsPerPage={rowsPerPage}
-          onRowsPerPageChange={handleChangeRowsPerPage}
-          rowsPerPageOptions={isMobile ? [] : [5, 10, 15]}
-          labelRowsPerPage={isMobile ? "" : "Rows per page"}
-          labelDisplayedRows={customLabelDisplayedRows}
-        />
-        {/* </Box> */}
+        >
+          <TablePagination
+            // sx={{border:'1px solid red'}}
+            component="div"
+            count={suppliersData.length}
+            page={page}
+            onPageChange={handleChangePage}
+            rowsPerPage={rowsPerPage}
+            onRowsPerPageChange={handleChangeRowsPerPage}
+            rowsPerPageOptions={isMobile ? [] : [5, 10, 15]}
+            labelRowsPerPage={isMobile ? "" : ""}
+            labelDisplayedRows={customLabelDisplayedRows}
+          />
+          <Typography
+            sx={{
+              display: "flex",
+              justifyContent: "right",
+            }}
+          >
+            <input
+              type="number"
+              onChange={handleGoToPageChange}
+              value={goToPage}
+              placeholder="page"
+              onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                  handleGoToPage();
+                }
+              }}
+              min={0}
+              style={{
+                width: "60px",
+                height: "30px",
+                marginRight: "8px",
+                marginTop: "15px",
+              }}
+            />
+            <Button
+              variant="contained"
+              onClick={handleGoToPage}
+              sx={{ width: "20px", height: "30px", mt: "15px" }}
+            >
+              Go
+            </Button>
+          </Typography>
+        </Grid>
       </CardContent>
 
       <Dialog open={deleteDialogOpen} onClose={handleDeleteDialogClose}>
