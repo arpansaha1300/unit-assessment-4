@@ -48,12 +48,12 @@ public class SupplierController {
         if (existingSupplier == null) {
             throw new SupplierNotFoundException("Supplier not found with id " + id);
         }
-        if (supplierdto.getName() != null) {
-            existingSupplier.setName(supplierdto.getName());
-        }
-        if (supplierdto.getEmail() != null) {
-            existingSupplier.setEmail(supplierdto.getEmail());
-        }
+        // if (supplierdto.getName() != null) {
+        //     existingSupplier.setName(supplierdto.getName());
+        // }
+        // if (supplierdto.getEmail() != null) {
+        //     existingSupplier.setEmail(supplierdto.getEmail());
+        // }
         if (supplierdto.getContactInfo() != null) {
             existingSupplier.setContactInfo(supplierdto.getContactInfo());
         }

@@ -19,6 +19,7 @@ public class Supplier {
     private String password;
     private String contactInfo;
     private String role;
+    private Double discount;
 
     @OneToMany(mappedBy = "supplier", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Package> packages;
@@ -80,5 +81,15 @@ public class Supplier {
     public void setRole(String role) {
         this.role = role;
     }
+
+    public Double getDiscount() {
+        return discount;
+    }
+
+    public void setDiscount(Double discount) {
+        this.discount = discount;
+    }
+    
+
     
 }

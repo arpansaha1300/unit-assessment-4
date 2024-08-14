@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import io.assessment.inventory.controller.dto.PackageDto;
+import io.assessment.inventory.controller.dto.PriceRequestDto;
 import io.assessment.inventory.exception.PackageNotFoundException;
 import io.assessment.inventory.exception.SupplierNotFoundException;
 import io.assessment.inventory.model.Package;
@@ -76,7 +77,29 @@ public class PackageController {
         }
         return packageService.savePackage(existingPackage);
     }
+    @PostMapping("/{id}/price")
+    public Double getTotalPrice(@PathVariable Long id,@RequestBody PriceRequestDto p){
+        Package pkg=packageService.getPackageById(id);
+        if(pkg==null){
+            throw new PackageNotFoundException("Package not found with id " + id);
+        }
+        Long reqqtn=p.getQuantity();
+        if(reqqtn>pkg.getQuantity()){
+            throw new IllegalArgumentException("Requested quantity exceeds available quantity");
+        }
+        Supplier supplier=pkg.getSupplier();
+        if(supplier==null){
+            throw new SupplierNotFoundException("Supplier not found for package with id " + id);
+        }
+        Double discount = supplier.getDiscount();
+        if (discount == null) {
+            discount = 0.0; 
+        }
+        Double totalPriceBeforeDiscount = reqqtn * pkg.getPricePerUnit();
+        Double totalPriceAfterDiscount = totalPriceBeforeDiscount*(1-discount/100);
+        return totalPriceAfterDiscount;
 
+    }
     @DeleteMapping("/{id}")
     public void deletePackage(@PathVariable Long id) {
         packageService.deletePackage(id);
