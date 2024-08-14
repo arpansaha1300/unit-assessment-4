@@ -1,10 +1,12 @@
 package io.assessment.inventory.model;
 
 import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Lob;
 import jakarta.persistence.OneToMany;
 
 import java.util.List;
@@ -23,7 +25,11 @@ public class Supplier {
 
     @OneToMany(mappedBy = "supplier", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Package> packages;
-    
+
+    @Lob
+    @Column(name = "profileImage", columnDefinition = "LONGBLOB")
+    private byte[] profileImage;
+
     public Long getId() {
         return id;
     }
@@ -39,8 +45,6 @@ public class Supplier {
     public void setName(String name) {
         this.name = name;
     }
-
-    
 
     public String getPassword() {
         return password;
@@ -89,7 +93,13 @@ public class Supplier {
     public void setDiscount(Double discount) {
         this.discount = discount;
     }
-    
 
-    
+    public byte[] getProfileImage() {
+        return profileImage;
+    }
+
+    public void setProfileImage(byte[] profileImage) {
+        this.profileImage = profileImage;
+    }
+
 }
