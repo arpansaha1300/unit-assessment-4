@@ -35,6 +35,7 @@ const Packages = () => {
   const navigate = useNavigate();
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
   const [packagesData, setPackagesData] = useState([]);
+  const [supplierMap, setSupplierMap] = useState({});
 
   useEffect(() => {
     const fetchPackages = async () => {
@@ -48,13 +49,30 @@ const Packages = () => {
     fetchPackages();
   }, []);
 
+  useEffect(() => {
+    const supplierIds = new Set(packagesData.map((p) => p.supplierId));
+    supplierIds.forEach(async (sid) => {
+      const response = await axios.get(
+        `http://localhost:8080/api/suppliers/${sid}`
+      );
+      setSupplierMap((s) => {
+        const n = { ...s };
+        n[sid] = {
+          name: response.data.name,
+          email: response.data.email,
+        };
+        return n;
+      });
+    });
+  }, [packagesData]);
+
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [order, setOrder] = useState("asc");
   const [orderBy, setOrderBy] = useState("id");
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [selectedPackage, setSelectedPackage] = useState(null);
-  const [goToPage,setGoToPage]=useState('');
+  const [goToPage, setGoToPage] = useState("");
 
   useEffect(() => {
     dispatch(createOrUpdateTab("/package-list"));
@@ -178,7 +196,7 @@ const Packages = () => {
                     <strong>Address:</strong> {truncateString(pkg.address, 36)}
                   </Typography>
                   <Typography variant="body2">
-                    <strong>Supplier ID: </strong> {pkg.supplierId}
+                    <strong>Supplier : </strong> {supplierMap[pkg.supplierId]?.name}
                   </Typography>
                   <Typography variant="body2">
                     <strong>Quantity:</strong> {pkg.quantity}
@@ -228,7 +246,7 @@ const Packages = () => {
                   Address
                 </TableCell>
                 <TableCell sx={{ fontWeight: "bold", width: "20%" }}>
-                  Supplier ID
+                  Supplier 
                 </TableCell>
                 <TableCell sx={{ fontWeight: "bold", width: "20%" }}>
                   <TableSortLabel
@@ -257,7 +275,7 @@ const Packages = () => {
                     <TableCell>{pkg.id}</TableCell>
                     <TableCell>{pkg.packageName}</TableCell>
                     <TableCell>{truncateString(pkg.address, 36)}</TableCell>
-                    <TableCell>{pkg.supplierId}</TableCell>
+                    <TableCell>{supplierMap[pkg.supplierId]?.name}</TableCell>
                     <TableCell>{pkg.quantity}</TableCell>
                     <TableCell sx={{ textAlign: "right" }}>
                       <Box
