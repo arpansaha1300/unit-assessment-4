@@ -14,6 +14,7 @@ import {
   useMediaQuery,
   Stack,
   Box,
+  Button,
 } from "@mui/material";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
@@ -29,6 +30,7 @@ export default function ProfilePage() {
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
   const [supplier, setSupplier] = useState(null);
   const supplierId = useSelector((state) => state.auth.id);
+  const [image, setImage] = useState(null);
 
   useEffect(() => {
     const fetchSupplierData = async () => {
@@ -44,12 +46,41 @@ export default function ProfilePage() {
     fetchSupplierData();
   }, [supplierId]);
 
-  const  truncateString=(str, maxLength) =>{
+  const truncateString = (str, maxLength) => {
     if (str.length > maxLength) {
-        return str.substring(0, maxLength - 3) + '...';
+      return str.substring(0, maxLength - 3) + "...";
     }
     return str;
-}
+  };
+  const handleFileChange = async (event) => {
+    const file = event.target.files[0];
+    if (file) {
+      const validFormats = ["image/jpeg", "image/png"];
+      if (validFormats.includes(file.type)) {
+        const formData = new FormData();
+        formData.append("image", file);
+
+        const reader = new FileReader();
+        reader.onloadend = () => {
+          setImage(reader.result);
+        };
+        reader.readAsDataURL(file);
+
+        await axios.post(
+          `http://localhost:8080/api/suppliers/${supplierId}/uploadImage`,
+          formData,
+          {
+            headers: {
+              "Content-Type": "multipart/form-data",
+            },
+          }
+        );
+        // console.log(response.data)
+      } else {
+        alert("Please upload a JPG or PNG image.");
+      }
+    }
+  };
 
   if (!supplier) {
     return (
@@ -62,7 +93,6 @@ export default function ProfilePage() {
       </Container>
     );
   }
-
   return (
     <Grid container spacing={2} sx={{ py: 2 }}>
       <Grid item xs={12} lg={4}>
@@ -73,7 +103,11 @@ export default function ProfilePage() {
             </Typography>
             <CardMedia
               component="img"
-              image="https://st2.depositphotos.com/1092019/10717/i/450/depositphotos_107178150-stock-photo-suppliers-on-office-folder-blurred.jpg"
+              image={
+                image
+                  ? image
+                  : `data:image/png;base64, ${supplier.profileImage}`
+              }
               alt="Supplier"
               sx={{
                 width: 150,
@@ -82,6 +116,19 @@ export default function ProfilePage() {
                 margin: "auto",
               }}
             />
+            <Button
+              variant="outlined"
+              component="label"
+              sx={{ marginTop: "7px" }}
+            >
+              Upload Image
+              <input
+                type="file"
+                accept="image/jpeg,image/png"
+                onChange={handleFileChange}
+                hidden
+              />
+            </Button>
           </CardContent>
         </Card>
 
@@ -89,16 +136,36 @@ export default function ProfilePage() {
           <CardContent>
             <List>
               <ListItem>
-                <ListItemText primary={<Typography sx={{fontWeight:'bold'}}>ID</Typography>} secondary={supplier.id}/>
+                <ListItemText
+                  primary={
+                    <Typography sx={{ fontWeight: "bold" }}>ID</Typography>
+                  }
+                  secondary={supplier.id}
+                />
               </ListItem>
               <ListItem>
-                <ListItemText primary={<Typography sx={{fontWeight:'bold'}}>Name</Typography>} secondary={supplier.name} />
+                <ListItemText
+                  primary={
+                    <Typography sx={{ fontWeight: "bold" }}>Name</Typography>
+                  }
+                  secondary={supplier.name}
+                />
               </ListItem>
               <ListItem>
-                <ListItemText primary={<Typography sx={{fontWeight:'bold'}}>Email</Typography>} secondary={supplier.email} />
+                <ListItemText
+                  primary={
+                    <Typography sx={{ fontWeight: "bold" }}>Email</Typography>
+                  }
+                  secondary={supplier.email}
+                />
               </ListItem>
               <ListItem>
-                <ListItemText primary={<Typography sx={{fontWeight:'bold'}}>Phone</Typography>} secondary={supplier.contactInfo} />
+                <ListItemText
+                  primary={
+                    <Typography sx={{ fontWeight: "bold" }}>Phone</Typography>
+                  }
+                  secondary={supplier.contactInfo}
+                />
               </ListItem>
             </List>
           </CardContent>
@@ -108,84 +175,123 @@ export default function ProfilePage() {
       <Grid item xs={12} lg={8}>
         {isMobile ? (
           <>
-          {supplier.packages.length==0? <Typography variant="h5" sx={{fontWeight:'bold',display:'flex',justifyContent:'center',alignItems:'center',}}>No Packages Assigned</Typography>
-          :<Card sx={{ boxShadow: "none", border: "1px solid #f0f0f0" }}>
-            <CardContent>
-              <Typography variant="h6" sx={{ fontWeight: "bold",p:1,display:'flex',justifyContent:'center' }}>
-                Packages Assigned
+            {supplier.packages.length == 0 ? (
+              <Typography
+                variant="h5"
+                sx={{
+                  fontWeight: "bold",
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                }}
+              >
+                No Packages Assigned
               </Typography>
-              <Stack spacing={2}>
-                {supplier.packages.map((pkg) => (
-                  <Box
-                    key={pkg.id}
+            ) : (
+              <Card sx={{ boxShadow: "none", border: "1px solid #f0f0f0" }}>
+                <CardContent>
+                  <Typography
+                    variant="h6"
                     sx={{
-                      border: "1px solid #f0f0f0",
-                      borderRadius: "4px",
-                      p: 2,
+                      fontWeight: "bold",
+                      p: 1,
+                      display: "flex",
+                      justifyContent: "center",
                     }}
                   >
-                    <Typography variant="body1">
-                      <strong>Package ID:</strong> {pkg.id}
-                    </Typography>
-                    <Typography>
-                      <strong>Name:</strong> {pkg.packageName}
-                    </Typography>
-                    <Typography>
-                      <strong>Quantity:</strong> {pkg.quantity}
-                    </Typography>
-                    <Typography>
-                      <strong>Address:</strong> {pkg.address}
-                    </Typography>
-                  </Box>
-                ))}
-              </Stack>
-            </CardContent>
-          </Card>}
+                    Packages Assigned
+                  </Typography>
+                  <Stack spacing={2}>
+                    {supplier.packages.map((pkg) => (
+                      <Box
+                        key={pkg.id}
+                        sx={{
+                          border: "1px solid #f0f0f0",
+                          borderRadius: "4px",
+                          p: 2,
+                        }}
+                      >
+                        <Typography variant="body1">
+                          <strong>Package ID:</strong> {pkg.id}
+                        </Typography>
+                        <Typography>
+                          <strong>Name:</strong> {pkg.packageName}
+                        </Typography>
+                        <Typography>
+                          <strong>Quantity:</strong> {pkg.quantity}
+                        </Typography>
+                        <Typography>
+                          <strong>Address:</strong> {pkg.address}
+                        </Typography>
+                      </Box>
+                    ))}
+                  </Stack>
+                </CardContent>
+              </Card>
+            )}
           </>
-          
         ) : (
           <>
-          {supplier.packages.length===0?<Typography variant="h5" sx={{fontWeight:'bold',display:'flex',justifyContent:'center',alignItems:'center'}}>No Packages Assigned</Typography>:
-          <TableContainer
-            component={Paper}
-            sx={{ boxShadow: "none", border: "1px solid #f0f0f0" }}
-          >
-            <Typography
-              variant="h6"
-              sx={{
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
-                fontWeight: "bold",
-                padding: 1,
-              }}
-            >
-              Packages Assigned
-            </Typography>
-            <Table sx={{ minWidth: 650 }} aria-label="simple table">
-              <TableHead>
-                <TableRow>
-                  <TableCell sx={{ fontWeight: "bold" }}>Package ID</TableCell>
-                  <TableCell sx={{ fontWeight: "bold" }}>Name</TableCell>
-                  <TableCell sx={{ fontWeight: "bold" }}>Quantity</TableCell>
-                  <TableCell sx={{ fontWeight: "bold" }}>Address</TableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {supplier.packages.map((pkg) => (
-                  <TableRow
-                    key={pkg.id}
-                    sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
-                  >
-                    <TableCell>{pkg.id}</TableCell>
-                    <TableCell>{pkg.packageName}</TableCell>
-                    <TableCell>{pkg.quantity}</TableCell>
-                    <TableCell>{truncateString(pkg.address,36)}</TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </TableContainer>}
+            {supplier.packages.length === 0 ? (
+              <Typography
+                variant="h5"
+                sx={{
+                  fontWeight: "bold",
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                }}
+              >
+                No Packages Assigned
+              </Typography>
+            ) : (
+              <TableContainer
+                component={Paper}
+                sx={{ boxShadow: "none", border: "1px solid #f0f0f0" }}
+              >
+                <Typography
+                  variant="h6"
+                  sx={{
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    fontWeight: "bold",
+                    padding: 1,
+                  }}
+                >
+                  Packages Assigned
+                </Typography>
+                <Table sx={{ minWidth: 650 }} aria-label="simple table">
+                  <TableHead>
+                    <TableRow>
+                      <TableCell sx={{ fontWeight: "bold" }}>
+                        Package ID
+                      </TableCell>
+                      <TableCell sx={{ fontWeight: "bold" }}>Name</TableCell>
+                      <TableCell sx={{ fontWeight: "bold" }}>
+                        Quantity
+                      </TableCell>
+                      <TableCell sx={{ fontWeight: "bold" }}>Address</TableCell>
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>
+                    {supplier.packages.map((pkg) => (
+                      <TableRow
+                        key={pkg.id}
+                        sx={{
+                          "&:last-child td, &:last-child th": { border: 0 },
+                        }}
+                      >
+                        <TableCell>{pkg.id}</TableCell>
+                        <TableCell>{pkg.packageName}</TableCell>
+                        <TableCell>{pkg.quantity}</TableCell>
+                        <TableCell>{truncateString(pkg.address, 36)}</TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </TableContainer>
+            )}
           </>
         )}
       </Grid>
