@@ -3,12 +3,11 @@ import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { createOrUpdateTab } from "../redux/tabSlice";
 import {
-  Alert,
   Autocomplete,
   Box,
   Button,
   FormControl,
-  Snackbar,
+  IconButton,
   Table,
   TableBody,
   TableCell,
@@ -19,17 +18,18 @@ import {
 import axios from "axios";
 import {
   addEstimationRow,
+  deleteEstimationRow,
   updateEPackage,
   updateEPackages,
   updateEQuantity,
   updateESupplier,
 } from "../redux/estimationSlice";
+import CloseIcon from "@mui/icons-material/Close";
 
 export default function Estimation() {
   const dispatch = useDispatch();
-  const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [suppliersData, setSuppliersData] = useState([]);
-  const estimation = useSelector((state) => state.estimation);
+  const estimation = useSelector((state) => state.estimation.rows);
   const [responseData, setResponseData] = useState();
 
   useEffect(() => {
@@ -49,76 +49,108 @@ export default function Estimation() {
     fetchSuppliers();
   }, []);
 
-  const handleSubmit = async (event) => {
-    event.preventDefault();
-    const requestBody = estimation.map((e) => ({
-      id: e.package.id,
-      quantity: e.quantity,
-    }));
-    await axios.post("http://localhost:8080/api/packages/totalprice", {
-      packages: requestBody,
-    })
-      .then((response) => {
-        setResponseData(response.data);
-      });
+  const handleSubmit = async (ev) => {
+    ev.preventDefault();
+
+    if (ev.nativeEvent.submitter.name === "estimate") {
+      const requestBody = estimation.map((e) => ({
+        id: e.package.id,
+        quantity: e.quantity,
+      }));
+      await axios
+        .post("http://localhost:8080/api/packages/totalprice", {
+          packages: requestBody,
+        })
+        .then((response) => {
+          setResponseData(response.data);
+        });
+    } else {
+      dispatch(addEstimationRow());
+    }
   };
 
-  function addRow() {
-    dispatch(addEstimationRow());
+  function deleteRow(i) {
+    dispatch(deleteEstimationRow({ i }));
   }
 
   return (
     <>
       <Box sx={{ maxWidth: "44rem", margin: "auto" }}>
-        <Button variant="contained" onClick={addRow}>
-          Add more
-        </Button>
-        <form onSubmit={handleSubmit}>
+        <form id="estimation-form" onSubmit={handleSubmit}>
           {estimation.map((row, i) => (
-            <FormRow suppliers={suppliersData} row={row} key={i} i={i} />
+            <Box
+              key={i}
+              sx={{ display: "flex", gap: "1rem", alignItems: "center" }}
+            >
+              <FormRow suppliers={suppliersData} row={row} i={i} />
+              {estimation.length > 1 && (
+                <div>
+                  <IconButton onClick={() => deleteRow(i)}>
+                    <CloseIcon />
+                  </IconButton>
+                </div>
+              )}
+            </Box>
           ))}
-
+        </form>
+        <Box sx={{ display: "flex", gap: "1rem", marginTop: "1.2rem" }}>
           <Button
             variant="contained"
             type="submit"
-            sx={{ textTransform: "none", marginTop: "1.2rem" }}
+            name="estimate"
+            form="estimation-form"
+            sx={{ textTransform: "none" }}
           >
             Estimate
           </Button>
-        </form>
-        <Snackbar
-          anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
-          open={snackbarOpen}
-          autoHideDuration={4000}
-          onClose={() => setSnackbarOpen(false)}
-        >
-          <Alert
-            onClose={() => setSnackbarOpen(false)}
-            severity="success"
-            variant="filled"
-            sx={{ width: "100%" }}
+          <Button
+            type="submit"
+            name="add"
+            variant="outlined"
+            form="estimation-form"
           >
-            Package successfully added
-          </Alert>
-        </Snackbar>
+            Add more
+          </Button>
+        </Box>
       </Box>
       {responseData && (
-        <Table align="center" sx={{maxWidth: "50rem", marginTop: "6rem", boxShadow: "0px 1px 5px 0px #bdbdbd", borderRadius: "0.2rem"}}>
+        <Table
+          align="center"
+          sx={{
+            maxWidth: "50rem",
+            marginTop: "6rem",
+            boxShadow: "0px 1px 5px 0px #bdbdbd",
+            borderRadius: "0.2rem",
+          }}
+        >
           <TableHead>
-            <TableRow >
-              <TableCell align="center" sx={{fontWeight: "bold"}}>Original Price (Rs.)</TableCell>
-              <TableCell align="center" sx={{fontWeight: "bold"}}>Discounted Price (Rs.)</TableCell>
-              <TableCell align="center" sx={{fontWeight: "bold"}}>Discount</TableCell>
+            <TableRow>
+              <TableCell align="center" sx={{ fontWeight: "bold" }}>
+                Original Price (Rs.)
+              </TableCell>
+              <TableCell align="center" sx={{ fontWeight: "bold" }}>
+                Discounted Price (Rs.)
+              </TableCell>
+              <TableCell align="center" sx={{ fontWeight: "bold" }}>
+                Discount
+              </TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
             {responseData.map((row, id) => (
               <TableRow
                 key={id}
-                sx={{ '&:last-child td, &:last-child th': { border: 0 }, "&:hover": { background: "#f0f0f0" } }}
+                sx={{
+                  "&:last-child td, &:last-child th": { border: 0 },
+                  "&:hover": { background: "#f0f0f0" },
+                }}
               >
-                <TableCell align="center">{row.totalPriceBeforeDiscount}</TableCell>
-                <TableCell align="center">{row.totalPriceAfterDiscount}</TableCell>
+                <TableCell align="center">
+                  {row.totalPriceBeforeDiscount}
+                </TableCell>
+                <TableCell align="center">
+                  {row.totalPriceAfterDiscount}
+                </TableCell>
                 <TableCell align="center">{row.discount}%</TableCell>
               </TableRow>
             ))}
@@ -160,10 +192,7 @@ function FormRow({ suppliers, row, i }) {
   }
 
   return (
-    <FormControl
-      fullWidth
-      sx={{ display: "flex", flexDirection: "row", marginTop: "1rem" }}
-    >
+    <FormControl fullWidth sx={{ display: "flex", flexDirection: "row" }}>
       <Autocomplete
         id="supplier"
         options={suppliers}
