@@ -13,9 +13,10 @@ import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
 import InventoryIcon from "@mui/icons-material/Inventory";
 import LocalShippingIcon from "@mui/icons-material/LocalShipping";
+import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import { useDispatch, useSelector } from "react-redux";
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
-import { createOrUpdateTab, removeTab } from "../redux/tabSlice";
+import { removeTab } from "../redux/tabSlice";
 import { Tab, Tabs, useMediaQuery } from "@mui/material";
 import { useEffect, useState } from "react";
 import CloseIcon from "@mui/icons-material/Close";
@@ -71,7 +72,7 @@ export default function Layout() {
   };
 
   return (
-    <Box sx={{ display: "flex", }}>
+    <Box sx={{ display: "flex" }}>
       <CssBaseline />
       <Navbar drawerOpen={open} handleDrawerOpen={handleDrawerOpen} />
 
@@ -114,7 +115,6 @@ export default function Layout() {
 }
 
 function DrawerTabs() {
-  const dispatch = useDispatch();
   const navigate = useNavigate();
 
   const drawerTabs = [
@@ -122,7 +122,6 @@ function DrawerTabs() {
       name: "Suppliers",
       icon: <LocalShippingIcon />,
       onClick: () => {
-        dispatch(createOrUpdateTab("/suppliers-list"));
         navigate("/suppliers-list");
       },
     },
@@ -130,8 +129,14 @@ function DrawerTabs() {
       name: "Packages",
       icon: <InventoryIcon />,
       onClick: () => {
-        dispatch(createOrUpdateTab("/package-list"));
         navigate("/package-list");
+      },
+    },
+    {
+      name: "Estimation",
+      icon: <ShoppingCartIcon />,
+      onClick: () => {
+        navigate("/estimation");
       },
     },
   ];

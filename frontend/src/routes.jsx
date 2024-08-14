@@ -14,6 +14,7 @@ import EditPackage from "./pages/packages/Edit";
 import AddSupplier from "./pages/AddSupplier";
 import AddPackage from "./pages/AddPackage";
 import store from "./redux/store";
+import Estimation from "./pages/Estimation";
 
 const router = createBrowserRouter([
   {
@@ -61,6 +62,10 @@ const router = createBrowserRouter([
       {
         path: "/add-package",
         element: <AddPackage />,
+      },
+      {
+        path: "/estimation",
+        element: <Estimation />,
       },
     ],
   },
