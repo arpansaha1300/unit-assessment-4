@@ -31,6 +31,8 @@ export default function ProfilePage() {
   const [supplier, setSupplier] = useState(null);
   const supplierId = useSelector((state) => state.auth.id);
   const [image, setImage] = useState(null);
+  const alternateUrl =
+    "https://st2.depositphotos.com/1092019/10717/i/450/depositphotos_107178150-stock-photo-suppliers-on-office-folder-blurred.jpg";
 
   useEffect(() => {
     const fetchSupplierData = async () => {
@@ -39,6 +41,7 @@ export default function ProfilePage() {
           `http://localhost:8080/api/suppliers/${supplierId}`
         );
         setSupplier(response.data);
+        setImage(`data:image/png;base64, ${response.data.profileImage}`);
       } catch (error) {
         console.error("Error fetching supplier data:", error);
       }
@@ -66,7 +69,7 @@ export default function ProfilePage() {
         };
         reader.readAsDataURL(file);
 
-        await axios.post(
+        const response = await axios.post(
           `http://localhost:8080/api/suppliers/${supplierId}/uploadImage`,
           formData,
           {
@@ -75,7 +78,17 @@ export default function ProfilePage() {
             },
           }
         );
-        // console.log(response.data)
+
+        if (response.data === "Image uploaded successfully.") {
+          const supplierResponse = await axios.get(
+            `http://localhost:8080/api/suppliers/${supplierId}`
+          );
+          setSupplier(supplierResponse.data);
+          setImage(
+            `data:image/png;base64, ${supplierResponse.data.profileImage}`
+          );
+        }
+        //  console.log(supplier.profileImage)
       } else {
         alert("Please upload a JPG or PNG image.");
       }
@@ -103,11 +116,7 @@ export default function ProfilePage() {
             </Typography>
             <CardMedia
               component="img"
-              image={
-                image
-                  ? image
-                  : `data:image/png;base64, ${supplier.profileImage}`
-              }
+              image={supplier.profileImage === null ? alternateUrl : image}
               alt="Supplier"
               sx={{
                 width: 150,
