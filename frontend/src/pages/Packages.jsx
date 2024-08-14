@@ -48,6 +48,7 @@ const Packages = () => {
     };
     fetchPackages();
   }, []);
+
   
   useEffect(() => {
     const supplierIds = new Set(packagesData.map((p) => p.supplierId));
@@ -61,7 +62,6 @@ const Packages = () => {
                 email: response.data.email,
             };
         }
-        console.log(updates);
         setSupplierMap((prevState) => ({ ...prevState, ...updates }));
     };
 
