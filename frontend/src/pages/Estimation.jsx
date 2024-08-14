@@ -9,6 +9,11 @@ import {
   Button,
   FormControl,
   Snackbar,
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableRow,
   TextField,
 } from "@mui/material";
 import axios from "axios";
@@ -25,6 +30,7 @@ export default function Estimation() {
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [suppliersData, setSuppliersData] = useState([]);
   const estimation = useSelector((state) => state.estimation);
+  const [responseData, setResponseData] = useState();
 
   useEffect(() => {
     dispatch(createOrUpdateTab("/estimation"));
@@ -51,7 +57,10 @@ export default function Estimation() {
     }));
     await axios.post("http://localhost:8080/api/packages/totalprice", {
       packages: requestBody,
-    });
+    })
+      .then((response) => {
+        setResponseData(response.data);
+      });
   };
 
   function addRow() {
@@ -59,39 +68,64 @@ export default function Estimation() {
   }
 
   return (
-    <Box sx={{ maxWidth: "44rem", margin: "auto" }}>
-      <Button variant="contained" onClick={addRow}>
-        Add more
-      </Button>
-      <form onSubmit={handleSubmit}>
-        {estimation.map((row, i) => (
-          <FormRow suppliers={suppliersData} row={row} key={i} i={i} />
-        ))}
-
-        <Button
-          variant="contained"
-          type="submit"
-          sx={{ textTransform: "none", marginTop: "1.2rem" }}
-        >
-          Estimate
+    <>
+      <Box sx={{ maxWidth: "44rem", margin: "auto" }}>
+        <Button variant="contained" onClick={addRow}>
+          Add more
         </Button>
-      </form>
-      <Snackbar
-        anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
-        open={snackbarOpen}
-        autoHideDuration={4000}
-        onClose={() => setSnackbarOpen(false)}
-      >
-        <Alert
+        <form onSubmit={handleSubmit}>
+          {estimation.map((row, i) => (
+            <FormRow suppliers={suppliersData} row={row} key={i} i={i} />
+          ))}
+
+          <Button
+            variant="contained"
+            type="submit"
+            sx={{ textTransform: "none", marginTop: "1.2rem" }}
+          >
+            Estimate
+          </Button>
+        </form>
+        <Snackbar
+          anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+          open={snackbarOpen}
+          autoHideDuration={4000}
           onClose={() => setSnackbarOpen(false)}
-          severity="success"
-          variant="filled"
-          sx={{ width: "100%" }}
         >
-          Package successfully added
-        </Alert>
-      </Snackbar>
-    </Box>
+          <Alert
+            onClose={() => setSnackbarOpen(false)}
+            severity="success"
+            variant="filled"
+            sx={{ width: "100%" }}
+          >
+            Package successfully added
+          </Alert>
+        </Snackbar>
+      </Box>
+      {responseData && (
+        <Table align="center" sx={{maxWidth: "50rem", marginTop: "6rem", boxShadow: "0px 1px 5px 0px #bdbdbd", borderRadius: "0.2rem"}}>
+          <TableHead>
+            <TableRow >
+              <TableCell align="center" sx={{fontWeight: "bold"}}>Original Price (Rs.)</TableCell>
+              <TableCell align="center" sx={{fontWeight: "bold"}}>Discounted Price (Rs.)</TableCell>
+              <TableCell align="center" sx={{fontWeight: "bold"}}>Discount</TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {responseData.map((row, id) => (
+              <TableRow
+                key={id}
+                sx={{ '&:last-child td, &:last-child th': { border: 0 }, "&:hover": { background: "#f0f0f0" } }}
+              >
+                <TableCell align="center">{row.totalPriceBeforeDiscount}</TableCell>
+                <TableCell align="center">{row.totalPriceAfterDiscount}</TableCell>
+                <TableCell align="center">{row.discount}%</TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      )}
+    </>
   );
 }
 
