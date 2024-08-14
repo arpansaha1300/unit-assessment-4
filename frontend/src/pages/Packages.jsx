@@ -48,23 +48,26 @@ const Packages = () => {
     };
     fetchPackages();
   }, []);
-
+  
   useEffect(() => {
     const supplierIds = new Set(packagesData.map((p) => p.supplierId));
-    supplierIds.forEach(async (sid) => {
-      const response = await axios.get(
-        `http://localhost:8080/api/suppliers/${sid}`
-      );
-      setSupplierMap((s) => {
-        const n = { ...s };
-        n[sid] = {
-          name: response.data.name,
-          email: response.data.email,
-        };
-        return n;
-      });
-    });
-  }, [packagesData]);
+    
+    const fetchSuppliers = async () => {
+        const updates = {};
+        for (const sid of supplierIds) {
+            const response = await axios.get(`http://localhost:8080/api/suppliers/${sid}`);
+            updates[sid] = {
+                name: response.data.name,
+                email: response.data.email,
+            };
+        }
+        console.log(updates);
+        setSupplierMap((prevState) => ({ ...prevState, ...updates }));
+    };
+
+    fetchSuppliers();
+}, [packagesData]);
+
 
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
