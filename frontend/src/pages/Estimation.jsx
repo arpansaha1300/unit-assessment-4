@@ -8,23 +8,26 @@ import {
   Box,
   Button,
   FormControl,
+  IconButton,
   Snackbar,
   TextField,
 } from "@mui/material";
 import axios from "axios";
 import {
   addEstimationRow,
+  deleteEstimationRow,
   updateEPackage,
   updateEPackages,
   updateEQuantity,
   updateESupplier,
 } from "../redux/estimationSlice";
+import CloseIcon from "@mui/icons-material/Close";
 
 export default function Estimation() {
   const dispatch = useDispatch();
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [suppliersData, setSuppliersData] = useState([]);
-  const estimation = useSelector((state) => state.estimation);
+  const estimation = useSelector((state) => state.estimation.rows);
 
   useEffect(() => {
     dispatch(createOrUpdateTab("/estimation"));
@@ -43,38 +46,58 @@ export default function Estimation() {
     fetchSuppliers();
   }, []);
 
-  const handleSubmit = async (event) => {
-    event.preventDefault();
-    const requestBody = estimation.map((e) => ({
-      id: e.package.id,
-      quantity: e.quantity,
-    }));
-    await axios.post("http://localhost:8080/api/packages/totalprice", {
-      packages: requestBody,
-    });
+  const handleSubmit = async (ev) => {
+    ev.preventDefault();
+
+    if (ev.nativeEvent.srcElement.name === "estimate") {
+      const requestBody = estimation.map((e) => ({
+        id: e.package.id,
+        quantity: e.quantity,
+      }));
+      await axios.post("http://localhost:8080/api/packages/totalprice", {
+        packages: requestBody,
+      });
+    } else {
+      dispatch(addEstimationRow());
+    }
   };
 
-  function addRow() {
-    dispatch(addEstimationRow());
+  function deleteRow(i) {
+    dispatch(deleteEstimationRow({ i }));
   }
 
   return (
     <Box sx={{ maxWidth: "44rem", margin: "auto" }}>
-      <Button variant="contained" onClick={addRow}>
-        Add more
-      </Button>
       <form onSubmit={handleSubmit}>
         {estimation.map((row, i) => (
-          <FormRow suppliers={suppliersData} row={row} key={i} i={i} />
+          <Box
+            key={i}
+            sx={{ display: "flex", gap: "1rem", alignItems: "center" }}
+          >
+            <FormRow suppliers={suppliersData} row={row} i={i} />
+            {estimation.length > 1 && (
+              <div>
+                <IconButton onClick={() => deleteRow(i)}>
+                  <CloseIcon />
+                </IconButton>
+              </div>
+            )}
+          </Box>
         ))}
 
-        <Button
-          variant="contained"
-          type="submit"
-          sx={{ textTransform: "none", marginTop: "1.2rem" }}
-        >
-          Estimate
-        </Button>
+        <Box sx={{ display: "flex", gap: "1rem", marginTop: "1.2rem" }}>
+          <Button
+            variant="contained"
+            type="submit"
+            name="estimate"
+            sx={{ textTransform: "none" }}
+          >
+            Estimate
+          </Button>
+          <Button type="submit" name="add" variant="outlined">
+            Add more
+          </Button>
+        </Box>
       </form>
       <Snackbar
         anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
@@ -126,10 +149,7 @@ function FormRow({ suppliers, row, i }) {
   }
 
   return (
-    <FormControl
-      fullWidth
-      sx={{ display: "flex", flexDirection: "row", marginTop: "1rem" }}
-    >
+    <FormControl fullWidth sx={{ display: "flex", flexDirection: "row" }}>
       <Autocomplete
         id="supplier"
         options={suppliers}
