@@ -1,24 +1,34 @@
+/* eslint-disable react/prop-types */
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { createOrUpdateTab } from "../redux/tabSlice";
-import { Alert, Autocomplete, Box, Button, FormControl, Snackbar, TextField } from "@mui/material";
+import {
+  Alert,
+  Autocomplete,
+  Box,
+  Button,
+  FormControl,
+  Snackbar,
+  TextField,
+} from "@mui/material";
 import axios from "axios";
+import {
+  addEstimationRow,
+  updateEPackage,
+  updateEPackages,
+  updateEQuantity,
+  updateESupplier,
+} from "../redux/estimationSlice";
 
 export default function Estimation() {
   const dispatch = useDispatch();
-  const [quantityError, setQuantityError] = useState("");
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [suppliersData, setSuppliersData] = useState([]);
-  const [packagesData, setPackagesData] = useState([]);
-  const [supplierPackage, setSupplierPackage] = useState(null);
-  const [supplier, setSupplier] = useState(null);
-  const [quantity, setQuantity] = useState(0);
-
-  const id = Number(supplier ? supplier.id:0);
+  const estimation = useSelector((state) => state.estimation);
 
   useEffect(() => {
     dispatch(createOrUpdateTab("/estimation"));
-  });
+  }, [dispatch]);
 
   useEffect(() => {
     const fetchSuppliers = async () => {
@@ -33,129 +43,31 @@ export default function Estimation() {
     fetchSuppliers();
   }, []);
 
-  useEffect(() => {
-    const fetchPackages = async () => {
-      try {
-        const response = await axios.get(`http://localhost:8080/api/suppliers/${id}`);
-        console.log(response.data.packages);
-        setPackagesData(response.data.packages);
-      } catch (error) {
-        console.error("Error fetching packages data:", error);
-      }
-    };
-
-    if (id > 0) fetchPackages();
-  }, [id]);
-
-  const validateDetails = (quantity) => {
-    let res = true;
-    if (quantity > supplierPackage.quantity) {
-      setQuantityError("Enter a valid quantity");
-      res = false;
-    }
-    return res;
-  };
-
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
-    const res = validateDetails(quantity);
-    if (res) {
-      console.log([{
-        packageId: supplierPackage.id,
-        quantity: quantity,
-      }])
-      // axios
-      //   .post("http://localhost:8080/api/packages/price", {
-      //     packageId: supplierPackage.id,
-      //     quantity: quantity,
-      //   })
-      //   .then((response) => {
-      //     console.log(response);
-      //     setSnackbarOpen(true);
-      //   })
-      //   .catch((error) => {
-      //     console.log(error);
-      //   });
-    }
+    const requestBody = estimation.map((e) => ({
+      id: e.package.id,
+      quantity: e.quantity,
+    }));
+    await axios.post("http://localhost:8080/api/packages/totalprice", {
+      packages: requestBody,
+    });
   };
 
-  function updateQuantity(e) {
-    setQuantity(e.target.value);
-    setQuantityError("");
-  }
-
-  function updateSupplier(_, newValue) {
-        setSupplier(
-          newValue
-          ? {
-            id: newValue.id,
-            name: newValue.name,
-            email: newValue.email,
-          }
-          : null
-        );
-  }
-
-  function updatePackage(_, newValue) {
-        setSupplierPackage(
-          newValue
-          ? {
-            id: newValue.id,
-            packageName: newValue.packageName,
-            quantity: newValue.quantity
-          }
-          : null
-        );
+  function addRow() {
+    dispatch(addEstimationRow());
   }
 
   return (
     <Box sx={{ maxWidth: "44rem", margin: "auto" }}>
+      <Button variant="contained" onClick={addRow}>
+        Add more
+      </Button>
       <form onSubmit={handleSubmit}>
-        <FormControl fullWidth sx={{ display: "flex", flexDirection: "row", marginTop: "3rem" }}>
-          <Autocomplete
-            id="supplier"
-            options={suppliersData}
-            value={supplier}
-            onChange={updateSupplier}
-            getOptionLabel={(option) =>
-              option ? `${option.name} (${option.email})` : ""
-            }
-            isOptionEqualToValue={(option, value) => {
-              if (!value) return false;
-              return option.id === value.id;
-            }}
-            sx={{ paddingTop: "0.5rem", paddingRight: "0.5rem" }}
-            fullWidth
-            renderInput={(params) => <TextField {...params} label="Supplier" />}
-          />
-          <Autocomplete
-            id="package"
-            options={packagesData}
-            value={supplierPackage}
-            onChange={updatePackage}
-            getOptionLabel={(option) =>
-              option ? `${option.packageName} (${option.quantity})` : ""
-            }
-            isOptionEqualToValue={(option, value) => {
-              if (!value) return false;
-              return option.id === value.id;
-            }}
-            sx={{ paddingTop: "0.5rem", paddingRight: "0.5rem" }}
-            fullWidth
-            renderInput={(params) => <TextField {...params} label="Package" />}
-          />
-          <TextField
-            margin="dense"
-            label="Quantity"
-            required
-            value={quantity}
-            onChange={updateQuantity}
-            error={!!quantityError}
-            helperText={quantityError}
-            fullWidth
-          />
-        </FormControl>
-        
+        {estimation.map((row, i) => (
+          <FormRow suppliers={suppliersData} row={row} key={i} i={i} />
+        ))}
+
         <Button
           variant="contained"
           type="submit"
@@ -180,5 +92,95 @@ export default function Estimation() {
         </Alert>
       </Snackbar>
     </Box>
+  );
+}
+
+function FormRow({ suppliers, row, i }) {
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    const fetchPackages = async () => {
+      try {
+        const response = await axios.get(
+          `http://localhost:8080/api/suppliers/${row.supplier.id}`
+        );
+        dispatch(updateEPackages({ i, packages: response.data.packages }));
+      } catch (error) {
+        console.error("Error fetching packages data:", error);
+      }
+    };
+
+    if (row.supplier) fetchPackages();
+  }, [dispatch, i, row.supplier]);
+
+  function updateQuantity(quantity, i) {
+    dispatch(updateEQuantity({ i, quantity }));
+  }
+
+  function updateSupplier(supplier, i) {
+    dispatch(updateESupplier({ i, supplier }));
+  }
+
+  function updatePackage(pkg, i) {
+    dispatch(updateEPackage({ i, package: pkg ? pkg : null }));
+  }
+
+  return (
+    <FormControl
+      fullWidth
+      sx={{ display: "flex", flexDirection: "row", marginTop: "1rem" }}
+    >
+      <Autocomplete
+        id="supplier"
+        options={suppliers}
+        value={row.supplier}
+        onChange={(_, val) => updateSupplier(val, i)}
+        getOptionLabel={(option) =>
+          option ? `${option.name} (${option.email})` : ""
+        }
+        isOptionEqualToValue={(option, value) => {
+          if (!value) return false;
+          return option.id === value.id;
+        }}
+        sx={{ paddingTop: "0.5rem", paddingRight: "0.5rem" }}
+        fullWidth
+        renderInput={(params) => (
+          <TextField {...params} label="Supplier" required />
+        )}
+      />
+      <Autocomplete
+        id="package"
+        options={row.packages}
+        value={row.package}
+        onChange={(_, val) => updatePackage(val, i)}
+        getOptionLabel={(option) =>
+          option ? `${option.packageName} (${option.quantity})` : ""
+        }
+        isOptionEqualToValue={(option, value) => {
+          if (!value) return false;
+          return option.id === value.id;
+        }}
+        disabled={row.supplier === null}
+        sx={{ paddingTop: "0.5rem", paddingRight: "0.5rem" }}
+        fullWidth
+        renderInput={(params) => (
+          <TextField {...params} label="Package" required />
+        )}
+      />
+      <TextField
+        margin="dense"
+        label="Quantity"
+        type="number"
+        required
+        inputProps={{
+          min: 0,
+          max: row.package?.quantity,
+        }}
+        disabled={row.package === null}
+        value={row.quantity}
+        onChange={(e) => updateQuantity(e.target.value, i)}
+        fullWidth
+      />
+    </FormControl>
   );
 }
