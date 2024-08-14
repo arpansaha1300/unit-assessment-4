@@ -40,3 +40,41 @@ insert into package (package_name, address, quantity, supplier_id) values
 ('graduation package', '60, pusa road, delhi', 6, 9),
 ('housewarming package', '27, ernakulam, kerala', 17, 10),
 ('get well package', '90, sector 22, gurgaon, haryana', 19, 10);
+
+
+------update packages-------
+UPDATE package SET price_per_unit = 6200  WHERE id = 1;
+UPDATE package SET price_per_unit = 9600  WHERE id = 2;
+UPDATE package SET price_per_unit = 8400  WHERE id = 3;
+UPDATE package SET price_per_unit = 10000  WHERE id = 4;
+UPDATE package SET price_per_unit = 5500  WHERE id = 5;
+UPDATE package SET price_per_unit = 9400  WHERE id = 6;
+UPDATE package SET price_per_unit = 5700  WHERE id = 7;
+UPDATE package SET price_per_unit = 6000  WHERE id = 8;
+UPDATE package SET price_per_unit = 8700  WHERE id = 9;
+UPDATE package SET price_per_unit = 2300  WHERE id = 10;
+UPDATE package SET price_per_unit = 4400  WHERE id = 11;
+UPDATE package SET price_per_unit = 2200  WHERE id = 12;
+UPDATE package SET price_per_unit = 1500  WHERE id = 13;
+UPDATE package SET price_per_unit = 6600  WHERE id = 14;
+UPDATE package SET price_per_unit = 2200  WHERE id = 15;
+UPDATE package SET price_per_unit = 1000  WHERE id = 16;
+UPDATE package SET price_per_unit = 2500  WHERE id = 17;
+UPDATE package SET price_per_unit = 1200  WHERE id = 18;
+UPDATE package SET price_per_unit = 8800  WHERE id = 19;
+UPDATE package SET price_per_unit = 9800  WHERE id = 20;
+UPDATE package SET price_per_unit = 3400  WHERE id = 21;
+UPDATE package SET price_per_unit = 5600  WHERE id = 22;
+
+------update supplier-----
+UPDATE supplier SET discount = 10  WHERE id = 1;
+UPDATE supplier SET discount = 11  WHERE id = 2;
+UPDATE supplier SET discount = 7  WHERE id = 3;
+UPDATE supplier SET discount = 9  WHERE id = 4;
+UPDATE supplier SET discount = 6  WHERE id = 5;
+UPDATE supplier SET discount = 22  WHERE id = 6;
+UPDATE supplier SET discount = 13  WHERE id = 7;
+UPDATE supplier SET discount = 18  WHERE id = 8;
+UPDATE supplier SET discount = 19  WHERE id = 9;
+UPDATE supplier SET discount = 11  WHERE id = 10;
+UPDATE supplier SET discount = 5  WHERE id = 11;
