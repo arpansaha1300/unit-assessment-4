@@ -192,7 +192,7 @@ function FormRow({ suppliers, row, i }) {
   }
 
   return (
-    <FormControl fullWidth sx={{ display: "flex", flexDirection: "row" }}>
+    <FormControl fullWidth sx={{ display: "flex", flexDirection: {sx: "column", md: "row"} }}>
       <Autocomplete
         id="supplier"
         options={suppliers}
@@ -239,6 +239,7 @@ function FormRow({ suppliers, row, i }) {
           min: 0,
           max: row.package?.quantity,
         }}
+        sx={{paddingRight: "0.5rem"}}
         disabled={row.package === null}
         value={row.quantity}
         onChange={(e) => updateQuantity(e.target.value, i)}
