@@ -35,6 +35,7 @@ const Packages = () => {
   const navigate = useNavigate();
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
   const [packagesData, setPackagesData] = useState([]);
+  const [supplierMap, setSupplierMap] = useState({});
 
   useEffect(() => {
     const fetchPackages = async () => {
@@ -47,6 +48,26 @@ const Packages = () => {
     };
     fetchPackages();
   }, []);
+
+  
+  useEffect(() => {
+    const supplierIds = new Set(packagesData.map((p) => p.supplierId));
+    
+    const fetchSuppliers = async () => {
+        const updates = {};
+        for (const sid of supplierIds) {
+            const response = await axios.get(`http://localhost:8080/api/suppliers/${sid}`);
+            updates[sid] = {
+                name: response.data.name,
+                email: response.data.email,
+            };
+        }
+        setSupplierMap((prevState) => ({ ...prevState, ...updates }));
+    };
+
+    fetchSuppliers();
+}, [packagesData]);
+
 
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
@@ -186,7 +207,7 @@ const Packages = () => {
                     <strong>Address:</strong> {truncateString(pkg.address, 36)}
                   </Typography>
                   <Typography variant="body2">
-                    <strong>Supplier ID: </strong> {pkg.supplierId}
+                    <strong>Supplier : </strong> {supplierMap[pkg.supplierId]?.name}
                   </Typography>
                   <Typography variant="body2">
                     <strong>Quantity:</strong> {pkg.quantity}
@@ -236,7 +257,7 @@ const Packages = () => {
                   Address
                 </TableCell>
                 <TableCell sx={{ fontWeight: "bold", width: "20%" }}>
-                  Supplier ID
+                  Supplier 
                 </TableCell>
                 <TableCell sx={{ fontWeight: "bold", width: "20%" }}>
                   <TableSortLabel
@@ -265,7 +286,7 @@ const Packages = () => {
                     <TableCell>{pkg.id}</TableCell>
                     <TableCell>{pkg.packageName}</TableCell>
                     <TableCell>{truncateString(pkg.address, 36)}</TableCell>
-                    <TableCell>{pkg.supplierId}</TableCell>
+                    <TableCell>{supplierMap[pkg.supplierId]?.name}</TableCell>
                     <TableCell>{pkg.quantity}</TableCell>
                     <TableCell sx={{ textAlign: "right" }}>
                       <Box
