@@ -47,6 +47,9 @@ function getRouteName(path, data) {
     case "/add-package": {
       return "Add Package";
     }
+    case "/estimation": {
+      return "Estimation";
+    }
     default: {
       if (path.startsWith("/suppliers-list") && path.endsWith("/edit")) {
         const supplier = data;
@@ -75,6 +78,9 @@ function getRouteType(path) {
     }
     case "/add-package": {
       return "add-package";
+    }
+    case "/estimation": {
+      return "estimation";
     }
     default: {
       if (path.startsWith("/suppliers-list") && path.endsWith("/edit")) {
