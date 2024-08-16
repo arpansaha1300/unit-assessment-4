@@ -5,6 +5,7 @@ const initialState = {
   address: "",
   quantity: "",
   supplier: null,
+  pricePerUnit:null
 };
 
 const addPackageSessionSlice = createSlice({
@@ -24,11 +25,15 @@ const addPackageSessionSlice = createSlice({
     updateAddPackageSessionSupplier: (state, action) => {
       state.supplier = action.payload;
     },
+    updateAddPackageSessionPricePerUnit: (state, action) => {
+      state.pricePerUnit = action.payload;
+    },
     clearAddPackageSession: (state) => {
       state.name = "";
       state.address = "";
       state.quantity = "";
       state.supplier = null;
+      state.pricePerUnit=null
     },
   },
 });
@@ -38,6 +43,7 @@ export const {
   updateAddPackageSessionName,
   updateAddPackageSessionQuantity,
   updateAddPackageSessionSupplier,
+  updateAddPackageSessionPricePerUnit,
   clearAddPackageSession,
 } = addPackageSessionSlice.actions;
 

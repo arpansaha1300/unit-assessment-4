@@ -16,6 +16,7 @@ import {
   updateAddPackageSessionName,
   updateAddPackageSessionQuantity,
   updateAddPackageSessionSupplier,
+  updateAddPackageSessionPricePerUnit
 } from "../redux/addPackageSessionSlice";
 
 function AddPackage() {
@@ -61,6 +62,7 @@ function AddPackage() {
           address: session.address,
           quantity: session.quantity,
           supplierId: session.supplier.id,
+          pricePerUnit:session.pricePerUnit,
         })
         .then(() => {
           setSnackbarOpen(true);
@@ -81,6 +83,10 @@ function AddPackage() {
 
   function updateQuantity(e) {
     dispatch(updateAddPackageSessionQuantity(e.target.value));
+    setQuantityError("");
+  }
+  function updatePricePerUnit(e) {
+    dispatch(updateAddPackageSessionPricePerUnit(e.target.value));
     setQuantityError("");
   }
 
@@ -124,6 +130,16 @@ function AddPackage() {
             required
             value={session.quantity}
             onChange={updateQuantity}
+            error={!!quantityError}
+            helperText={quantityError}
+            fullWidth
+          />
+          <TextField
+            margin="dense"
+            label="Price Per Unit"
+            required
+            value={session.pricePerUnit}
+            onChange={updatePricePerUnit}
             error={!!quantityError}
             helperText={quantityError}
             fullWidth

@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.net.http.HttpHeaders;
 import java.util.List;
 
 @RestController
@@ -35,6 +36,7 @@ public class SupplierController {
         supplier.setEmail(supplierDto.getEmail());
         supplier.setContactInfo(supplierDto.getContactInfo());
         supplier.setRole("supplier");
+        supplier.setDiscount(supplierDto.getDiscount());
         Supplier savedSupplier = supplierService.saveSupplier(supplier);
         return ResponseEntity.status(HttpStatus.CREATED).body(savedSupplier);
     }
@@ -58,6 +60,9 @@ public class SupplierController {
         // }
         if (supplierdto.getContactInfo() != null) {
             existingSupplier.setContactInfo(supplierdto.getContactInfo());
+        }
+        if (supplierdto.getDiscount() != null){
+            existingSupplier.setDiscount(supplierdto.getDiscount());
         }
         return supplierService.saveSupplier(existingSupplier);
     }
@@ -87,4 +92,5 @@ public class SupplierController {
                     .body("Failed to upload image.");
         }
     }
+    
 }
