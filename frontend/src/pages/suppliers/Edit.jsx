@@ -3,12 +3,13 @@ import {
   Box,
   Button,
   FormControl,
+  Grid,
   Snackbar,
   TextField,
 } from "@mui/material";
 import { useEffect, useMemo, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useLocation, useParams } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import { createOrUpdateTab } from "../../redux/tabSlice";
 import {
@@ -20,6 +21,7 @@ import {
 } from "../../redux/editSupplierSlice";
 
 export default function EditSupplier() {
+  const navigate=useNavigate();
   const [contactError, setContactError] = useState();
   const dispatch = useDispatch();
   const params = useParams();
@@ -137,6 +139,9 @@ export default function EditSupplier() {
       updateEditSupplierSessionDiscount({ id: supplier.id, discount: e.target.value })
     );
   }
+  function handleBackClick(){
+    navigate("/supplier-profile");
+  }
 
   return session ? (
     <Box sx={{ maxWidth: "24rem", margin: "auto" }}>
@@ -170,7 +175,7 @@ export default function EditSupplier() {
             fullWidth
             required
             type="number"
-            InputProps={{ inputProps: { min: 0 } }}
+            inputProps= {{ min: 0,max:90 }}
             value={session.discount}
             onChange={updateDiscount}
           />
@@ -187,6 +192,14 @@ export default function EditSupplier() {
             value={session.contactInfo}
             onChange={updateContact}
           />
+          <Grid sx={{display:'flex',justifyContent:'center',gap:'3px'}}>
+          <Button
+            variant="contained"
+            onClick={handleBackClick}
+            sx={{ textTransform: "none", marginTop: "0.2rem" }}
+          >
+            Back
+          </Button>
           <Button
             variant="contained"
             type="submit"
@@ -195,6 +208,7 @@ export default function EditSupplier() {
           >
             Save
           </Button>
+          </Grid>
         </FormControl>
       </form>
       <Snackbar
