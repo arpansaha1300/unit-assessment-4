@@ -138,6 +138,8 @@ function AddPackage() {
             margin="dense"
             label="Price Per Unit"
             required
+            type="number"
+            InputProps={{ inputProps: { min: 0 } }}
             value={session.pricePerUnit}
             onChange={updatePricePerUnit}
             error={!!quantityError}
