@@ -15,6 +15,7 @@ const editSupplierSlice = createSlice({
         name: action.payload.name,
         email: action.payload.email,
         contactInfo: action.payload.contactInfo,
+        discount:action.payload.discount,
       };
     },
     updateEditSupplierSessionName: (state, action) => {
@@ -29,6 +30,10 @@ const editSupplierSlice = createSlice({
       const supplierId = action.payload.id;
       state.sessions[supplierId].contactInfo = action.payload.contactInfo;
     },
+    updateEditSupplierSessionDiscount: (state, action) => {
+      const supplierId = action.payload.id;
+      state.sessions[supplierId].discount = action.payload.discount;
+    },
     removeEditSupplierSession: (state, action) => {
       delete state.sessions[action.payload.id];
     },
@@ -40,6 +45,7 @@ export const {
   updateEditSupplierSessionContact,
   updateEditSupplierSessionEmail,
   updateEditSupplierSessionName,
+  updateEditSupplierSessionDiscount,
   removeEditSupplierSession,
 } = editSupplierSlice.actions;
 

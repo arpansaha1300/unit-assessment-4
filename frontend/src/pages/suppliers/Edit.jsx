@@ -16,6 +16,7 @@ import {
   updateEditSupplierSessionContact,
   updateEditSupplierSessionEmail,
   updateEditSupplierSessionName,
+  updateEditSupplierSessionDiscount
 } from "../../redux/editSupplierSlice";
 
 export default function EditSupplier() {
@@ -52,7 +53,8 @@ export default function EditSupplier() {
     return (
       supplier.name !== session.name ||
       supplier.email !== session.email ||
-      supplier.contactInfo !== session.contactInfo
+      supplier.contactInfo !== session.contactInfo||
+      supplier.discount!==session.discount
     );
   }, [session, supplier]);
 
@@ -93,6 +95,7 @@ export default function EditSupplier() {
             name: session.name,
             email: session.email,
             contactInfo: session.contactInfo,
+            discount:session.discount
           }
         );
         setSupplier(res.data);
@@ -129,6 +132,12 @@ export default function EditSupplier() {
     }
   }
 
+  function updateDiscount(e) {
+    dispatch(
+      updateEditSupplierSessionDiscount({ id: supplier.id, discount: e.target.value })
+    );
+  }
+
   return session ? (
     <Box sx={{ maxWidth: "24rem", margin: "auto" }}>
       <form onSubmit={updateSupplier}>
@@ -153,6 +162,17 @@ export default function EditSupplier() {
             value={session.email}
             disabled={userRole === "SUPPLIER"}
             onChange={updateEmail}
+          />
+          <TextField
+            margin="dense"
+            label="Discount"
+            name="Discount"
+            fullWidth
+            required
+            type="number"
+            InputProps={{ inputProps: { min: 0 } }}
+            value={session.discount}
+            onChange={updateDiscount}
           />
           <TextField
             margin="dense"
