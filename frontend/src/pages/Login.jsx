@@ -64,7 +64,7 @@ function Login() {
     maxWidth: "40rem",
     borderRadius: "1rem",
     backgroundColor: "rgba(255, 255, 255, 0.89)",
-    boxShadow: "10px 8px 10px 1px #2669d4"
+    boxShadow: "10px 8px 10px 1px #1A2130"
   };
 
   const itemStyle = {
@@ -94,64 +94,68 @@ function Login() {
   return (
     <Box
       style={{
+        backgroundImage: "url('https://img.freepik.com/free-vector/futuristic-background-with-lines_23-2148487905.jpg?w=1380&t=st=1723796353~exp=1723796953~hmac=2274b172f17468c5615a81d1dc6e8ff7ba3621edd276e4fc2cdcaaa3d1e1cfdd')",
+        backgroundRepeat: "no-repeat",
+        backgroundSize: "cover",
         height: "100vh",
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
-        backgroundColor: "#b8cdff"
+        backgroundColor: "#b8cdff",
+
       }}
     >
       <CssBaseline />
-        <Grid container style={formStyle}>
-          <Grid item xs={12} md={6} sx={{display: "flex", flexDirection: "column", justifyContent: "center"}}>
-            <Box sx={{ display: "flex", justifyContent: "center", color: "green" }}>
-              <LockOutlinedIcon style={iconStyle} />
-            </Box>
-            <Typography style={headingStyle}>Log In</Typography>
-          </Grid>
-          <Grid item xs={12} md={6} style={screen.width>'679px' ? itemStyle : resItemStyle}>
-            <form onSubmit={handleSubmit} style={{padding: "auto 5rem"}}>
-              <FormControl fullWidth>
-                <TextField
-                  sx={{ marginBottom: "0.5rem" }}
-                  value={name}
-                  onChange={handleNameChange}
-                  variant="standard"
-                  label="Email"
-                  type="email"
-                  required
-                />
-                <TextField
-                  sx={{ marginBottom: "2rem" }}
-                  value={pass}
-                  onChange={handlePassChange}
-                  variant="standard"
-                  label="Password"
-                  type="password"
-                  required
-                />
-                <Button
-                  variant="contained"
-                  type="submit"
-                  sx={{ textTransform: "none", marginTop: "0.2rem" }}
-                >
-                  Log In
-                </Button>
-              </FormControl>
-              <Typography
-                sx={{
-                  textAlign: "center",
-                  marginTop: "0.4rem",
-                  color: "rgb(66, 66, 66)",
-                }}
-              >
-                New User?&nbsp;
-                <Link to="/sign-up">SignUp</Link>
-              </Typography>
-            </form>
-          </Grid>
+      <Grid container style={formStyle}>
+        <Grid item xs={12} md={6} sx={{ display: "flex", flexDirection: "column", justifyContent: "center" }}>
+          <Box sx={{ display: "flex", justifyContent: "center", color: "green" }}>
+            <LockOutlinedIcon style={iconStyle} />
+          </Box>
+          <Typography style={headingStyle}>Log In</Typography>
         </Grid>
-        <Snackbar
+        <Grid item xs={12} md={6} style={screen.width > '679px' ? itemStyle : resItemStyle}>
+          <form onSubmit={handleSubmit} style={{ padding: "auto 5rem" }}>
+            <FormControl fullWidth>
+              <TextField
+                sx={{ marginBottom: "0.5rem" }}
+                value={name}
+                onChange={handleNameChange}
+                variant="standard"
+                label="Email"
+                type="email"
+                required
+              />
+              <TextField
+                sx={{ marginBottom: "2rem" }}
+                value={pass}
+                onChange={handlePassChange}
+                variant="standard"
+                label="Password"
+                type="password"
+                required
+              />
+              <Button
+                variant="contained"
+                type="submit"
+                sx={{ textTransform: "none", marginTop: "0.2rem" }}
+              >
+                Log In
+              </Button>
+            </FormControl>
+            <Typography
+              sx={{
+                textAlign: "center",
+                marginTop: "0.4rem",
+                color: "rgb(66, 66, 66)",
+              }}
+            >
+              New User?&nbsp;
+              <Link to="/sign-up">SignUp</Link>
+            </Typography>
+          </form>
+        </Grid>
+      </Grid>
+      <Snackbar
         anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
         open={snackbarOpen}
         autoHideDuration={4000}

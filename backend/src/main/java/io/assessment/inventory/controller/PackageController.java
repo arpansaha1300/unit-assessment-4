@@ -44,6 +44,7 @@ public class PackageController {
         packages.setPackageName(packagedto.getPackageName());
         packages.setAddress(packagedto.getAddress());
         packages.setQuantity(packagedto.getQuantity());
+        packages.setPricePerUnit(packagedto.getPricePerUnit());
         packages.setSupplier(supplier);
         return packageService.savePackage(packages);
     }
@@ -68,6 +69,9 @@ public class PackageController {
         }
         if (packagedto.getQuantity() != null) {
             existingPackage.setQuantity(packagedto.getQuantity());
+        }
+        if (packagedto.getPricePerUnit() != null){
+            existingPackage.setPricePerUnit(packagedto.getPricePerUnit());
         }
         if (packagedto.getSupplier_id() != null) {
             Supplier newSupplier = supplierService.getSupplierById(packagedto.getSupplier_id());
