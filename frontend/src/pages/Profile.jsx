@@ -31,6 +31,7 @@ export default function ProfilePage() {
   const [supplier, setSupplier] = useState(null);
   const supplierId = useSelector((state) => state.auth.id);
   const [image, setImage] = useState(null);
+  const userRole=useSelector((state)=>state.auth.role);
   const alternateUrl =
     "https://st2.depositphotos.com/1092019/10717/i/450/depositphotos_107178150-stock-photo-suppliers-on-office-folder-blurred.jpg";
 
@@ -78,8 +79,7 @@ export default function ProfilePage() {
             },
           }
         );
-
-        if (response.data === "Image uploaded successfully.") {
+        if (response.status===200) {
           const supplierResponse = await axios.get(
             `http://localhost:8080/api/suppliers/${supplierId}`
           );
@@ -88,7 +88,6 @@ export default function ProfilePage() {
             `data:image/png;base64, ${supplierResponse.data.profileImage}`
           );
         }
-        //  console.log(supplier.profileImage)
       } else {
         alert("Please upload a JPG or PNG image.");
       }
@@ -125,7 +124,7 @@ export default function ProfilePage() {
                 margin: "auto",
               }}
             />
-            <Button
+            {userRole==="SUPPLIER" && <Button
               variant="outlined"
               component="label"
               sx={{ marginTop: "7px" }}
@@ -137,7 +136,7 @@ export default function ProfilePage() {
                 onChange={handleFileChange}
                 hidden
               />
-            </Button>
+            </Button>}
           </CardContent>
         </Card>
 
