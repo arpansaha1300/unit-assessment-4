@@ -64,7 +64,7 @@ function Login() {
     maxWidth: "40rem",
     borderRadius: "1rem",
     backgroundColor: "rgba(255, 255, 255, 0.89)",
-    boxShadow: "10px 8px 10px 1px #1A2130"
+    boxShadow: "10px 8px 10px 1px #2669d4"
   };
 
   const itemStyle = {
@@ -94,9 +94,6 @@ function Login() {
   return (
     <Box
       style={{
-        backgroundImage: "url('https://img.freepik.com/free-vector/futuristic-background-with-lines_23-2148487905.jpg?w=1380&t=st=1723796353~exp=1723796953~hmac=2274b172f17468c5615a81d1dc6e8ff7ba3621edd276e4fc2cdcaaa3d1e1cfdd')",
-        backgroundRepeat: "no-repeat",
-        backgroundSize: "cover",
         height: "100vh",
         display: "flex",
         justifyContent: "center",
